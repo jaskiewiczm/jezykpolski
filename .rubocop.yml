@@ -1,0 +1,9 @@
+
+AllCops:
+  Exclude:
+    - 'db/migrate/*.rb'
+    - 'node_modules/**/*'
+    - 'db/schema.rb'
+
+Metrics/LineLength:
+  Enabled: false
