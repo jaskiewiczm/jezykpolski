@@ -1,7 +1,16 @@
 # frozen_string_literal: true
 
 class LoginController < ApplicationController
-  def index
-    render 'layouts/application'
+  include Devise::Controllers::Helpers
+
+  def login
+    require 'pry'
+    binding.pry
+    #email = User.where(:email => )
+    #sign_in
+  end
+
+  def logout
+
   end
 end

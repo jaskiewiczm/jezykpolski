@@ -44,3 +44,18 @@ c1.assignment_text = 'Learn 123s'
 c1.date = Date.today
 c1.klass_id = k.id
 c1.save!
+
+h1 = Homework.new
+h1.due_date = Date.today
+h1.description = 'Do the assignment'
+h1.save!
+
+h2 = Homework.new
+h2.due_date = Date.tomorrow
+h2.description = 'Optional assignment'
+h2.save!
+
+h3 = Homework.new
+h3.due_date = Date.yesterday
+h3.description = 'It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of light, it was the season of darkness, it was the spring of hope, it was the winter of despair.'
+h3.save!
