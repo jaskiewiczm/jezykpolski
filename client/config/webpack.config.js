@@ -82,7 +82,6 @@ module.exports = function(env = 'development') {
     target: 'web',
     entry: {
       bundle: [
-        "babel-polyfill", // adds Array.includes, Promise, etc for ie9
         "./client/js/application.js"
       ]
     },
