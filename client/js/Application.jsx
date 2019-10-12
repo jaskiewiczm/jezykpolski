@@ -121,11 +121,12 @@ export default class Application extends React.Component {
   }
 
   getNavButtons() {
+    //<Nav.Link href="/">Home</Nav.Link>
+    //<Nav.Link href="/calendar">Calendar</Nav.Link>
+    //<Nav.Link href="/homeworks">Homework</Nav.Link>
     return (
         <Nav className="mr-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/calendar">Calendar</Nav.Link>
-          <Nav.Link href="/homeworks">Homework</Nav.Link>
+
         </Nav>
       )
   }
@@ -136,7 +137,7 @@ export default class Application extends React.Component {
         {this.addAlert()}
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Język Polski</Navbar.Brand>
-
+          {this.getNavButtons()}
           {this.getAuthenticatorArea()}
         </Navbar>
         {this.getContent()}
