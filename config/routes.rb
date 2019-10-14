@@ -3,6 +3,7 @@ Jezykpolski::Application.routes.draw do
 
   post '/login' => 'login#login'
   post '/logout' => 'login#logout'
+  get '/whoami' => 'login#whoami'
 
   devise_for :users, only: []
 

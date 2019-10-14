@@ -3,6 +3,14 @@
 class LoginController < ApplicationController
   include Devise::Controllers::Helpers
 
+  def whoami
+    if current_user
+      render json: current_user, status: 200
+    else
+      render json: {}, status: 404
+    end
+  end
+
   def login
     params.require [:email, :password]
     user = User.where(:email => params[:email]).first

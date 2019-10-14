@@ -27,6 +27,34 @@ export default class Application extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.whoami()
+  }
+
+  whoami = () => {
+    var that = this
+    fetch('/whoami', {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      if (response.status == 200) {
+        return response.json()
+      } else {
+        return null
+      }
+    }).then((response)=>{
+      if (response != null) {
+        that.setState({
+          loggedIn: true,
+          loginFailed: false,
+          email: response.email
+        })
+      }
+    })
+  }
+
   login() {
     var that = this
     fetch('/login', {
