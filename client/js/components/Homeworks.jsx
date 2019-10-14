@@ -47,7 +47,7 @@ export default class Homeworks extends React.Component {
             <ListGroup className={styles.homeworks}>
               {
                 this.state.homeworks.map(function(key, index){
-                  return <ListGroup.Item action key={index}><IndividualHomework dueDate={key.due_date} description={key.description} /></ListGroup.Item>
+                  return <ListGroup.Item action key={index}><IndividualHomework dueDate={key.due_date} description={key.description} homeworkId={key.id}/></ListGroup.Item>
                 })
               }
             </ListGroup>

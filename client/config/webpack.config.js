@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const autoprefixer = require('autoprefixer');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const { LoaderOptionsPlugin, ContextReplacementPlugin, DefinePlugin } = webpack;
 
@@ -101,37 +102,17 @@ module.exports = function(env = 'development') {
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
+          test: /\.jsx?/,
           exclude: /node_modules/,
           use: 'babel-loader'
         },
         {
-          test: /(\.global)?\.s?css/,
-          include: /(node_modules\/)|(scss\/)/,
-          exclude: /js\//,
-          use: getCssLoader(env, false)
-        },
-        {
-          test: /\.s?css$/, /* idea is to only use scoped css for the components */
-          exclude: /node_modules/,
-          include: /js\//,
-          loader: getCssLoader(env, true)
-        },
-        { // for bootstrap-loader
-          test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/,
-          use: 'imports-loader?jQuery=jquery'
-        },
-        {
-          test: /\.(gif|png|jpe?g|svg)$/i,
+          test: /\.(css|sass|scss)$/,
           use: [
-            'file-loader',
-            {
-              loader: 'image-webpack-loader',
-              options: {
-                bypassOnDebug: true, // webpack@1.x
-                disable: true, // webpack@2.x and newer
-              },
-            },
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'postcss-loader',
+            'sass-loader',
           ],
         }
       ]
@@ -143,11 +124,17 @@ module.exports = function(env = 'development') {
       //     'NODE_ENV': JSON.stringify(env)
       //   }
       // }),
-      new ExtractTextPlugin("[name].css")
+      //new ExtractTextPlugin("[name].css")
       // new webpack.ProvidePlugin({
       //     $: "jquery",
       //     jQuery: "jquery"
       // })
+
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].css',
+        ignoreOrder: false, // Enable to remove warnings about conflicting order
+      })
     ]
   };
 
