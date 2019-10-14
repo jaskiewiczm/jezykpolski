@@ -13,7 +13,7 @@ class HomeworksController < ApplicationController
   end
 
   def delete_homework
-    homework = Homework.find_by_id :params[:homeworkId]
+    homework = Homework.find_by_id params[:homeworkId]
     homework.destroy!
     render json: {}, status: 200
   end
