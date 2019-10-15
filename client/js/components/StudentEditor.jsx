@@ -7,46 +7,34 @@ import Container from 'react-bootstrap/Container'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 
-import Calendar from 'react-calendar'
-
 import "./HomeworkEditor.scss"
 
-export default class HomeworkEditor extends React.Component {
+export default class StudentEditor extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      value: this.props.description != null ? RichTextEditor.createValueFromString(this.props.description, 'html') : RichTextEditor.createEmptyValue(),
+      name: this.props.name,
+      email: this.props.email,
       show: true,
-      title: this.props.title == null ? 'Edit Homework' : this.props.title
+      title: this.props.title == null ? 'Edit Student' : this.props.title
     }
   }
-
-  onChange = (value) => {
-    this.setState({value});
-    if (this.props.onChange) {
-      this.props.onChange(
-        value.toString('html')
-      );
-    }
-  };
 
   handleClose = () => {
     this.setState({
       show: false
     })
 
-    var updatedText = this.state.value.toString('html')
-
-    fetch('/update_homework_description', {
+    fetch('/update_student', {
       method: 'POST',
-      body: JSON.stringify({description: updatedText, homeworkId: this.props.homeworkId}),
+      body: JSON.stringify({name: this.state.name, studentId: this.props.studentId, email: this.state.email}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
       if (response.status == 200) {
-        this.props.callback(updatedText)
+        this.props.callback(this.state.email, this.state.name)
       }
     })
   }
@@ -61,17 +49,9 @@ export default class HomeworkEditor extends React.Component {
         <Modal.Body>
           <Container>
             <Row>
+              <Col>{this.state.name}</Col>
+              <Col>{this.state.email}</Col>
               <Col></Col>
-              <Col xs={8}>
-                <RichTextEditor
-                  value={this.state.value}
-                  onChange={this.onChange}/>
-              </Col>
-              <Col>
-                <Calendar
-                  onChange={this.onChange}
-                  value={this.state.date}/>
-              </Col>
             </Row>
           </Container>
         </Modal.Body>

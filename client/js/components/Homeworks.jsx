@@ -1,5 +1,7 @@
 import React from "react"
 import IndividualHomework from './IndividualHomework.jsx'
+import SchoolSelector from './SchoolSelector.jsx'
+//import KlassSelector from './KlassSelector.jsx'
 import styles from './Homeworks.scss'
 
 import ListGroup from 'react-bootstrap/ListGroup'
@@ -16,7 +18,10 @@ export default class Homeworks extends React.Component {
     super(props)
 
     this.state = {
-      homeworks: []
+      homeworks: [],
+      editMode: false,
+      selectedSchoolId: null,
+      selectedKlassId: null
     }
 
     this.getHomeworks = this.getHomeworks.bind(this)
@@ -44,11 +49,37 @@ export default class Homeworks extends React.Component {
   }
 
   add = () => {
+    this.setState({
+      editMode: true
+    })
+  }
 
+  closeEditor = () => {
+    this.setState({
+      editMode: false
+    }, this.getHomeworks())
+  }
+
+  schoolSelected = (schoolId) => {
+    this.setState({
+      selectedSchoolId: schoolId
+    })
+  }
+
+  klassSelected = (klassId) => {
+    this.setState({
+      selectedKlassId: klassId
+    })
   }
 
   render() {
     var that = this
+
+    var editContent = this.state.editMode ? <HomeworkEditor callback={this.closeEditor} title={'Add Homework'}/> : null
+
+    //<SchoolSelector callback={this.schoolSelected}/>
+    //<KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected}/>
+
     return (
       <div>
         <br />
@@ -57,6 +88,12 @@ export default class Homeworks extends React.Component {
             <Navbar.Brand>Homework</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link onClick={that.add}>Add</Nav.Link>
+            </Nav>
+            <Nav>
+
+            </Nav>
+            <Nav>
+
             </Nav>
           </Navbar>
           <Row>
@@ -73,6 +110,7 @@ export default class Homeworks extends React.Component {
             <Col></Col>
           </Row>
         </Container>
+        {editContent}
       </div>
     )
   }

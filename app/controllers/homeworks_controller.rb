@@ -12,6 +12,13 @@ class HomeworksController < ApplicationController
     render json: Homework.all.map(&:attributes)
   end
 
+  def add_homework
+    h = Homework.new
+    h.description = params[:description]
+    #h.dueDate =
+    h.save!
+  end
+
   def delete_homework
     homework = Homework.find_by_id params[:homeworkId]
     homework.destroy!

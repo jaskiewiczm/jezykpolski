@@ -14,10 +14,6 @@ u.password = 'password'
 u.password_confirmation = 'password'
 u.save!
 
-r = Role.new
-r.name = 'administrator'
-r.save!
-
 b = Book.new
 b.title = 'Don Quixote'
 b.author = 'Miguel de Cervantes'
