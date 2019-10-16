@@ -1,7 +1,8 @@
 import React from "react"
 import IndividualHomework from './IndividualHomework.jsx'
 import SchoolSelector from './SchoolSelector.jsx'
-//import KlassSelector from './KlassSelector.jsx'
+import KlassSelector from './KlassSelector.jsx'
+import HomeworkEditor from './HomeworkEditor.jsx'
 import styles from './Homeworks.scss'
 
 import ListGroup from 'react-bootstrap/ListGroup'
@@ -23,15 +24,16 @@ export default class Homeworks extends React.Component {
       selectedSchoolId: null,
       selectedKlassId: null
     }
-
-    this.getHomeworks = this.getHomeworks.bind(this)
-    this.getHomeworks()
   }
 
-  getHomeworks() {
+  getHomeworks = () => {
     var that = this
     fetch('/get_homeworks', {
-      method: 'GET',
+      method: 'POST',
+      body: JSON.stringify({
+        schoolId: this.state.selectedSchoolId,
+        klassId: this.state.selectedKlassId
+      }),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -69,7 +71,7 @@ export default class Homeworks extends React.Component {
   klassSelected = (klassId) => {
     this.setState({
       selectedKlassId: klassId
-    })
+    }, this.getHomeworks)
   }
 
   render() {
@@ -77,8 +79,12 @@ export default class Homeworks extends React.Component {
 
     var editContent = this.state.editMode ? <HomeworkEditor callback={this.closeEditor} title={'Add Homework'}/> : null
 
-    //<SchoolSelector callback={this.schoolSelected}/>
-    //<KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected}/>
+    var klassSelector = null
+    if (this.state.selectedSchoolId != null) {
+      klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected}/>
+    }
+
+    var body = <Row className={styles.noHomeworkSelected}><Col xs={12}>Please select a school and class to view homework.</Col></Row>
 
     return (
       <div>
@@ -90,12 +96,14 @@ export default class Homeworks extends React.Component {
               <Nav.Link onClick={that.add}>Add</Nav.Link>
             </Nav>
             <Nav>
-
+              <SchoolSelector callback={this.schoolSelected}/>
             </Nav>
+            &nbsp;
             <Nav>
-
+              {klassSelector}
             </Nav>
           </Navbar>
+          {body}
           <Row>
             <Col></Col>
             <Col xs={12}>

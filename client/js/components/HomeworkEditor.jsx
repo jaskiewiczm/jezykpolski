@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
 
 import Calendar from 'react-calendar'
 
@@ -67,11 +68,16 @@ export default class HomeworkEditor extends React.Component {
                   value={this.state.value}
                   onChange={this.onChange}/>
               </Col>
+              <Col></Col>
+            </Row>
+            <Row>
+              <Col></Col>
               <Col>
-                <Calendar
-                  onChange={this.onChange}
-                  value={this.state.date}/>
+                <label for="due_datedate"></label>
+                <input type="date" id="due_date" name="due_date"
+                  value="2018-07-22"/>
               </Col>
+              <Col></Col>
             </Row>
           </Container>
         </Modal.Body>

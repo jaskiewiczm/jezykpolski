@@ -1,6 +1,7 @@
 import React from "react"
 
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
 
 export default class KlassSelector extends React.Component {
 
@@ -13,12 +14,15 @@ export default class KlassSelector extends React.Component {
       title: 'Class'
     }
 
-    this.getKlasses()
+    if (this.props.schoolId != null) {
+      this.getKlasses()
+    }
   }
 
   getKlasses = () => {
-    fetch('/getKlasses', {
-      method: 'GET',
+    fetch('/get_klasses', {
+      method: 'POST',
+      body: JSON.stringify({schoolId: this.props.schoolId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -26,22 +30,32 @@ export default class KlassSelector extends React.Component {
       return response.json()
     }).then((response)=>{
       this.setState({
-        klasses: response.klasses
+        klasses: response
       })
     })
   }
 
-  klassSelected = (schoolId) => {
+  klassSelected = (klassId) => {
+    var klass = this.state.klasses.find((element) => {
+      return element.id == klassId;
+    })
 
+    this.setState({
+      title: klass.name
+    })
+
+    this.props.callback(klassId)
   }
 
   render() {
+    var that = this
+
     return (
       <div>
-        <DropdownButton title={this.state.title}>
+        <DropdownButton title={this.state.title} drop={'left'} onSelect={that.klassSelected}>
           {
             this.state.klasses.map(function(key, index){
-              return <Dropdown.Item onClick={that.klassSelected} eventKey={key.id}>{key.name}</Dropdown.Item>
+              return <Dropdown.Item eventKey={key.id} key={index}>{key.name}</Dropdown.Item>
             })
           }
         </DropdownButton>

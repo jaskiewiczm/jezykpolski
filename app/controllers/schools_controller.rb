@@ -7,7 +7,8 @@ class SchoolsController < ApplicationController
     render 'layouts/application'
   end
 
-  def getSchools
-    render json: {School.all}, status: 200
+  def get_schools
+    schools = School.all.map(&:attributes)
+    render json: schools, status: 200
   end
 end

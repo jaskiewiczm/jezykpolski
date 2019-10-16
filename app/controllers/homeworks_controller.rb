@@ -9,7 +9,7 @@ class HomeworksController < ApplicationController
   end
 
   def homework
-    render json: Homework.all.map(&:attributes)
+    render json: Homework.where('klass_id = ?', params[:klassId]).map(&:attributes)
   end
 
   def add_homework

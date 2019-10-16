@@ -101,4 +101,7 @@
 .homeworks {
   opacity: 0.75; }
 
+.noHomeworkSelected {
+  background: white; }
+
 

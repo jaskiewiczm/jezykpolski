@@ -8,7 +8,7 @@ Jezykpolski::Application.routes.draw do
   devise_for :users, only: []
 
   get '/homeworks' => 'homeworks#index'
-  get '/get_homeworks' => 'homeworks#homework'
+  post '/get_homeworks' => 'homeworks#homework'
 
   post '/add_homework' => 'homeworks#add_homework'
   post '/delete_homework' => 'homeworks#delete_homework'
@@ -21,5 +21,8 @@ Jezykpolski::Application.routes.draw do
   post '/delete_student' => 'students#delete_student'
   post '/update_student' => 'students#update_student'
 
+
+  get '/get_schools' => 'schools#get_schools'
+  post '/get_klasses' => 'klasses#get_klasses'
 
 end

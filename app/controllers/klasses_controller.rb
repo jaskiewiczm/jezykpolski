@@ -7,7 +7,8 @@ class KlassesController < ApplicationController
     render 'layouts/application'
   end
 
-  def getKlasses
-    render json: {Klass.where('school_id = ?', param[:schoolId])}, status: 200
+  def get_klasses
+    klasses = Klass.where('school_id = ?', params[:schoolId]).map(&:attributes)
+    render json: klasses, status: 200
   end
 end
