@@ -18,7 +18,8 @@ export default class IndividualHomework extends React.Component {
     this.state = {
       editMode: false,
       description: this.props.description,
-      homeworkId: this.props.homeworkId
+      homeworkId: this.props.homeworkId,
+      dueDate: this.props.dueDate
     }
   }
 
@@ -62,21 +63,24 @@ export default class IndividualHomework extends React.Component {
     })
   }
 
-  editClosed = (text) => {
-    this.setState({
-      editMode: false,
-      description: text
-    })
+  editClosed = (text, dueDate) => {
+    if (text != null && dueDate != null) {
+      this.setState({
+        editMode: false,
+        description: text,
+        dueDate: dueDate
+      })
+    }
   }
 
   render() {
-    var editContent = this.state.editMode ? <HomeworkEditor homeworkId={this.state.homeworkId} description={this.state.description} callback={this.editClosed}/> : null
+    var editContent = this.state.editMode ? <HomeworkEditor homeworkId={this.state.homeworkId} description={this.state.description} callback={this.editClosed} dueDate={this.state.dueDate}/> : null
 
     return (
       <div>
         <Container>
           <Row>
-            <Col xs={2}>{this.props.dueDate}</Col>
+            <Col xs={2}>{this.state.dueDate}</Col>
             <Col xs={8} dangerouslySetInnerHTML={{__html: this.state.description}} />
             <Col xs={1}>
               <Image src="pencil.png" onClick={this.editHomework} />

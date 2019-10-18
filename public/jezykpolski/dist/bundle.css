@@ -102,6 +102,7 @@
   opacity: 0.75; }
 
 .noHomeworkSelected {
-  background: white; }
+  background-color: white;
+  opacity: 0.75; }
 
 

@@ -10,7 +10,8 @@ export default class SchoolSelector extends React.Component {
 
     this.state = {
       schools: [],
-      title: 'School'
+      title: 'School',
+      selectedSchoolId: this.props.schoolId
     }
 
     this.getSchools()
@@ -25,8 +26,18 @@ export default class SchoolSelector extends React.Component {
     }).then((response)=>{
       return response.json()
     }).then((response)=>{
+      var school = response.find((element) => {
+        return element.id == parseInt(this.state.selectedSchoolId);
+      })
+
+      var title = this.state.title
+      if (school != null) {
+        title = school.name
+      }
+
       this.setState({
-        schools: response
+        schools: response,
+        title: title
       })
     })
   }

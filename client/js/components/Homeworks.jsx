@@ -18,11 +18,18 @@ export default class Homeworks extends React.Component {
   constructor(props) {
     super(props)
 
+    var schoolId = localStorage.getItem('selectedSchoolId')
+    var klassId = localStorage.getItem('selectedKlassId')
+
     this.state = {
       homeworks: [],
       editMode: false,
-      selectedSchoolId: null,
-      selectedKlassId: null
+      selectedSchoolId: schoolId,
+      selectedKlassId: klassId
+    }
+
+    if (schoolId != null && klassId != null) {
+      this.getHomeworks()
     }
   }
 
@@ -66,45 +73,31 @@ export default class Homeworks extends React.Component {
     this.setState({
       selectedSchoolId: schoolId
     })
+
+    localStorage.setItem('selectedSchoolId', schoolId)
   }
 
   klassSelected = (klassId) => {
     this.setState({
       selectedKlassId: klassId
     }, this.getHomeworks)
+
+    localStorage.setItem('selectedKlassId', klassId)
   }
 
   render() {
     var that = this
 
-    var editContent = this.state.editMode ? <HomeworkEditor callback={this.closeEditor} title={'Add Homework'}/> : null
+    var editContent = this.state.editMode ? <HomeworkEditor callback={this.closeEditor} title={'Add Homework'} selectedKlassId={this.state.selectedKlassId}/> : null
 
     var klassSelector = null
     if (this.state.selectedSchoolId != null) {
-      klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected}/>
+      klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected} klassId={this.state.selectedKlassId}/>
     }
 
-    var body = <Row className={styles.noHomeworkSelected}><Col xs={12}>Please select a school and class to view homework.</Col></Row>
-
-    return (
-      <div>
-        <br />
-        <Container>
-          <Navbar bg="dark" variant="dark">
-            <Navbar.Brand>Homework</Navbar.Brand>
-            <Nav className="mr-auto">
-              <Nav.Link onClick={that.add}>Add</Nav.Link>
-            </Nav>
-            <Nav>
-              <SchoolSelector callback={this.schoolSelected}/>
-            </Nav>
-            &nbsp;
-            <Nav>
-              {klassSelector}
-            </Nav>
-          </Navbar>
-          {body}
-          <Row>
+    var body = null
+    if (this.state.homeworks.length > 0) {
+      body = (<Row>
             <Col></Col>
             <Col xs={12}>
               <ListGroup className={styles.homeworks}>
@@ -116,7 +109,39 @@ export default class Homeworks extends React.Component {
               </ListGroup>
             </Col>
             <Col></Col>
-          </Row>
+          </Row>)
+    } else {
+      body = (<Row>
+                <Col/>
+                <Col xs={12}>
+                  <ListGroup>
+                    <ListGroup.Item>
+                      Please select a school and class to view homework.
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Col>
+                <Col/>
+              </Row>)
+    }
+
+    return (
+      <div>
+        <br />
+        <Container>
+          <Navbar bg="dark" variant="dark">
+            <Navbar.Brand>Homework</Navbar.Brand>
+            <Nav className="mr-auto">
+              <Nav.Link onClick={that.add}>Add</Nav.Link>
+            </Nav>
+            <Nav>
+              <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
+            </Nav>
+            &nbsp;
+            <Nav>
+              {klassSelector}
+            </Nav>
+          </Navbar>
+          {body}
         </Container>
         {editContent}
       </div>

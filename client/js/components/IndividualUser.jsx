@@ -10,7 +10,7 @@ import Image from 'react-bootstrap/Image'
 
 import styles from "./IndividualHomework.scss"
 
-export default class IndividualStudent extends React.Component {
+export default class IndividualUser extends React.Component {
 
   constructor(props) {
     super(props)
@@ -19,16 +19,16 @@ export default class IndividualStudent extends React.Component {
       editMode: false,
       name: this.props.description,
       email: this.props.email,
-      studentId: this.props.homeworkId,
+      userId: this.props.userId,
       guardians: []
     }
   }
 
-  deleteStudent = () => {
+  deleteUser = () => {
     var that = this
     swal({
-      title: "Delete Student?",
-      text: "Are you sure you want to delete this student?",
+      title: "Delete User?",
+      text: "Are you sure you want to delete this user?",
       icon: "warning",
       buttons: {
         no: {
@@ -43,9 +43,9 @@ export default class IndividualStudent extends React.Component {
     })
     .then((willDelete) => {
       if (willDelete === true) {
-        fetch('/delete_student', {
+        fetch('/delete_user', {
           method: 'POST',
-          body: JSON.stringify({studentId: this.props.studentId}),
+          body: JSON.stringify({userId: this.props.userId}),
           headers: {
             "Content-Type": "application/json; charset=utf-8"
           }
@@ -58,7 +58,7 @@ export default class IndividualStudent extends React.Component {
     });
   }
 
-  editStudent = () => {
+  editUser = () => {
     this.setState({
       editMode: true
     })
@@ -73,7 +73,7 @@ export default class IndividualStudent extends React.Component {
   }
 
   render() {
-    var editContent = this.state.editMode ? <StudentEditor studentId={this.state.studentId} name={this.state.name} callback={this.editClosed}/> : null
+    var editContent = this.state.editMode ? <UserEditor userId={this.state.userId} name={this.state.name} callback={this.editClosed}/> : null
 
     return (
       <div>
@@ -82,10 +82,10 @@ export default class IndividualStudent extends React.Component {
             <Col xs={1}>{this.state.name}</Col>
             <Col xs={1}>{this.state.email}</Col>
             <Col xs={1}>
-              <Image src="pencil.png" onClick={this.editStudent} />
+              <Image src="pencil.png" onClick={this.editUser} />
             </Col>
             <Col xs={1}>
-              <Image src="trash.png" onClick={this.deleteStudent} />
+              <Image src="trash.png" onClick={this.deleteUser} />
             </Col>
           </Row>
         </Container>

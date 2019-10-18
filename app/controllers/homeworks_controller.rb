@@ -9,14 +9,16 @@ class HomeworksController < ApplicationController
   end
 
   def homework
-    render json: Homework.where('klass_id = ?', params[:klassId]).map(&:attributes)
+    render json: Homework.where('klass_id = ?', params[:klassId]).order(due_date: :desc).map(&:attributes)
   end
 
   def add_homework
     h = Homework.new
-    h.description = params[:description]
-    #h.dueDate =
+    h.description = Sanitize.fragment(params[:description], :elements => ['b', 'strong', 'p', 'i', 'ul', 'li', 'ol', 'del', 'u'])
+    h.due_date = params[:dueDate]
+    h.klass_id = params[:selectedKlassId]
     h.save!
+    render json: {}, status: 200
   end
 
   def delete_homework
@@ -28,6 +30,7 @@ class HomeworksController < ApplicationController
   def update_homework_description
     homework = Homework.find_by_id params[:homeworkId]
     homework.description = Sanitize.fragment(params[:description], :elements => ['b', 'strong', 'p', 'i', 'ul', 'li', 'ol', 'del', 'u'])
+    homework.due_date = params[:dueDate]
     homework.save!
     render json: {}, status: 200
   end

@@ -19,7 +19,10 @@ export default class HomeworkEditor extends React.Component {
     this.state = {
       value: this.props.description != null ? RichTextEditor.createValueFromString(this.props.description, 'html') : RichTextEditor.createEmptyValue(),
       show: true,
-      title: this.props.title == null ? 'Edit Homework' : this.props.title
+      title: this.props.title == null ? 'Edit Homework' : this.props.title,
+      dueDate: this.props.dueDate != null ? this.props.dueDate : null,
+      addOrEdit: this.props.title == null ? 'edit' : 'add',
+      selectedKlassId: this.props.selectedKlassId
     }
   }
 
@@ -32,24 +35,61 @@ export default class HomeworkEditor extends React.Component {
     }
   };
 
+  onDueDateChange = (value) => {
+    this.setState({
+      dueDate: value.currentTarget.value
+    })
+  }
+
   handleClose = () => {
+    this.setState({
+      show: false
+    })
+
+    this.props.callback()
+  }
+
+  handleSave = () => {
     this.setState({
       show: false
     })
 
     var updatedText = this.state.value.toString('html')
 
-    fetch('/update_homework_description', {
-      method: 'POST',
-      body: JSON.stringify({description: updatedText, homeworkId: this.props.homeworkId}),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    }).then((response)=>{
-      if (response.status == 200) {
-        this.props.callback(updatedText)
-      }
-    })
+    if (this.state.addOrEdit == 'add') {
+      fetch('/add_homework', {
+        method: 'POST',
+        body: JSON.stringify({description: updatedText,
+                              dueDate: this.state.dueDate,
+                              selectedKlassId: this.state.selectedKlassId}),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }).then((response)=>{
+        if (response.status == 200) {
+          return response.json()
+        }
+        return null
+      }).then((response)=>{
+        if (response != null) {
+          this.props.callback()
+        }
+      })
+    } else {
+      fetch('/update_homework_description', {
+        method: 'POST',
+        body: JSON.stringify({description: updatedText,
+                              homeworkId: this.props.homeworkId,
+                              dueDate: this.state.dueDate}),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }).then((response)=>{
+        if (response.status == 200) {
+          this.props.callback(updatedText, this.state.dueDate)
+        }
+      })
+    }
   }
 
 
@@ -60,32 +100,24 @@ export default class HomeworkEditor extends React.Component {
           <Modal.Title>{this.state.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Container>
-            <Row>
-              <Col></Col>
-              <Col xs={8}>
-                <RichTextEditor
+          <Form>
+            <Form.Group>
+              <Form.Label>Due Date</Form.Label>
+              <Form.Control type="date" onChange={this.onDueDateChange} value={this.state.dueDate}/>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Assignment</Form.Label>
+              <RichTextEditor
                   value={this.state.value}
                   onChange={this.onChange}/>
-              </Col>
-              <Col></Col>
-            </Row>
-            <Row>
-              <Col></Col>
-              <Col>
-                <label for="due_datedate"></label>
-                <input type="date" id="due_date" name="due_date"
-                  value="2018-07-22"/>
-              </Col>
-              <Col></Col>
-            </Row>
-          </Container>
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleClose}>
+          <Button variant="primary" onClick={this.handleSave}>
             Save Changes
           </Button>
         </Modal.Footer>

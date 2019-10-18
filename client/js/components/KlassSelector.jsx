@@ -11,7 +11,8 @@ export default class KlassSelector extends React.Component {
     this.state = {
       klasses: [],
       schoolId: this.props.schoolId,
-      title: 'Class'
+      title: 'Class',
+      selectedKlassId: this.props.klassId
     }
 
     if (this.props.schoolId != null) {
@@ -29,8 +30,18 @@ export default class KlassSelector extends React.Component {
     }).then((response)=>{
       return response.json()
     }).then((response)=>{
+      var klass = response.find((element) => {
+        return element.id == parseInt(this.state.selectedKlassId);
+      })
+
+      var title = this.state.title
+      if (klass != null) {
+        title = klass.name
+      }
+
       this.setState({
-        klasses: response
+        klasses: response,
+        title: title
       })
     })
   }
