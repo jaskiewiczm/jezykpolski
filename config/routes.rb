@@ -14,8 +14,8 @@ Jezykpolski::Application.routes.draw do
   post '/delete_homework' => 'homeworks#delete_homework'
   post '/update_homework_description' => 'homeworks#update_homework_description'
 
-  get '/students' => 'students#index'
-  get '/get_students' => 'students#students'
+  get '/users' => 'users#index'
+  get '/get_users' => 'users#users'
 
   post '/add_student' => 'students#add_student'
   post '/delete_student' => 'students#delete_student'

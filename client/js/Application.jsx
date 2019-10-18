@@ -1,11 +1,10 @@
 import React from 'react';
+import {Link} from 'react-router-dom'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
-import Homeworks from 'components/Homeworks.jsx'
-import Welcome from 'components/Welcome.jsx'
 import Alert from 'react-bootstrap/Alert'
 
 export default class Application extends React.Component {
@@ -154,7 +153,8 @@ export default class Application extends React.Component {
     //<Nav.Link href="/homeworks">Homework</Nav.Link>
     return (
         <Nav className="mr-auto">
-
+          <Link to="/homeworks">Homework</Link>
+          <Link to="/users">Users</Link>
         </Nav>
       )
   }
@@ -168,7 +168,6 @@ export default class Application extends React.Component {
           {this.getNavButtons()}
           {this.getAuthenticatorArea()}
         </Navbar>
-        {this.getContent()}
       </div>
     )
   }

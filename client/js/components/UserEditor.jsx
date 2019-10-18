@@ -43,7 +43,7 @@ export default class UserEditor extends React.Component {
 
 
   render() {
-    var
+
     if (this.state.userType == 'parent') {
 
     } else if (this.state.userType == 'student') {

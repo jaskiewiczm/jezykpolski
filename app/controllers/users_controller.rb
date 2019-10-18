@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 
-class StudentsController < ApplicationController
+class UsersController < ApplicationController
   before_action :authenticate_user!
 
   def index
     render 'layouts/application'
   end
 
-  def student
-    render json: Student.all.map(&:attributes)
+  def users
+    render json: User.all.map(&:attributes)
   end
 
-  def add_student
+  def add_user
 
     render json: {}, status: 200
   end
 
-  def delete_student
+  def delete_user
 
     render json: {}, status: 200
   end
 
-  def update_student
+  def update_user
 
     render json: {}, status: 200
   end

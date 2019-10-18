@@ -1,6 +1,7 @@
 import React from "react"
 
-import IndividualHomework from './IndividualUser.jsx'
+import IndividualUser from './IndividualUser.jsx'
+import UserEditor from './UserEditor.jsx'
 
 import ListGroup from 'react-bootstrap/ListGroup'
 import Col from 'react-bootstrap/Col'
@@ -21,6 +22,8 @@ export default class Users extends React.Component {
       users: [],
       editMode: false
     }
+
+    this.getUsers()
   }
 
   getUsers() {
@@ -75,8 +78,8 @@ export default class Users extends React.Component {
             <Col xs={12}>
               <ListGroup className={styles.homeworks}>
                 {
-                  this.state.students.map(function(key, index){
-                    return <ListGroup.Item action key={index}><IndividualUser userId={key.id} name={key.name} deleteCallback={that.deleteCallback}/></ListGroup.Item>
+                  this.state.users.map(function(key, index){
+                    return <ListGroup.Item action key={index}><IndividualUser userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback}/></ListGroup.Item>
                   })
                 }
               </ListGroup>

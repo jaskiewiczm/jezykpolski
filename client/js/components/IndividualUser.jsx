@@ -17,7 +17,7 @@ export default class IndividualUser extends React.Component {
 
     this.state = {
       editMode: false,
-      name: this.props.description,
+      name: this.props.name,
       email: this.props.email,
       userId: this.props.userId,
       guardians: []
@@ -79,8 +79,8 @@ export default class IndividualUser extends React.Component {
       <div>
         <Container>
           <Row>
-            <Col xs={1}>{this.state.name}</Col>
-            <Col xs={1}>{this.state.email}</Col>
+            <Col xs={3}>{this.state.name}</Col>
+            <Col xs={3}>{this.state.email}</Col>
             <Col xs={1}>
               <Image src="pencil.png" onClick={this.editUser} />
             </Col>
