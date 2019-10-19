@@ -20,7 +20,8 @@ export default class IndividualUser extends React.Component {
       name: this.props.name,
       email: this.props.email,
       userId: this.props.userId,
-      guardians: []
+      guardians: [],
+      schoolId: this.props.schoolId
     }
   }
 
@@ -79,7 +80,7 @@ export default class IndividualUser extends React.Component {
   }
 
   render() {
-    var editContent = this.state.editMode ? <UserEditor userId={this.state.userId} name={this.state.name} email={this.state.email} callback={this.editClosed}/> : null
+    var editContent = this.state.editMode ? <UserEditor userId={this.state.userId} name={this.state.name} email={this.state.email} schoolId={this.state.schoolId} callback={this.editClosed}/> : null
 
     return (
       <div>

@@ -1,9 +1,7 @@
 import React from "react"
 
-import RichTextEditor from 'react-rte';
-import Col from 'react-bootstrap/Col'
-import Row from 'react-bootstrap/Row'
-import Container from 'react-bootstrap/Container'
+import Enrollment from './Enrollment.jsx'
+
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
@@ -22,7 +20,9 @@ export default class UserEditor extends React.Component {
       title: this.props.title == null ? 'Edit User' : this.props.title,
       userType: this.props.userType,
       enrollments: [],
-      userId: this.props.userId
+      userId: this.props.userId,
+      schoolId: this.props.schoolId,
+      showAddEnrollments: false
     }
 
     this.getEnrollments()
@@ -74,6 +74,39 @@ export default class UserEditor extends React.Component {
     })
   }
 
+  addEnrollment = () => {
+    fetch('/add_enrollments', {
+      method: 'POST',
+      body: JSON.stringify({userId: this.state.userId, klassId: this.state.selectedKlassId}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    })
+  }
+
+  nameChanged = (evt) => {
+    this.setState({
+      name: evt.currentTarget.value
+    })
+  }
+
+  emailChanged = (evt) => {
+    this.setState({
+      email: evt.currentTarget.value
+    })
+  }
+
+  addEnrollment = () => {
+    this.setState({
+      showAddEnrollments: true
+    })
+  }
+
+  addEnrollmentCallback = (klassId) => {
+    this.setState({
+      showAddEnrollments: false
+    })
+  }
 
   render() {
 
@@ -81,6 +114,11 @@ export default class UserEditor extends React.Component {
 
     } else if (this.state.userType == 'student') {
 
+    }
+
+    var enrollment = null
+    if (this.state.showAddEnrollments) {
+      enrollment = <Enrollment userId={this.state.userId} schoolId={this.state.schoolId} callback={this.addEnrollmentCallback}/>
     }
 
     return (
@@ -92,11 +130,11 @@ export default class UserEditor extends React.Component {
           <Form>
             <Form.Group>
               <Form.Label>Name</Form.Label>
-              <Form.Control type='text' value={this.state.name}/>
+              <Form.Control type='text' value={this.state.name} onChange={this.nameChanged}/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Email</Form.Label>
-              <Form.Control type='text' value={this.state.email}/>
+              <Form.Control type='text' value={this.state.email} onChange={this.emailChanged}/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Parent #1</Form.Label>
@@ -109,10 +147,13 @@ export default class UserEditor extends React.Component {
 
             <Form.Group>
               <Form.Label>Enrollments</Form.Label>
+              <Button variant="outline-primary" size='sm' onClick={this.addEnrollment} style={{float: 'right', paddingBottom: '5px'}}>Enroll</Button>
+            </Form.Group>
+            <Form.Group>
               <ListGroup>
                 {
                   this.state.enrollments.map(function(key, index){
-                    return <ListGroup.Item variant={ index % 2 == 0 ? 'dark' : 'light'}>{key.name}</ListGroup.Item>
+                    return <ListGroup.Item key={index} variant={ index % 2 == 0 ? 'dark' : 'light'}>{key.name}</ListGroup.Item>
                   })
                 }
               </ListGroup>
@@ -127,6 +168,7 @@ export default class UserEditor extends React.Component {
             Save Changes
           </Button>
         </Modal.Footer>
+        {enrollment}
       </Modal>
     )
   }

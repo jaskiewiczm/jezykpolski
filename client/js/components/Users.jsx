@@ -84,7 +84,7 @@ export default class Users extends React.Component {
   render() {
     var that = this
 
-    var editContent = this.state.editMode ? <UserEditor callback={this.closeEditor} title={'Add User'}/> : null
+    var editContent = this.state.editMode ? <UserEditor callback={this.closeEditor} title={'Add User'} schoolId={this.state.selectedSchoolId}/> : null
 
     var klassSelector = null
     if (this.state.selectedSchoolId != null) {
@@ -101,7 +101,7 @@ export default class Users extends React.Component {
                   <ListGroup className={styles.homeworks}>
                     {
                       this.state.users.map(function(key, index){
-                        return <ListGroup.Item action key={index}><IndividualUser userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback}/></ListGroup.Item>
+                        return <ListGroup.Item action key={index}><IndividualUser userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback} schoolId={that.state.selectedSchoolId}/></ListGroup.Item>
                       })
                     }
                   </ListGroup>
