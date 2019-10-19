@@ -1,6 +1,5 @@
 import React from "react"
 
-import RichTextEditor from 'react-rte';
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
@@ -10,16 +9,20 @@ import Form from 'react-bootstrap/Form'
 
 import "./HomeworkEditor.scss"
 
-export default class UserEditor extends React.Component {
+export default class KlassEditor extends React.Component {
 
   constructor(props) {
     super(props)
+
+    var name = this.props.name != null ? this.props.name : ''
+
     this.state = {
-      name: this.props.name,
-      email: this.props.email,
+      klassId: this.props.klassId,
+      schoolId: this.props.schoolId,
+      name: name,
       show: true,
-      title: this.props.title == null ? 'Edit User' : this.props.title,
-      userType: this.props.userType
+      title: this.props.title == null ? 'Edit Class' : this.props.title,
+      addOrEdit: this.props.title == null ? 'edit' : 'add',
     }
   }
 
@@ -28,30 +31,40 @@ export default class UserEditor extends React.Component {
       show: false
     })
 
-    fetch('/update_user', {
+    this.props.callback(this.state.name)
+  }
+
+  handleSave = () => {
+    this.setState({
+      show: false
+    })
+
+    var path = ''
+    if (this.state.addOrEdit == 'edit') {
+      path = '/update_klass'
+    } else {
+      path = '/add_klass'
+    }
+
+    fetch(path, {
       method: 'POST',
-      body: JSON.stringify({name: this.state.name, userId: this.props.userId, email: this.state.email}),
+      body: JSON.stringify({name: this.state.name, klassId: this.props.klassId, schoolId: this.props.schoolId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
       if (response.status == 200) {
-        this.props.callback(this.state.email, this.state.name)
-      } else {
-        this.props.callback()
+        this.props.callback(this.state.name)
       }
     })
+
   }
 
+  nameChanged = (evt) => {
+    this.setState({name: evt.currentTarget.value})
+  }
 
   render() {
-
-    if (this.state.userType == 'parent') {
-
-    } else if (this.state.userType == 'student') {
-
-    }
-
     return (
       <Modal show={this.state.show} size="lg">
         <Modal.Header>
@@ -61,19 +74,7 @@ export default class UserEditor extends React.Component {
           <Form>
             <Form.Group>
               <Form.Label>Name</Form.Label>
-              <Form.Control />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Email</Form.Label>
-              <Form.Control />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Parent #1</Form.Label>
-              <Form.Control />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Parent #2</Form.Label>
-              <Form.Control />
+              <Form.Control type='text' value={this.state.name} onChange={this.nameChanged}/>
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -81,7 +82,7 @@ export default class UserEditor extends React.Component {
           <Button variant="secondary" onClick={this.handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleClose}>
+          <Button variant="primary" onClick={this.handleSave}>
             Save Changes
           </Button>
         </Modal.Footer>

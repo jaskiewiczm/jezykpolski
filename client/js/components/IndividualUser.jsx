@@ -1,5 +1,5 @@
 import React from "react"
-import HomeworkEditor from './HomeworkEditor.jsx'
+import UserEditor from './UserEditor.jsx'
 
 import swal from 'sweetalert';
 import Col from 'react-bootstrap/Col'
@@ -65,11 +65,17 @@ export default class IndividualUser extends React.Component {
   }
 
   editClosed = (email, name) => {
-    this.setState({
-      editMode: false,
-      name: name,
-      email: email
-    })
+    if (email != null && name != null) {
+      this.setState({
+        editMode: false,
+        name: name,
+        email: email
+      })
+    } else {
+      this.setState({
+        editMode: false
+      })
+    }
   }
 
   render() {

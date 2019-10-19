@@ -50,6 +50,7 @@ export default class Application extends React.Component {
           loginFailed: false,
           email: response.email
         })
+        that.props.history.push('/homeworks')
       }
     })
   }
@@ -75,6 +76,7 @@ export default class Application extends React.Component {
           loginFailed: false,
           email: response.email
         })
+        that.props.history.push('/homeworks')
       } else {
         that.setState({
           loginFailed: true
@@ -96,6 +98,8 @@ export default class Application extends React.Component {
           loginFailed: false,
           email: null
         })
+
+        this.props.history.push('/welcome')
       }
     })
   }
@@ -154,7 +158,10 @@ export default class Application extends React.Component {
     return (
         <Nav className="mr-auto">
           <Link to="/homeworks">Homework</Link>
+          &nbsp;&nbsp;&nbsp;
           <Link to="/users">Users</Link>
+          &nbsp;&nbsp;&nbsp;
+          <Link to="/klasses">Classes</Link>
         </Nav>
       )
   }
@@ -164,7 +171,7 @@ export default class Application extends React.Component {
       <div>
         {this.addAlert()}
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Język Polski</Navbar.Brand>
+          <Navbar.Brand>Język Polski</Navbar.Brand>
           {this.getNavButtons()}
           {this.getAuthenticatorArea()}
         </Navbar>

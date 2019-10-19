@@ -1,9 +1,9 @@
 import React from "react"
 
-import IndividualUser from './IndividualUser.jsx'
-import UserEditor from './UserEditor.jsx'
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
+import IndividualKlass from './IndividualKlass.jsx'
+import KlassEditor from './KlassEditor.jsx'
 
 import ListGroup from 'react-bootstrap/ListGroup'
 import Col from 'react-bootstrap/Col'
@@ -15,28 +15,28 @@ import Nav from 'react-bootstrap/Nav'
 import styles from './Homeworks.scss'
 
 
-export default class Users extends React.Component {
+export default class Klasses extends React.Component {
 
   constructor(props) {
     super(props)
 
-    var schoolId = localStorage.getItem('usersSelectedSchoolId')
-    var klassId = localStorage.getItem('usersSelectedKlassId')
+    var schoolId = localStorage.getItem('klassesSelectedSchoolId')
+    var klassId = localStorage.getItem('klassesSelectedKlassId')
 
     this.state = {
-      users: [],
+      klasses: [],
       editMode: false,
-      selectedSchoolId: schoolId,
-      selectedKlassId: klassId
+      selectedSchoolId: schoolId
     }
 
-    this.getUsers()
+    this.getKlasses()
   }
 
-  getUsers() {
+  getKlasses() {
     var that = this
-    fetch('/get_users', {
-      method: 'GET',
+    fetch('/get_klasses', {
+      method: 'POST',
+      body: JSON.stringify({schoolId: this.state.selectedSchoolId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -44,13 +44,13 @@ export default class Users extends React.Component {
       return response.json()
     }).then((response)=>{
       that.setState({
-        users: response
+        klasses: response
       })
     })
   }
 
   deleteCallback = () => {
-    this.getUsers()
+    this.getKlasses()
   }
 
   add = () => {
@@ -62,7 +62,7 @@ export default class Users extends React.Component {
   closeEditor = () => {
     this.setState({
       editMode: false
-    }, this.getUsers)
+    }, this.getKlasses)
   }
 
   schoolSelected = (schoolId) => {
@@ -70,7 +70,8 @@ export default class Users extends React.Component {
       selectedSchoolId: schoolId
     })
 
-    localStorage.setItem('usersSelectedSchoolId', schoolId)
+    localStorage.setItem('klassesSelectedSchoolId', schoolId)
+    this.getKlasses()
   }
 
   klassSelected = (klassId) => {
@@ -78,30 +79,24 @@ export default class Users extends React.Component {
       selectedKlassId: klassId
     }, this.getHomeworks)
 
-    localStorage.setItem('usersSelectedKlassId', klassId)
+    localStorage.setItem('klassesSelectedKlassId', klassId)
   }
 
   render() {
     var that = this
 
-    var editContent = this.state.editMode ? <UserEditor callback={this.closeEditor} title={'Add User'}/> : null
-
-    var klassSelector = null
-    if (this.state.selectedSchoolId != null) {
-      klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected} klassId={this.state.selectedKlassId}/>
-    }
-
+    var editContent = this.state.editMode ? <KlassEditor callback={this.closeEditor} title={'Add Class'} schoolId={this.state.selectedSchoolId}/> : null
 
     var body = null
-    if (this.state.users.length > 0) {
+    if (this.state.klasses.length > 0) {
 
       body = (<Row>
                 <Col></Col>
                 <Col xs={12}>
                   <ListGroup className={styles.homeworks}>
                     {
-                      this.state.users.map(function(key, index){
-                        return <ListGroup.Item action key={index}><IndividualUser userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback}/></ListGroup.Item>
+                      this.state.klasses.map(function(key, index){
+                        return <ListGroup.Item action key={index}><IndividualKlass klassId={key.id} name={key.name} deleteCallback={that.deleteCallback}/></ListGroup.Item>
                       })
                     }
                   </ListGroup>
@@ -115,7 +110,7 @@ export default class Users extends React.Component {
                 <Col xs={12}>
                   <ListGroup>
                     <ListGroup.Item>
-                      Please select a school and class to view users.
+                      Please select a school to view classes.
                     </ListGroup.Item>
                   </ListGroup>
                 </Col>
@@ -129,16 +124,12 @@ export default class Users extends React.Component {
         <br />
         <Container>
           <Navbar bg="dark" variant="dark">
-            <Navbar.Brand>User</Navbar.Brand>
+            <Navbar.Brand>Classes</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link onClick={that.add}>Add</Nav.Link>
             </Nav>
             <Nav>
               <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
-            </Nav>
-            &nbsp;
-            <Nav>
-              {klassSelector}
             </Nav>
           </Navbar>
           {body}

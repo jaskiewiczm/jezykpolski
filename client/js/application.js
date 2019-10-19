@@ -9,6 +9,7 @@ import ReadingLog from './components/ReadingLog.jsx'
 import Homeworks from 'components/Homeworks.jsx'
 import Users from 'components/Users.jsx'
 import Welcome from 'components/Welcome.jsx'
+import Klasses from 'components/Klasses.jsx'
 
 const bindNode = document.getElementById('data-bind-node');
 
@@ -21,8 +22,9 @@ if (!bindNode) {
       <BrowserRouter>
         <Route path="/" component={Application} />
         <Route path="/users" component={Users} />
-        <Route path="/homeworks" component={Homeworks} />
+        <Route path="/homeworks" component={Homeworks}/>
         <Route path="/welcome" component={Welcome} />
+        <Route path="/klasses" component={Klasses} />
       </BrowserRouter>
     ), bindNode
   )

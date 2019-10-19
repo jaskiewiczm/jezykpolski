@@ -18,8 +18,8 @@ export default class Homeworks extends React.Component {
   constructor(props) {
     super(props)
 
-    var schoolId = localStorage.getItem('selectedSchoolId')
-    var klassId = localStorage.getItem('selectedKlassId')
+    var schoolId = localStorage.getItem('homeworksSelectedSchoolId')
+    var klassId = localStorage.getItem('homeworksSelectedKlassId')
 
     this.state = {
       homeworks: [],
@@ -74,7 +74,7 @@ export default class Homeworks extends React.Component {
       selectedSchoolId: schoolId
     })
 
-    localStorage.setItem('selectedSchoolId', schoolId)
+    localStorage.setItem('homeworksSelectedSchoolId', schoolId)
   }
 
   klassSelected = (klassId) => {
@@ -82,7 +82,7 @@ export default class Homeworks extends React.Component {
       selectedKlassId: klassId
     }, this.getHomeworks)
 
-    localStorage.setItem('selectedKlassId', klassId)
+    localStorage.setItem('homeworksSelectedKlassId', klassId)
   }
 
   render() {

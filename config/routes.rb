@@ -9,7 +9,6 @@ Jezykpolski::Application.routes.draw do
 
   get '/homeworks' => 'homeworks#index'
   post '/get_homeworks' => 'homeworks#homework'
-
   post '/add_homework' => 'homeworks#add_homework'
   post '/delete_homework' => 'homeworks#delete_homework'
   post '/update_homework_description' => 'homeworks#update_homework_description'
@@ -17,12 +16,12 @@ Jezykpolski::Application.routes.draw do
   get '/users' => 'users#index'
   get '/get_users' => 'users#users'
 
-  post '/add_student' => 'students#add_student'
-  post '/delete_student' => 'students#delete_student'
-  post '/update_student' => 'students#update_student'
-
-
   get '/get_schools' => 'schools#get_schools'
+
   post '/get_klasses' => 'klasses#get_klasses'
+  get '/klasses' => 'klasses#index'
+  post '/update_klass' => 'klasses#update'
+  post '/add_klass' => 'klasses#add'
+  post '/delete_klass' => 'klasses#delete'
 
 end

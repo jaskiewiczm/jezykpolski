@@ -1,5 +1,5 @@
 import React from "react"
-import HomeworkEditor from './HomeworkEditor.jsx'
+import KlassEditor from './KlassEditor.jsx'
 
 import swal from 'sweetalert';
 import Col from 'react-bootstrap/Col'
@@ -10,24 +10,23 @@ import Image from 'react-bootstrap/Image'
 
 import styles from "./IndividualHomework.scss"
 
-export default class IndividualHomework extends React.Component {
+export default class IndividualKlass extends React.Component {
 
   constructor(props) {
     super(props)
 
     this.state = {
       editMode: false,
-      description: this.props.description,
-      homeworkId: this.props.homeworkId,
-      dueDate: this.props.dueDate
+      name: this.props.name,
+      klassId: this.props.klassId
     }
   }
 
-  deleteHomework = () => {
+  deleteKlass = () => {
     var that = this
     swal({
-      title: "Delete Homework?",
-      text: "Are you sure you want to delete this homework assignment?",
+      title: "Delete Class?",
+      text: "Are you sure you want to delete this class?",
       icon: "warning",
       buttons: {
         no: {
@@ -42,33 +41,32 @@ export default class IndividualHomework extends React.Component {
     })
     .then((willDelete) => {
       if (willDelete === true) {
-        fetch('/delete_homework', {
+        fetch('/delete_klass', {
           method: 'POST',
-          body: JSON.stringify({homeworkId: this.props.homeworkId}),
+          body: JSON.stringify({klassId: this.props.klassId}),
           headers: {
             "Content-Type": "application/json; charset=utf-8"
           }
         }).then((response)=>{
           if (response.status == 200) {
-            that.forceUpdate();
+            this.props.deleteCallback()
           }
         })
       }
     });
   }
 
-  editHomework = () => {
+  editKlass = () => {
     this.setState({
       editMode: true
     })
   }
 
-  editClosed = (text, dueDate) => {
-    if (text != null && dueDate != null) {
+  editClosed = (name) => {
+    if (name != null) {
       this.setState({
         editMode: false,
-        description: text,
-        dueDate: dueDate
+        name: name
       })
     } else {
       this.setState({
@@ -78,19 +76,20 @@ export default class IndividualHomework extends React.Component {
   }
 
   render() {
-    var editContent = this.state.editMode ? <HomeworkEditor homeworkId={this.state.homeworkId} description={this.state.description} callback={this.editClosed} dueDate={this.state.dueDate}/> : null
+    var editContent = this.state.editMode ? <KlassEditor klassId={this.state.klassId} name={this.state.name} callback={this.editClosed} /> : null
 
     return (
       <div>
         <Container>
           <Row>
-            <Col xs={2}>{this.state.dueDate}</Col>
-            <Col xs={8} dangerouslySetInnerHTML={{__html: this.state.description}} />
-            <Col xs={1}>
-              <Image src="pencil.png" onClick={this.editHomework} />
+            <Col xs={8}>
+              {this.state.name}
             </Col>
             <Col xs={1}>
-              <Image src="trash.png" onClick={this.deleteHomework} />
+              <Image src="pencil.png" onClick={this.editKlass} />
+            </Col>
+            <Col xs={1}>
+              <Image src="trash.png" onClick={this.deleteKlass} />
             </Col>
           </Row>
         </Container>
