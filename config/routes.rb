@@ -24,4 +24,8 @@ Jezykpolski::Application.routes.draw do
   post '/add_klass' => 'klasses#add'
   post '/delete_klass' => 'klasses#delete'
 
+  post '/get_enrollments' => 'enrollments#get_enrollments'
+  post '/add_enrollments' => 'enrollments#add_enrollments'
+  post '/delete_enrollments' => 'enrollments#delete_enrollments'
+
 end

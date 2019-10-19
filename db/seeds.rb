@@ -55,3 +55,16 @@ h3 = Homework.new
 h3.due_date = Date.yesterday
 h3.description = 'It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of light, it was the season of darkness, it was the spring of hope, it was the winter of despair.'
 h3.save!
+
+k = Klass.new
+k.name = 'Disney Princesses'
+k.save!
+
+k = Klass.new
+k.name = 'Stickbots'
+k.save!
+
+k = Klass.new
+k.name = 'Puppies and Kittens'
+k.save!
+

@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import ListGroup from 'react-bootstrap/ListGroup'
 
 import "./HomeworkEditor.scss"
 
@@ -19,11 +20,41 @@ export default class UserEditor extends React.Component {
       email: this.props.email,
       show: true,
       title: this.props.title == null ? 'Edit User' : this.props.title,
-      userType: this.props.userType
+      userType: this.props.userType,
+      enrollments: [],
+      userId: this.props.userId
+    }
+
+    this.getEnrollments()
+  }
+
+  getEnrollments = () => {
+    if (this.state.userId) {
+      fetch('/get_enrollments', {
+        method: 'POST',
+        body: JSON.stringify({userId: this.state.userId}),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }).then((response) => {
+        return response.json()
+      }).then((response) => {
+        this.setState({
+          enrollments: response
+        })
+      })
     }
   }
 
   handleClose = () => {
+    this.setState({
+      show: false
+    })
+
+    this.props.callback()
+  }
+
+  handleSave = () => {
     this.setState({
       show: false
     })
@@ -61,19 +92,30 @@ export default class UserEditor extends React.Component {
           <Form>
             <Form.Group>
               <Form.Label>Name</Form.Label>
-              <Form.Control />
+              <Form.Control type='text' value={this.state.name}/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Email</Form.Label>
-              <Form.Control />
+              <Form.Control type='text' value={this.state.email}/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Parent #1</Form.Label>
-              <Form.Control />
+              <Form.Control type='text'/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Parent #2</Form.Label>
-              <Form.Control />
+              <Form.Control type='text'/>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Enrollments</Form.Label>
+              <ListGroup>
+                {
+                  this.state.enrollments.map(function(key, index){
+                    return <ListGroup.Item variant={ index % 2 == 0 ? 'dark' : 'light'}>{key.name}</ListGroup.Item>
+                  })
+                }
+              </ListGroup>
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -81,7 +123,7 @@ export default class UserEditor extends React.Component {
           <Button variant="secondary" onClick={this.handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleClose}>
+          <Button variant="primary" onClick={this.handleSave}>
             Save Changes
           </Button>
         </Modal.Footer>

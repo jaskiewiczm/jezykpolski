@@ -79,7 +79,7 @@ export default class IndividualUser extends React.Component {
   }
 
   render() {
-    var editContent = this.state.editMode ? <UserEditor userId={this.state.userId} name={this.state.name} callback={this.editClosed}/> : null
+    var editContent = this.state.editMode ? <UserEditor userId={this.state.userId} name={this.state.name} email={this.state.email} callback={this.editClosed}/> : null
 
     return (
       <div>
