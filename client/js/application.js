@@ -10,6 +10,7 @@ import Homeworks from 'components/Homeworks.jsx'
 import Users from 'components/Users.jsx'
 import Welcome from 'components/Welcome.jsx'
 import Klasses from 'components/Klasses.jsx'
+import Gradebook from 'components/Gradebook.jsx'
 
 const bindNode = document.getElementById('data-bind-node');
 
@@ -25,6 +26,7 @@ if (!bindNode) {
         <Route path="/homeworks" component={Homeworks}/>
         <Route path="/welcome" component={Welcome} />
         <Route path="/klasses" component={Klasses} />
+        <Route path="/gradebook" component={Gradebook} />
       </BrowserRouter>
     ), bindNode
   )

@@ -162,6 +162,8 @@ export default class Application extends React.Component {
           <Link to="/users">Users</Link>
           &nbsp;&nbsp;&nbsp;
           <Link to="/klasses">Classes</Link>
+          &nbsp;&nbsp;&nbsp;
+          <Link to="/gradebook">Gradebook</Link>
         </Nav>
       )
   }

@@ -31,4 +31,7 @@ Jezykpolski::Application.routes.draw do
   post '/add_enrollment' => 'enrollments#add_enrollment'
   post '/delete_enrollment' => 'enrollments#delete_enrollment'
 
+  get '/gradebook' => 'gradebooks#index'
+
+
 end
