@@ -2,9 +2,11 @@
 
 class Klass < ApplicationRecord
   has_many :calendar_entries
-  has_many :users
+  has_many :user_klasses
+  has_many :users, :through => :user_klasses
   has_many :documents
   has_one :gradebook
+  has_many :homeworks
 
   def initialize(args)
     super(args)

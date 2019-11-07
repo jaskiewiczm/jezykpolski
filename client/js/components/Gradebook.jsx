@@ -2,6 +2,7 @@ import React from "react"
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
+import Table from 'react-bootstrap/Table'
 
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
@@ -64,6 +65,16 @@ export default class Gradebook extends React.Component {
     var klassSelector = null
     if (this.state.selectedSchoolId != null) {
       klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected} klassId={this.state.selectedKlassId}/>
+    }
+
+    var body = null
+    if (this.state.selectedSchoolId != null && this.state.selectedKlassId != null) {
+      body = (<Table>
+          <thead>
+          </thead>
+          <tbody>
+          </tbody>
+        </Table>)
     }
 
     return (
