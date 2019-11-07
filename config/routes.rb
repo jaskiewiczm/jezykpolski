@@ -15,6 +15,9 @@ Jezykpolski::Application.routes.draw do
 
   get '/users' => 'users#index'
   get '/get_users' => 'users#users'
+  post '/add_user' => 'users#add_user'
+  post '/delete_user' => 'users#delete_user'
+  post '/update_user' => 'users#update_user'
 
   get '/get_schools' => 'schools#get_schools'
 
@@ -25,7 +28,7 @@ Jezykpolski::Application.routes.draw do
   post '/delete_klass' => 'klasses#delete'
 
   post '/get_enrollments' => 'enrollments#get_enrollments'
-  post '/add_enrollments' => 'enrollments#add_enrollments'
-  post '/delete_enrollments' => 'enrollments#delete_enrollments'
+  post '/add_enrollment' => 'enrollments#add_enrollment'
+  post '/delete_enrollment' => 'enrollments#delete_enrollment'
 
 end

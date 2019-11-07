@@ -6,6 +6,10 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import ListGroup from 'react-bootstrap/ListGroup'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Image from 'react-bootstrap/Image'
+
 
 import "./HomeworkEditor.scss"
 
@@ -22,7 +26,8 @@ export default class UserEditor extends React.Component {
       enrollments: [],
       userId: this.props.userId,
       schoolId: this.props.schoolId,
-      showAddEnrollments: false
+      showAddEnrollments: false,
+      addOrEdit: this.props.title == null ? 'edit' : 'add'
     }
 
     this.getEnrollments()
@@ -59,7 +64,13 @@ export default class UserEditor extends React.Component {
       show: false
     })
 
-    fetch('/update_user', {
+    var path = ''
+    if (this.state.addOrEdit == 'edit') {
+      path = '/update_user'
+    } else {
+      path = '/add_user'
+    }
+    fetch(path, {
       method: 'POST',
       body: JSON.stringify({name: this.state.name, userId: this.props.userId, email: this.state.email}),
       headers: {
@@ -84,6 +95,26 @@ export default class UserEditor extends React.Component {
     })
   }
 
+  deleteEnrollment = (klassId) => {
+    var that = this
+    fetch('/delete_enrollment', {
+      method: 'POST',
+      body: JSON.stringify({userId: this.state.userId, klassId: klassId}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      var enrollments = this.state.enrollments
+      enrollments = enrollments.filter(function(value, index, ar) {
+        return value.id != klassId
+      })
+
+      this.setState({
+        enrollments: enrollments
+      })
+    })
+  }
+
   nameChanged = (evt) => {
     this.setState({
       name: evt.currentTarget.value
@@ -102,13 +133,18 @@ export default class UserEditor extends React.Component {
     })
   }
 
-  addEnrollmentCallback = (klassId) => {
+  addEnrollmentCallback = (klass) => {
+    var enrollments = this.state.enrollments
+    enrollments.push(klass)
+
     this.setState({
-      showAddEnrollments: false
+      showAddEnrollments: false,
+      enrollments: enrollments
     })
   }
 
   render() {
+    var that = this
 
     if (this.state.userType == 'parent') {
 
@@ -134,7 +170,7 @@ export default class UserEditor extends React.Component {
             </Form.Group>
             <Form.Group>
               <Form.Label>Email</Form.Label>
-              <Form.Control type='text' value={this.state.email} onChange={this.emailChanged}/>
+              <Form.Control type='email' value={this.state.email} onChange={this.emailChanged}/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Parent #1</Form.Label>
@@ -153,7 +189,16 @@ export default class UserEditor extends React.Component {
               <ListGroup>
                 {
                   this.state.enrollments.map(function(key, index){
-                    return <ListGroup.Item key={index} variant={ index % 2 == 0 ? 'dark' : 'light'}>{key.name}</ListGroup.Item>
+                    return <ListGroup.Item key={index}>
+                      <Row>
+                        <Col xs={10}>
+                          {key.name}
+                        </Col>
+                        <Col>
+                          <Image src="trash.png" onClick={() => {that.deleteEnrollment(key.id)}} />
+                        </Col>
+                      </Row>
+                      </ListGroup.Item>
                   })
                 }
               </ListGroup>

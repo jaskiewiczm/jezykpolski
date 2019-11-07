@@ -53,7 +53,22 @@ export default class Enrollment extends React.Component {
       show: false
     })
 
-    this.props.callback(this.state.selectedKlassId)
+    if (this.state.userId) {
+      fetch('/add_enrollment', {
+        method: 'POST',
+        body: JSON.stringify({userId: this.state.userId, klassId: this.state.selectedKlassId}),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }).then((response)=>{
+        if (response.status == 200) {
+          var klass = this.state.klasses.find((member) => {
+            return member.id == this.state.selectedKlassId
+          })
+          this.props.callback(klass)
+        }
+      })
+    }
   }
 
   klassSelected = (key) => {
@@ -84,7 +99,7 @@ export default class Enrollment extends React.Component {
             Close
           </Button>
           <Button variant="primary" onClick={this.handleSave}>
-            Save Changes
+            Add
           </Button>
         </Modal.Footer>
       </Modal>

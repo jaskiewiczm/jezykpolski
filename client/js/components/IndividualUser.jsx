@@ -53,6 +53,7 @@ export default class IndividualUser extends React.Component {
         }).then((response)=>{
           if (response.status == 200) {
             that.forceUpdate();
+            that.props.deleteCallback()
           }
         })
       }
