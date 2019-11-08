@@ -6,8 +6,9 @@ import Table from 'react-bootstrap/Table'
 
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
+import Grade from './Grade.jsx'
 
-import styles from './Homeworks.scss'
+import {gradebook} from './Gradebook.scss'
 
 
 export default class Gradebook extends React.Component {
@@ -21,16 +22,64 @@ export default class Gradebook extends React.Component {
     this.state = {
       selectedSchoolId: schoolId,
       selectedKlassId: klassId,
-      klasses: null
+      klasses: null,
+
+      homeworks: [],
+      grades: [],
+      users: [],
+      sortedHomeworkIds: [],
+      gradingScale: []
+    }
+
+    this.getGradingScale()
+    if (klassId != null) {
+      this.getGradebook()
     }
   }
 
   klassSelected = (klassId) => {
     this.setState({
       selectedKlassId: klassId
-    }, this.getHomeworks)
+    }, this.getGradebook)
 
     localStorage.setItem('gradebookSelectedKlassId', klassId)
+  }
+
+  getGradebook = () => {
+    var that = this
+    fetch('/get_gradebook', {
+      method: 'POST',
+      body: JSON.stringify({klassId: this.state.selectedKlassId}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response) => {
+      return response.json()
+    }).then((response) => {
+      this.setState({
+        grades: response.grades,
+        homeworks: response.homeworks,
+        users: response.users,
+        sortedHomeworkIds: response.homeworks.map(function(item){ return item.id })
+      })
+    })
+  }
+
+  getGradingScale() {
+    var that = this
+    fetch('/get_grading_scale', {
+      method: 'POST',
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      return response.json()
+    }).then((response)=>{
+      that.setState({
+        gradingScale: response.scale
+      })
+    })
   }
 
   getKlasses() {
@@ -59,6 +108,10 @@ export default class Gradebook extends React.Component {
     this.getKlasses()
   }
 
+  getEarnedGrade = (userId, homeworkId) => {
+    return null
+  }
+
   render() {
     var that = this
 
@@ -69,10 +122,24 @@ export default class Gradebook extends React.Component {
 
     var body = null
     if (this.state.selectedSchoolId != null && this.state.selectedKlassId != null) {
-      body = (<Table>
-          <thead>
+      body = (<Table responsive striped hover>
+          <thead className='gradebook'>
+            <tr>
+              <th></th>
+              {this.state.homeworks.map(function(key, index) {
+                return <th key={index}>{key.title}</th>
+              })}
+            </tr>
           </thead>
-          <tbody>
+          <tbody className='gradebook'>
+            {this.state.users.map(function(key, index){
+              return <tr key={index}>
+                  <td>{key.name}</td>
+                  {that.state.sortedHomeworkIds.map(function(homeworkId, hIndex){
+                    return <td key={hIndex}><Grade earnedGrade={that.getEarnedGrade(key.id, homeworkId)} gradingScale={that.state.gradingScale}/></td>
+                  })}
+                </tr>
+            })}
           </tbody>
         </Table>)
     }
@@ -94,7 +161,7 @@ export default class Gradebook extends React.Component {
               {klassSelector}
             </Nav>
           </Navbar>
-
+          {body}
         </Container>
       </div>
     )

@@ -34,6 +34,13 @@ class Grades < ActiveRecord::Migration[5.2]
       gsg.order = n
       gsg.save!
     end
+
+    gsg = GradingScaleGrade.new
+    gsg.name = 'N/A'
+    gsg.value = 0
+    gsg.grading_scale_id = gs.id
+    gsg.order = 0
+    gsg.save!
   end
 
   def down

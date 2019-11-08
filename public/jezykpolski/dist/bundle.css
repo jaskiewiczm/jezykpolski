@@ -106,3 +106,10 @@
   background-color: white;
   opacity: 0.75; }
 
+.grade {
+  cursor: pointer; }
+
+.gradebook {
+  background-color: white;
+  opacity: 1; }
+

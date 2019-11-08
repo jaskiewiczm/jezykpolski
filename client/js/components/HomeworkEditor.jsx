@@ -21,6 +21,7 @@ export default class HomeworkEditor extends React.Component {
       show: true,
       title: this.props.title == null ? 'Edit Homework' : this.props.title,
       dueDate: this.props.dueDate != null ? this.props.dueDate : null,
+      homeworkTitle: this.props.homeworkTitle != null ? this.props.homeworkTitle : null,
       addOrEdit: this.props.title == null ? 'edit' : 'add',
       selectedKlassId: this.props.selectedKlassId
     }
@@ -38,6 +39,12 @@ export default class HomeworkEditor extends React.Component {
   onDueDateChange = (value) => {
     this.setState({
       dueDate: value.currentTarget.value
+    })
+  }
+
+  onTitleChange = (value) => {
+    this.setState({
+      homeworkTitle: value.currentTarget.value
     })
   }
 
@@ -61,7 +68,8 @@ export default class HomeworkEditor extends React.Component {
         method: 'POST',
         body: JSON.stringify({description: updatedText,
                               dueDate: this.state.dueDate,
-                              selectedKlassId: this.state.selectedKlassId}),
+                              selectedKlassId: this.state.selectedKlassId,
+                              title: this.state.homeworkTitle}),
         headers: {
           "Content-Type": "application/json; charset=utf-8"
         }
@@ -80,7 +88,8 @@ export default class HomeworkEditor extends React.Component {
         method: 'POST',
         body: JSON.stringify({description: updatedText,
                               homeworkId: this.props.homeworkId,
-                              dueDate: this.state.dueDate}),
+                              dueDate: this.state.dueDate,
+                              title: this.state.homeworkTitle}),
         headers: {
           "Content-Type": "application/json; charset=utf-8"
         }
@@ -101,6 +110,10 @@ export default class HomeworkEditor extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            <Form.Group>
+              <Form.Label>Title</Form.Label>
+              <Form.Control required type="text" onChange={this.onTitleChange} value={this.state.homeworkTitle}/>
+            </Form.Group>
             <Form.Group>
               <Form.Label>Due Date</Form.Label>
               <Form.Control type="date" onChange={this.onDueDateChange} value={this.state.dueDate}/>

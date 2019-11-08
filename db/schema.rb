@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_07_192830) do
+ActiveRecord::Schema.define(version: 2019_11_08_041921) do
 
   create_table "books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "title"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2019_11_07_192830) do
   create_table "earned_grades", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "gradebook_id", null: false
     t.integer "user_id", null: false
-    t.integer "grading_scale_grades", null: false
+    t.integer "grading_scale_grade_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "homework_id", null: false
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 2019_11_07_192830) do
     t.datetime "updated_at", null: false
     t.bigint "klass_id"
     t.boolean "disabled", default: false
+    t.string "title"
     t.index ["klass_id"], name: "fk_rails_be9153e8bc"
   end
 

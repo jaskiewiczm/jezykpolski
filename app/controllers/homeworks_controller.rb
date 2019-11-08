@@ -17,6 +17,7 @@ class HomeworksController < ApplicationController
     h.description = Sanitize.fragment(params[:description], :elements => ['b', 'strong', 'p', 'i', 'ul', 'li', 'ol', 'del', 'u'])
     h.due_date = params[:dueDate]
     h.klass_id = params[:selectedKlassId]
+    h.title = params[:title]
     h.save!
     render json: {}, status: 200
   end
@@ -32,6 +33,7 @@ class HomeworksController < ApplicationController
     homework = Homework.find_by_id params[:homeworkId]
     homework.description = Sanitize.fragment(params[:description], :elements => ['b', 'strong', 'p', 'i', 'ul', 'li', 'ol', 'del', 'u'])
     homework.due_date = params[:dueDate]
+    homework.title = params[:title]
     homework.save!
     render json: {}, status: 200
   end

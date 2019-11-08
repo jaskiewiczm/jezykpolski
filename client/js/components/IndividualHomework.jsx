@@ -19,7 +19,8 @@ export default class IndividualHomework extends React.Component {
       editMode: false,
       description: this.props.description,
       homeworkId: this.props.homeworkId,
-      dueDate: this.props.dueDate
+      dueDate: this.props.dueDate,
+      homeworkTitle: this.props.homeworkTitle
     }
   }
 
@@ -78,7 +79,7 @@ export default class IndividualHomework extends React.Component {
   }
 
   render() {
-    var editContent = this.state.editMode ? <HomeworkEditor homeworkId={this.state.homeworkId} description={this.state.description} callback={this.editClosed} dueDate={this.state.dueDate}/> : null
+    var editContent = this.state.editMode ? <HomeworkEditor homeworkId={this.state.homeworkId} homeworkTitle={this.state.homeworkTitle} description={this.state.description} callback={this.editClosed} dueDate={this.state.dueDate}/> : null
 
     return (
       <div>

@@ -8,16 +8,19 @@ class GradebooksController < ApplicationController
   end
 
   def get_gradebook
-    params.require(:schoolId).require(:klassId)
+    params.require(:klassId)
 
     klass = Klass.find_by_id params[:klassId]
     users = klass.users
     homeworks = klass.homeworks
     grades = klass.gradebook.earned_grades
 
+    homeworks = homeworks.map(&:attributes)
+    homeworks = homeworks.sort_by {|h| h['due_date']}
+
     json = {
       users: users.map(&:attributes),
-      homeworks: homeworks.map(&:attributes),
+      homeworks: homeworks,
       grades: grades.map(&:attributes)
     }
 
