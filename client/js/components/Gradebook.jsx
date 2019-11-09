@@ -7,6 +7,7 @@ import Table from 'react-bootstrap/Table'
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
 import Grade from './Grade.jsx'
+import GradebookHomeworkHeader from './GradebookHomeworkHeader.jsx'
 
 import {gradebook} from './Gradebook.scss'
 
@@ -109,7 +110,9 @@ export default class Gradebook extends React.Component {
   }
 
   getEarnedGrade = (userId, homeworkId) => {
-    return null
+    return this.state.grades.find(function(earnedGrade){
+      return earnedGrade.user_id == userId && earnedGrade.homework_id == homeworkId
+    })
   }
 
   render() {
@@ -126,17 +129,17 @@ export default class Gradebook extends React.Component {
           <thead className='gradebook'>
             <tr>
               <th></th>
-              {this.state.homeworks.map(function(key, index) {
-                return <th key={index}>{key.title}</th>
+              {this.state.homeworks.map(function(homework, index) {
+                return <th key={index}><GradebookHomeworkHeader homework={homework}/></th>
               })}
             </tr>
           </thead>
           <tbody className='gradebook'>
-            {this.state.users.map(function(key, index){
+            {this.state.users.map(function(user, index){
               return <tr key={index}>
-                  <td>{key.name}</td>
+                  <td>{user.name}</td>
                   {that.state.sortedHomeworkIds.map(function(homeworkId, hIndex){
-                    return <td key={hIndex}><Grade earnedGrade={that.getEarnedGrade(key.id, homeworkId)} gradingScale={that.state.gradingScale}/></td>
+                    return <td key={hIndex}><Grade userId={user.id} homeworkId={homeworkId} earnedGrade={that.getEarnedGrade(user.id, homeworkId)} gradingScale={that.state.gradingScale}/></td>
                   })}
                 </tr>
             })}
@@ -147,7 +150,7 @@ export default class Gradebook extends React.Component {
     return (
       <div>
         <br />
-        <Container>
+        <Container className="gradebookContainer">
           <Navbar bg="dark" variant="dark">
             <Navbar.Brand>Gradebook</Navbar.Brand>
             <Nav className="mr-auto">
