@@ -82,7 +82,7 @@ export default class IndividualKlass extends React.Component {
       <div>
         <Container>
           <Row>
-            <Col xs={8}>
+            <Col xs={10}>
               {this.state.name}
             </Col>
             <Col xs={1}>

@@ -89,6 +89,7 @@ export default class IndividualUser extends React.Component {
           <Row>
             <Col xs={3}>{this.state.name}</Col>
             <Col xs={3}>{this.state.email}</Col>
+            <Col xs={4} />
             <Col xs={1}>
               <Image src="pencil.png" onClick={this.editUser} />
             </Col>

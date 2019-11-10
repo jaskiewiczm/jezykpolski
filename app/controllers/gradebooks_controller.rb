@@ -41,7 +41,7 @@ class GradebooksController < ApplicationController
       earned_grade.homework = homework
       earned_grade.gradebook = gradebook
     else
-      earned_grade = EarnedGrade.find_by_id params[:earnedGradeId].first
+      earned_grade = EarnedGrade.find_by_id(params[:earnedGradeId])
     end
 
     earned_grade.grading_scale_grade = grading_scale_grade

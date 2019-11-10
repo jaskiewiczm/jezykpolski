@@ -51,7 +51,9 @@ export default class IndividualHomework extends React.Component {
           }
         }).then((response)=>{
           if (response.status == 200) {
-            that.forceUpdate();
+            that.setState({
+              editMode: false
+            }, this.props.deleteCallback)
           }
         })
       }
