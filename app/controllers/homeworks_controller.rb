@@ -9,7 +9,11 @@ class HomeworksController < ApplicationController
   end
 
   def homework
-    render json: Homework.where('klass_id = ? and disabled=0', params[:klassId]).order(due_date: :desc).map(&:attributes)
+    if Rails.env.production?
+      render json: Homework.where('klass_id = ? and disabled=false', params[:klassId]).order(due_date: :desc).map(&:attributes)
+    else
+      render json: Homework.where('klass_id = ? and disabled=0', params[:klassId]).order(due_date: :desc).map(&:attributes)
+    end
   end
 
   def add_homework
