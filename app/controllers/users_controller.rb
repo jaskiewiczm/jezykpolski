@@ -8,7 +8,20 @@ class UsersController < ApplicationController
   end
 
   def users
-    render json: User.all.map(&:attributes)
+    users = User.all
+
+    userRole = {}
+    users.each do |user|
+      userRole[user.id] = Role.find_by_id(user.roles.first).code
+    end
+
+    users = users.map(&:attributes)
+
+    users.each do |user|
+      user['roleCode'] = userRole[user['id']]
+    end
+
+    render json: users
   end
 
   def add_user

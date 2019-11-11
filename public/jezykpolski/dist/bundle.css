@@ -106,6 +106,9 @@
   background-color: white;
   opacity: 0.75; }
 
+.schoolAdminRoleClass {
+  background-color: #FDFD96 !important; }
+
 .grade {
   cursor: pointer; }
 
@@ -117,4 +120,8 @@
   padding: 0px !important;
   background-color: white;
   opacity: 1; }
+
+.userReport {
+  background-color: white;
+  opacity: 0.75; }
 

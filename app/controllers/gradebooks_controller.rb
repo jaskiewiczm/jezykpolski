@@ -12,7 +12,7 @@ class GradebooksController < ApplicationController
 
     klass = Klass.find_by_id params[:klassId]
     users = klass.users
-    homeworks = klass.homeworks
+    homeworks = klass.homeworks.where(:disabled => false)
     grades = klass.gradebook.earned_grades
 
     homeworks = homeworks.map(&:attributes)

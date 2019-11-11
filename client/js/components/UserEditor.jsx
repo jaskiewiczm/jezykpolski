@@ -27,10 +27,28 @@ export default class UserEditor extends React.Component {
       userId: this.props.userId,
       schoolId: this.props.schoolId,
       showAddEnrollments: false,
-      addOrEdit: this.props.title == null ? 'edit' : 'add'
+      addOrEdit: this.props.title == null ? 'edit' : 'add',
+      roles: []
     }
 
     this.getEnrollments()
+    this.getRoles()
+  }
+
+  getRoles = () => {
+    var that = this
+    fetch('/get_roles', {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      return response.json()
+    }).then((response)=>{
+      that.setState({
+        roles: response
+      })
+    })
   }
 
   getEnrollments = () => {
@@ -171,6 +189,14 @@ export default class UserEditor extends React.Component {
             <Form.Group>
               <Form.Label>Email</Form.Label>
               <Form.Control type='email' value={this.state.email} onChange={this.emailChanged}/>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Permissions</Form.Label>
+              <Form.Control as='select'>
+                {this.state.roles.map(function(role){
+                  return <option key={role.id}>{role.name}</option>
+                })}
+              </Form.Control>
             </Form.Group>
             <Form.Group>
               <Form.Label>Parent #1</Form.Label>

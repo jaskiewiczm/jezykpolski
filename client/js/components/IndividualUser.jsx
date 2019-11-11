@@ -6,9 +6,11 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
 import Image from 'react-bootstrap/Image'
+import $ from 'jquery'
 
 
 import styles from "./IndividualHomework.scss"
+import './IndividualUser.scss'
 
 export default class IndividualUser extends React.Component {
 
@@ -21,7 +23,8 @@ export default class IndividualUser extends React.Component {
       email: this.props.email,
       userId: this.props.userId,
       guardians: [],
-      schoolId: this.props.schoolId
+      schoolId: this.props.schoolId,
+      roleCode: this.props.roleCode
     }
   }
 
@@ -80,11 +83,19 @@ export default class IndividualUser extends React.Component {
     }
   }
 
+  componentDidMount() {
+    var roleStyle = this.state.roleCode.includes('admin') ? 'schoolAdminRoleClass' : ''
+
+    var individualUserId = '#individual_user_' + String(this.state.userId)
+    $(individualUserId).parent().addClass(roleStyle)
+  }
+
   render() {
     var editContent = this.state.editMode ? <UserEditor userId={this.state.userId} name={this.state.name} email={this.state.email} schoolId={this.state.schoolId} callback={this.editClosed}/> : null
+    var individualUserId = 'individual_user_' + String(this.state.userId)
 
     return (
-      <div>
+      <div id={individualUserId}>
         <Container>
           <Row>
             <Col xs={3}>{this.state.name}</Col>

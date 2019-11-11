@@ -37,4 +37,10 @@ Jezykpolski::Application.routes.draw do
 
   post '/get_grading_scale' => 'grading_scales#get_grading_scale'
 
+  get '/user_report' => 'user_reports#index'
+  get '/get_user_report' => 'user_reports#get_user_report'
+  get '/get_class_standing' => 'user_reports#get_class_standing'
+
+  get '/get_roles' => 'roles#get_roles'
+
 end
