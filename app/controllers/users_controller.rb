@@ -59,4 +59,9 @@ class UsersController < ApplicationController
 
     render json: {}, status: 200
   end
+
+  def get_user_roles
+    roles = current_user.roles.map(&:attributes)
+    render json: roles, status: 200
+  end
 end

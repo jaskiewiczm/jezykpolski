@@ -18,6 +18,7 @@ Jezykpolski::Application.routes.draw do
   post '/add_user' => 'users#add_user'
   post '/delete_user' => 'users#delete_user'
   post '/update_user' => 'users#update_user'
+  get '/get_user_roles' => 'users#get_user_roles'
 
   get '/get_schools' => 'schools#get_schools'
 

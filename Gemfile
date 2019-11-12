@@ -19,6 +19,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'pg', '~> 1.1.4'
 gem 'pry'
 gem 'sanitize', '~> 5.1.0'
+gem 'axlsx_rails'
 
 
 group :development, :test do
