@@ -121,6 +121,9 @@
   background-color: white;
   opacity: 1; }
 
+.exportLink {
+  color: gray !important; }
+
 .userReport {
   background-color: white;
   opacity: 0.75; }

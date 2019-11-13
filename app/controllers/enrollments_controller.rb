@@ -2,10 +2,20 @@
 
 class EnrollmentsController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_permissions
+
+  def initialize
+    @permitted_role_codes = ['admin', 'school_admin']
+  end
+
+  def check_permissions
+    if current_user.roles.where(:code => @permitted_role_codes).count == 0
+      raise NotAuthorized
+    end
+  end
 
   def get_enrollments
     params.require(:userId)
-    #params.require(:schoolId)
 
     klasses = User.find_by_id(params[:userId]).klasses.map(&:attributes)
 

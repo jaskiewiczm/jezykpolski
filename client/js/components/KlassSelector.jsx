@@ -28,21 +28,26 @@ export default class KlassSelector extends React.Component {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
-      return response.json()
-    }).then((response)=>{
-      var klass = response.find((element) => {
-        return element.id == parseInt(this.state.selectedKlassId);
-      })
-
-      var title = this.state.title
-      if (klass != null) {
-        title = klass.name
+      if (response.status == 200) {
+        return response.json()
       }
+      return null
+    }).then((response)=>{
+      if (response != null) {
+        var klass = response.find((element) => {
+          return element.id == parseInt(this.state.selectedKlassId);
+        })
 
-      this.setState({
-        klasses: response,
-        title: title
-      })
+        var title = this.state.title
+        if (klass != null) {
+          title = klass.name
+        }
+
+        this.setState({
+          klasses: response,
+          title: title
+        })
+      }
     })
   }
 

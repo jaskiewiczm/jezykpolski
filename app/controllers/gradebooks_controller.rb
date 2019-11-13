@@ -2,9 +2,20 @@
 
 class GradebooksController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_permissions
+
+  def initialize
+    @permitted_role_codes = ['teacher', 'admin', 'school_admin']
+  end
 
   def index
     render 'layouts/application'
+  end
+
+  def check_permissions
+    if current_user.roles.where(:code => @permitted_role_codes).count == 0
+      raise NotAuthorized
+    end
   end
 
   def get_gradebook
@@ -19,6 +30,7 @@ class GradebooksController < ApplicationController
     homeworks = homeworks.sort_by {|h| h['due_date']}
 
     json = {
+      gradebook_id: klass.gradebook.id,
       users: users.map(&:attributes),
       homeworks: homeworks,
       grades: grades.map(&:attributes)
@@ -48,6 +60,12 @@ class GradebooksController < ApplicationController
     earned_grade.save!
 
     render json: {grade: earned_grade}, status: 200
+  end
+
+  def download
+    params.require(:gradebookId)
+    gradebook = Gradebook.find_by_id params[:gradebookId]
+    send_file(gradebook.gradebook_to_excel_file)
   end
 
 end

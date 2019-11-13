@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'axlsx'
+require 'fileutils'
 
 class Gradebook < ApplicationRecord
   belongs_to :klass
@@ -42,7 +43,11 @@ class Gradebook < ApplicationRecord
       end
 
     end
-    p.serialize('simple.xlsx')
-    return p
+
+    dir = 'public/downloads/' + SecureRandom.uuid + '/'
+    FileUtils.mkdir_p(dir)
+    filepath = dir + self.klass.name + '_Gradebook.xlsx'
+    p.serialize(filepath)
+    return filepath
   end
 end

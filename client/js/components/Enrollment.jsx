@@ -32,11 +32,16 @@ export default class Enrollment extends React.Component {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
-      return response.json()
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
     }).then((response)=>{
-      that.setState({
-        klasses: response
-      })
+      if (response != null) {
+        that.setState({
+          klasses: response
+        })
+      }
     })
   }
 

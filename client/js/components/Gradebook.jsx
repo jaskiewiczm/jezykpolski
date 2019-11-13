@@ -40,7 +40,11 @@ export default class Gradebook extends React.Component {
 
   klassSelected = (klassId) => {
     this.setState({
-      selectedKlassId: klassId
+      selectedKlassId: klassId,
+      grades: [],
+      users: [],
+      sortedHomeworkIds: [],
+      homeworks: []
     }, this.getGradebook)
 
     localStorage.setItem('gradebookSelectedKlassId', klassId)
@@ -55,14 +59,20 @@ export default class Gradebook extends React.Component {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response) => {
-      return response.json()
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
     }).then((response) => {
-      this.setState({
-        grades: response.grades,
-        homeworks: response.homeworks,
-        users: response.users,
-        sortedHomeworkIds: response.homeworks.map(function(item){ return item.id })
-      })
+      if (response != null) {
+        this.setState({
+          grades: response.grades,
+          homeworks: response.homeworks,
+          users: response.users,
+          sortedHomeworkIds: response.homeworks.map(function(item){ return item.id }),
+          gradebookId: response.gradebook_id
+        })
+      }
     })
   }
 
@@ -75,11 +85,16 @@ export default class Gradebook extends React.Component {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
-      return response.json()
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
     }).then((response)=>{
-      that.setState({
-        gradingScale: response.scale
-      })
+      if (response != null) {
+        that.setState({
+          gradingScale: response.scale
+        })
+      }
     })
   }
 
@@ -123,6 +138,7 @@ export default class Gradebook extends React.Component {
       klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected} klassId={this.state.selectedKlassId}/>
     }
 
+    var gradebookDownloadUrl = 'download_gradebook/' + this.state.gradebookId
     var body = null
     if (this.state.selectedSchoolId != null && this.state.selectedKlassId != null) {
       body = (<Table responsive striped hover>
@@ -154,7 +170,7 @@ export default class Gradebook extends React.Component {
           <Navbar bg="dark" variant="dark">
             <Navbar.Brand>Gradebook</Navbar.Brand>
             <Nav className="mr-auto">
-              <Nav.Link onClick={that.add}></Nav.Link>
+              <a className='exportLink' href={gradebookDownloadUrl}>Export</a>
             </Nav>
             <Nav>
               <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>

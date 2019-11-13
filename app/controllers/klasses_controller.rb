@@ -2,6 +2,17 @@
 
 class KlassesController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_permissions
+
+  def initialize
+    @permitted_role_codes = ['teacher', 'admin', 'school_admin']
+  end
+
+  def check_permissions
+    if current_user.roles.where(:code => @permitted_role_codes).count == 0
+      raise NotAuthorized
+    end
+  end
 
   def index
     render 'layouts/application'
@@ -42,6 +53,12 @@ class KlassesController < ApplicationController
     klass.destroy!
 
     render json: {}, status: 200
+  end
+
+  def download
+    params.require(:klassId)
+    klass = Klass.find_by_id params[:klassId]
+    send_file(klass.enrollment_to_excel_file)
   end
 
 end

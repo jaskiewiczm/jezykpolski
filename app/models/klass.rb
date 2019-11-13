@@ -28,6 +28,19 @@ class Klass < ApplicationRecord
       end
     end
 
-    return p
+    dir = 'public/downloads/' + SecureRandom.uuid + '/'
+    FileUtils.mkdir_p(dir)
+    filepath = dir + self.klass.name + '_Gradebook.xlsx'
+    p.serialize(filepath)
+    return filepath
+  end
+
+  def get_klass_grade
+    values = []
+    gradebook.earned_grades.each do |earned_grade|
+      values.append(earned_grade.grading_scale_grade.value)
+    end
+
+    return values.reduce(:+) / values.size.to_f
   end
 end

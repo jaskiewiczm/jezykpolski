@@ -45,11 +45,16 @@ export default class Homeworks extends React.Component {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
-      return response.json()
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
     }).then((response)=>{
-      that.setState({
-        homeworks: response
-      })
+      if (response != null) {
+        that.setState({
+          homeworks: response
+        })
+      }
     })
   }
 

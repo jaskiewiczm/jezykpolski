@@ -24,21 +24,25 @@ export default class SchoolSelector extends React.Component {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
-      return response.json()
-    }).then((response)=>{
-      var school = response.find((element) => {
-        return element.id == parseInt(this.state.selectedSchoolId);
-      })
-
-      var title = this.state.title
-      if (school != null) {
-        title = school.name
+      if (response.status == 200) {
+        return response.json()
       }
+    }).then((response)=>{
+      if (response != null) {
+        var school = response.find((element) => {
+          return element.id == parseInt(this.state.selectedSchoolId);
+        })
 
-      this.setState({
-        schools: response,
-        title: title
-      })
+        var title = this.state.title
+        if (school != null) {
+          title = school.name
+        }
+
+        this.setState({
+          schools: response,
+          title: title
+        })
+      }
     })
   }
 

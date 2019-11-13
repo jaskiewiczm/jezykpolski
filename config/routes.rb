@@ -27,6 +27,7 @@ Jezykpolski::Application.routes.draw do
   post '/update_klass' => 'klasses#update'
   post '/add_klass' => 'klasses#add'
   post '/delete_klass' => 'klasses#delete'
+  get '/download_enrollment/:gradebookId' => 'klasses#download'
 
   post '/get_enrollments' => 'enrollments#get_enrollments'
   post '/add_enrollment' => 'enrollments#add_enrollment'
@@ -35,12 +36,12 @@ Jezykpolski::Application.routes.draw do
   get '/gradebook' => 'gradebooks#index'
   post '/get_gradebook' => 'gradebooks#get_gradebook'
   post '/set_grade' => 'gradebooks#set_grade'
+  get '/download_gradebook/:gradebookId' => 'gradebooks#download'
 
   post '/get_grading_scale' => 'grading_scales#get_grading_scale'
 
   get '/user_report' => 'user_reports#index'
   get '/get_user_report' => 'user_reports#get_user_report'
-  get '/get_class_standing' => 'user_reports#get_class_standing'
 
   get '/get_roles' => 'roles#get_roles'
 

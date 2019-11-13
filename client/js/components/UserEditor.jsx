@@ -43,11 +43,15 @@ export default class UserEditor extends React.Component {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
-      return response.json()
+      if (response.status == 200) {
+        return response.json()
+      }
     }).then((response)=>{
-      that.setState({
-        roles: response
-      })
+      if (response != null) {
+        that.setState({
+          roles: response
+        })
+      }
     })
   }
 
@@ -60,11 +64,16 @@ export default class UserEditor extends React.Component {
           "Content-Type": "application/json; charset=utf-8"
         }
       }).then((response) => {
-        return response.json()
+        if (response.status == 200) {
+          return response.json()
+        }
+        return null
       }).then((response) => {
-        this.setState({
-          enrollments: response
-        })
+        if (response != null) {
+          this.setState({
+            enrollments: response
+          })
+        }
       })
     }
   }

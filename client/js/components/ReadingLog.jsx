@@ -28,11 +28,15 @@ export default class ReadingLog extends React.Component {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
-      return response.json()
+      if (response.status == 200) {
+        return response.json()
+      }
     }).then((response)=>{
-      this.setState({
-        logs: response.logs
-      })
+      if (response != null) {
+        this.setState({
+          logs: response.logs
+        })
+      }
     })
   }
 

@@ -7,18 +7,6 @@ class UserReportsController < ApplicationController
     render 'layouts/application'
   end
 
-  def get_class_standings
-    user = User.find_by_id current_user.id
-
-    user.klasses.each do |klass|
-      gradebook = klass.gradebook
-      grade_counts = EarnedGrade.where(:gradebook_id => gradebook.id).group(:grading_scale_grade_id).count
-
-    end
-
-    render json: {}, status: 200
-  end
-
   def get_user_report
 
     user = User.find_by_id current_user.id
@@ -40,6 +28,7 @@ class UserReportsController < ApplicationController
         end
 
         klass_obj['homeworks'] << homework_obj
+        klass_obj['final_grade'] = klass.get_klass_grade
       end
 
       klasses_array << klass_obj

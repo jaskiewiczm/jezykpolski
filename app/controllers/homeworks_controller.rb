@@ -3,6 +3,17 @@ require 'sanitize'
 
 class HomeworksController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_permissions, only: [:add_homework, :delete_homework, :update_homework_description]
+
+  def initialize
+    @permitted_role_codes = ['teacher', 'admin', 'school_admin']
+  end
+
+  def check_permissions
+    if current_user.roles.where(:code => @permitted_role_codes).count == 0
+      raise NotAuthorized
+    end
+  end
 
   def index
     render 'layouts/application'
