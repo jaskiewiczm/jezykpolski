@@ -8,17 +8,18 @@ class UsersController < ApplicationController
   end
 
   def users
-    users = User.all
+    users = User.all.order(:name)
 
-    userRole = {}
+    userRoles = {}
     users.each do |user|
-      userRole[user.id] = Role.find_by_id(user.roles.first).code
+      roles = user.roles.order(:name)
+      userRoles[user.id] = roles.map(&:attributes)
     end
 
     users = users.map(&:attributes)
 
     users.each do |user|
-      user['roleCode'] = userRole[user['id']]
+      user['userRoles'] = userRoles[user['id']]
     end
 
     render json: users
@@ -33,6 +34,11 @@ class UsersController < ApplicationController
     u.email = params[:email]
     u.password = 'TEMP_PASSWORD'
     u.password_confirmation = 'TEMP_PASSWORD'
+
+    params[:roles].each do |role_id|
+      u.roles.append(Role.find_by_id(role_id))
+    end
+
     u.save!
 
     render json: {}, status: 200
@@ -55,6 +61,13 @@ class UsersController < ApplicationController
     u = User.find_by_id(params[:userId])
     u.name = params[:name]
     u.email = params[:email]
+
+    u.roles.clear
+
+    params[:roles].each do |role_id|
+      u.roles.append(Role.find_by_id(role_id))
+    end
+
     u.save!
 
     render json: {}, status: 200

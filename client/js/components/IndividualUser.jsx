@@ -24,7 +24,7 @@ export default class IndividualUser extends React.Component {
       userId: this.props.userId,
       guardians: [],
       schoolId: this.props.schoolId,
-      roleCode: this.props.roleCode
+      userRoles: this.props.userRoles
     }
   }
 
@@ -69,13 +69,14 @@ export default class IndividualUser extends React.Component {
     })
   }
 
-  editClosed = (email, name) => {
+  editClosed = (email, name, userRoles) => {
     if (email != null && name != null) {
       this.setState({
         editMode: false,
         name: name,
-        email: email
-      })
+        email: email,
+        userRoles: userRoles
+      }, this.updateAdminAlert)
     } else {
       this.setState({
         editMode: false
@@ -83,15 +84,24 @@ export default class IndividualUser extends React.Component {
     }
   }
 
-  componentDidMount() {
-    var roleStyle = this.state.roleCode.includes('admin') ? 'schoolAdminRoleClass' : ''
-
+  updateAdminAlert = () => {
+    var roleStyle = this.state.userRoles.find(function(roleObj){return roleObj.code.includes('admin')})
     var individualUserId = '#individual_user_' + String(this.state.userId)
-    $(individualUserId).parent().addClass(roleStyle)
+
+    if (roleStyle != null) {
+      $(individualUserId).parent().addClass('schoolAdminRoleClass')
+    } else {
+      $(individualUserId).parent().removeClass('schoolAdminRoleClass')
+    }
+
+  }
+
+  componentDidMount() {
+    this.updateAdminAlert()
   }
 
   render() {
-    var editContent = this.state.editMode ? <UserEditor userId={this.state.userId} name={this.state.name} email={this.state.email} schoolId={this.state.schoolId} callback={this.editClosed}/> : null
+    var editContent = this.state.editMode ? <UserEditor userId={this.state.userId} name={this.state.name} email={this.state.email} schoolId={this.state.schoolId} callback={this.editClosed} userRoles={this.state.userRoles}/> : null
     var individualUserId = 'individual_user_' + String(this.state.userId)
 
     return (

@@ -10,6 +10,7 @@
 
 u = User.new
 u.email = 'jaskiemr@gmail.com'
+u.name = 'Michael Jaskiewicz'
 u.password = 'password'
 u.password_confirmation = 'password'
 u.save!

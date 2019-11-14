@@ -28,7 +28,8 @@ export default class UserEditor extends React.Component {
       schoolId: this.props.schoolId,
       showAddEnrollments: false,
       addOrEdit: this.props.title == null ? 'edit' : 'add',
-      roles: []
+      roles: [],
+      userRoles: this.props.userRoles == null ? [] : this.props.userRoles
     }
 
     this.getEnrollments()
@@ -99,13 +100,16 @@ export default class UserEditor extends React.Component {
     }
     fetch(path, {
       method: 'POST',
-      body: JSON.stringify({name: this.state.name, userId: this.props.userId, email: this.state.email}),
+      body: JSON.stringify({name: this.state.name,
+                            userId: this.props.userId,
+                            email: this.state.email,
+                            roles: this.state.userRoles.map(function(role){return role.id})}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
     }).then((response)=>{
       if (response.status == 200) {
-        this.props.callback(this.state.email, this.state.name)
+        this.props.callback(this.state.email, this.state.name, this.state.userRoles)
       } else {
         this.props.callback()
       }
@@ -170,14 +174,24 @@ export default class UserEditor extends React.Component {
     })
   }
 
+  permissionsChanged = (event) => {
+    var roles = []
+    var len = event.currentTarget.length
+    for (var i=0; i<len; i++) {
+      var option = event.currentTarget[i]
+      if (option.selected) {
+        var roleId = option.getAttribute('role-id')
+        roles.push(this.state.roles.find(function(element){return element.id == roleId}))
+      }
+    }
+
+    this.setState({
+      userRoles: roles
+    })
+  }
+
   render() {
     var that = this
-
-    if (this.state.userType == 'parent') {
-
-    } else if (this.state.userType == 'student') {
-
-    }
 
     var enrollment = null
     if (this.state.showAddEnrollments) {
@@ -201,9 +215,9 @@ export default class UserEditor extends React.Component {
             </Form.Group>
             <Form.Group>
               <Form.Label>Permissions</Form.Label>
-              <Form.Control as='select'>
+              <Form.Control as='select' multiple onChange={this.permissionsChanged} value={this.state.userRoles.map(function(role){return role.name})}>
                 {this.state.roles.map(function(role){
-                  return <option key={role.id}>{role.name}</option>
+                  return <option key={role.id} role-id={role.id}>{role.name}</option>
                 })}
               </Form.Control>
             </Form.Group>
