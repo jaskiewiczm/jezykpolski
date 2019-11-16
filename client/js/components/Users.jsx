@@ -6,15 +6,12 @@ import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
 import UserSearch from './UserSearch.jsx'
 
-import Button from 'react-bootstrap/Button'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
-import Popover from 'react-bootstrap/Popover'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 import styles from './Homeworks.scss'
 
@@ -93,23 +90,13 @@ export default class Users extends React.Component {
   }
 
   userSelectedCallback = (name) => {
-    this.overlay.hide()
     var visibleUsers = [this.state.masterUsers.find(user => {return user.name == name})]
     this.setState({
       visibleUsers: visibleUsers
     })
   }
 
-  searchPopover = (userId, homeworkId) => {
-    var that = this
-    return (<Popover id="popover-basic">
-        <Popover.Content>
-          <UserSearch users={this.state.masterUsers} callback={this.userSelectedCallback} />
-        </Popover.Content>
-      </Popover>)
-  }
-
-  clearSearch = () => {
+  clearSearchCallback = () => {
     this.setState({
       visibleUsers: this.state.masterUsers
     })
@@ -143,9 +130,7 @@ export default class Users extends React.Component {
                 <Col></Col>
               </Row>)
 
-      userSearch =  (<div><OverlayTrigger trigger="click" placement="left" overlay={this.searchPopover()} ref={(ref) => this.overlay = ref}>
-                      <Button>Search</Button>
-                    </OverlayTrigger>&nbsp;<Button onClick={this.clearSearch}>Clear</Button></div>)
+      userSearch =  (<UserSearch users={this.state.masterUsers} clearCallback={this.clearSearchCallback} selectedCallback={this.userSelectedCallback} />)
     } else {
       body = (<Row>
                 <Col/>
@@ -176,6 +161,7 @@ export default class Users extends React.Component {
             <Nav>
               {klassSelector}
             </Nav>
+            &nbsp;
             <Nav>
               {userSearch}
             </Nav>

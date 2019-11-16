@@ -2,6 +2,10 @@ import React from "react"
 
 import Autosuggest from 'react-autosuggest';
 
+import Popover from 'react-bootstrap/Popover'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Button from 'react-bootstrap/Button'
+
 import styles from './UserSearch.scss'
 
 
@@ -31,7 +35,8 @@ export default class UserSearch extends React.Component {
   getSuggestionValue = suggestion => suggestion.name;
 
   selectionClicked = (name) => {
-    this.props.callback(name)
+    this.overlay.hide()
+    this.props.selectedCallback(name)
   }
 
   // Use your imagination to render suggestions.
@@ -62,25 +67,43 @@ export default class UserSearch extends React.Component {
     });
   };
 
-  render() {
-    const { value, suggestions } = this.state;
-
+  searchPopover = (userId, homeworkId) => {
+    const {value, suggestions} = this.state
     const inputProps = {
       placeholder: 'Enter a name',
       value,
       onChange: this.onChange
     };
 
+    var that = this
+    return (<Popover id="popover-basic">
+        <Popover.Content>
+          <Autosuggest
+            suggestions={this.state.suggestions}
+            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+            getSuggestionValue={this.getSuggestionValue}
+            renderSuggestion={this.renderSuggestion}
+            inputProps={inputProps}
+          />
+        </Popover.Content>
+      </Popover>)
+  }
+
+  clearSearch = () => {
+    this.props.clearCallback()
+  }
+
+  render() {
+    const { value, suggestions } = this.state;
+
     return (
       <div>
-        <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          getSuggestionValue={this.getSuggestionValue}
-          renderSuggestion={this.renderSuggestion}
-          inputProps={inputProps}
-        />
+        <OverlayTrigger trigger="click" placement="left" overlay={this.searchPopover()} ref={(ref) => this.overlay = ref}>
+          <Button>Search</Button>
+        </OverlayTrigger>
+        &nbsp;
+        <Button onClick={this.clearSearch}>Clear</Button>
       </div>
     )
   }
