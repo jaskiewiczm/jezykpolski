@@ -4,13 +4,17 @@ import IndividualUser from './IndividualUser.jsx'
 import UserEditor from './UserEditor.jsx'
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
+import UserSearch from './UserSearch.jsx'
 
+import Button from 'react-bootstrap/Button'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
+import Popover from 'react-bootstrap/Popover'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 import styles from './Homeworks.scss'
 
@@ -24,16 +28,17 @@ export default class Users extends React.Component {
     var klassId = localStorage.getItem('usersSelectedKlassId')
 
     this.state = {
-      users: [],
+      masterUsers: [],
+      visibleUsers: [],
       editMode: false,
       selectedSchoolId: schoolId,
       selectedKlassId: klassId
     }
 
-    this.getUsers()
+    this.getMasterUsers()
   }
 
-  getUsers() {
+  getMasterUsers() {
     var that = this
     fetch('/get_users', {
       method: 'GET',
@@ -48,14 +53,15 @@ export default class Users extends React.Component {
     }).then((response)=>{
       if (response != null) {
         that.setState({
-          users: response
+          masterUsers: response,
+          visibleUsers: response
         })
       }
     })
   }
 
   deleteCallback = () => {
-    this.getUsers()
+    this.getMasterUsers()
   }
 
   add = () => {
@@ -67,7 +73,7 @@ export default class Users extends React.Component {
   closeEditor = () => {
     this.setState({
       editMode: false
-    }, this.getUsers)
+    }, this.getMasterUsers)
   }
 
   schoolSelected = (schoolId) => {
@@ -86,6 +92,29 @@ export default class Users extends React.Component {
     localStorage.setItem('usersSelectedKlassId', klassId)
   }
 
+  userSelectedCallback = (name) => {
+    this.overlay.hide()
+    var visibleUsers = [this.state.masterUsers.find(user => {return user.name == name})]
+    this.setState({
+      visibleUsers: visibleUsers
+    })
+  }
+
+  searchPopover = (userId, homeworkId) => {
+    var that = this
+    return (<Popover id="popover-basic">
+        <Popover.Content>
+          <UserSearch users={this.state.masterUsers} callback={this.userSelectedCallback} />
+        </Popover.Content>
+      </Popover>)
+  }
+
+  clearSearch = () => {
+    this.setState({
+      visibleUsers: this.state.masterUsers
+    })
+  }
+
   render() {
     var that = this
 
@@ -98,15 +127,15 @@ export default class Users extends React.Component {
 
 
     var body = null
-    if (this.state.users.length > 0) {
-
+    var userSearch = null
+    if (this.state.visibleUsers.length > 0) {
       body = (<Row>
                 <Col></Col>
                 <Col xs={12}>
                   <ListGroup className={styles.homeworks}>
                     {
-                      this.state.users.map(function(key, index){
-                        return <ListGroup.Item action key={index}><IndividualUser userRoles={key.userRoles} userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback} schoolId={that.state.selectedSchoolId}/></ListGroup.Item>
+                      this.state.visibleUsers.map(function(key, index){
+                        return <ListGroup.Item action key={key.id}><IndividualUser userRoles={key.userRoles} userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback} schoolId={that.state.selectedSchoolId}/></ListGroup.Item>
                       })
                     }
                   </ListGroup>
@@ -114,6 +143,9 @@ export default class Users extends React.Component {
                 <Col></Col>
               </Row>)
 
+      userSearch =  (<div><OverlayTrigger trigger="click" placement="left" overlay={this.searchPopover()} ref={(ref) => this.overlay = ref}>
+                      <Button>Search</Button>
+                    </OverlayTrigger>&nbsp;<Button onClick={this.clearSearch}>Clear</Button></div>)
     } else {
       body = (<Row>
                 <Col/>
@@ -127,7 +159,6 @@ export default class Users extends React.Component {
                 <Col/>
               </Row>)
     }
-
 
     return (
       <div>
@@ -144,6 +175,9 @@ export default class Users extends React.Component {
             &nbsp;
             <Nav>
               {klassSelector}
+            </Nav>
+            <Nav>
+              {userSearch}
             </Nav>
           </Navbar>
           {body}

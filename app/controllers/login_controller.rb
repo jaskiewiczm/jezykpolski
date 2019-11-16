@@ -5,7 +5,8 @@ class LoginController < ApplicationController
 
   def whoami
     if current_user
-      render json: current_user, status: 200
+      user = {user: current_user.attributes, roles: current_user.roles.map(&:attributes)}
+      render json: user, status: 200
     else
       render json: {}, status: 404
     end
@@ -13,9 +14,12 @@ class LoginController < ApplicationController
 
   def login
     params.require [:email, :password]
-    user = User.where(:email => params[:email]).first
+    user = User.includes(:roles).where(:email => params[:email]).first
     if user.present? && user.valid_password?(params[:password])
       sign_in user
+      roles = user.roles.map(&:attributes)
+      user = user.attributes
+      user['roles'] = roles
 
       render json: user, status: 200
     else

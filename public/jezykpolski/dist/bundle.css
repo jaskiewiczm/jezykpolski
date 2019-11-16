@@ -109,6 +109,10 @@
 .schoolAdminRoleClass {
   background-color: #FDFD96 !important; }
 
+.userSearchEntry {
+  padding: 5px;
+  cursor: pointer; }
+
 .grade {
   cursor: pointer; }
 

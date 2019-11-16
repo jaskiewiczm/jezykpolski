@@ -62,10 +62,16 @@ class UsersController < ApplicationController
     u.name = params[:name]
     u.email = params[:email]
 
+    is_system_admin = u.roles.where('code = ?', 'admin').count > 0
+
     u.roles.clear
 
     params[:roles].each do |role_id|
       u.roles.append(Role.find_by_id(role_id))
+    end
+
+    if is_system_admin
+      u.roles.append(Role.where('code = ?', 'admin').first)
     end
 
     u.save!

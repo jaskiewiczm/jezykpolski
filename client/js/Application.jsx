@@ -22,7 +22,8 @@ export default class Application extends React.Component {
     this.state = {
       loggedIn: false,
       loginFailed: false,
-      email: null
+      email: null,
+      roles: []
     }
   }
 
@@ -48,7 +49,8 @@ export default class Application extends React.Component {
         that.setState({
           loggedIn: true,
           loginFailed: false,
-          email: response.email
+          email: response.user.email,
+          roles: response.roles
         })
         that.props.history.push('/homeworks')
       }
@@ -74,7 +76,8 @@ export default class Application extends React.Component {
         that.setState({
           loggedIn: true,
           loginFailed: false,
-          email: response.email
+          email: response.email,
+          roles: response.roles
         })
         that.props.history.push('/homeworks')
       } else {
@@ -96,7 +99,8 @@ export default class Application extends React.Component {
         this.setState({
           loggedIn: false,
           loginFailed: false,
-          email: null
+          email: null,
+          roles: []
         })
 
         this.props.history.push('/welcome')
@@ -152,20 +156,41 @@ export default class Application extends React.Component {
   }
 
   getNavButtons() {
-    //<Nav.Link href="/">Home</Nav.Link>
-    //<Nav.Link href="/calendar">Calendar</Nav.Link>
-    //<Nav.Link href="/homeworks">Homework</Nav.Link>
+
+    var homeworksLink = null
+    var usersLink = null
+    var classesLink = null
+    var gradebookLink = null
+    var studentReportLink = null
+    if (this.state.roles.length > 0) {
+      if (this.state.roles.find((role) => {return role.code.includes('admin')}) != null) {
+        homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
+        usersLink = <div><Link to="/users">Users</Link>&nbsp;&nbsp;&nbsp;</div>
+        classesLink = <div><Link to="/klasses">Classes</Link>&nbsp;&nbsp;&nbsp;</div>
+        gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
+        studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
+      }
+      if (this.state.roles.find((role) => {return role.code.includes('teacher')}) != null) {
+        homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
+        gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
+      }
+      if (this.state.roles.find((role) => {return role.code.includes('student')}) != null) {
+        homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
+        studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
+      }
+      if (this.state.roles.find((role) => {return role.code.includes('parent')}) != null) {
+        homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
+        studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
+      }
+    }
+
     return (
         <Nav className="mr-auto">
-          <Link to="/homeworks">Homework</Link>
-          &nbsp;&nbsp;&nbsp;
-          <Link to="/users">Users</Link>
-          &nbsp;&nbsp;&nbsp;
-          <Link to="/klasses">Classes</Link>
-          &nbsp;&nbsp;&nbsp;
-          <Link to="/gradebook">Gradebook</Link>
-          &nbsp;&nbsp;&nbsp;
-          <Link to="/user_report">Student Report</Link>
+          {homeworksLink}
+          {usersLink}
+          {classesLink}
+          {gradebookLink}
+          {studentReportLink}
         </Nav>
       )
   }
