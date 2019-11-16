@@ -13,10 +13,14 @@ class UsersController < ApplicationController
     userRoles = {}
     users.each do |user|
       roles = user.roles.order(:name)
-      userRoles[user.id] = roles.map(&:attributes)
+      roles = roles.map(&:attributes)
+
+      roles = roles.map {|role| role.except(:created_at.to_s, :updated_at.to_s)}
+      userRoles[user.id] = roles
     end
 
     users = users.map(&:attributes)
+    users = users.map{|user| user.select {|k,v| [:email.to_s, :id.to_s, :name.to_s, :parent_1_id.to_s, :parent_2_id.to_s].include?(k)}}
 
     users.each do |user|
       user['userRoles'] = userRoles[user['id']]
