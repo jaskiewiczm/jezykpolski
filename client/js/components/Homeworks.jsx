@@ -12,6 +12,8 @@ import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 
+import g_roles from './GlobalRoles.jsx'
+
 
 export default class Homeworks extends React.Component {
 
@@ -100,6 +102,13 @@ export default class Homeworks extends React.Component {
       klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected} klassId={this.state.selectedKlassId}/>
     }
 
+    var addButton = <Nav className="mr-auto" />
+    if (g_roles.containsRole('teacher') || g_roles.containsRole('admin') || g_roles.containsRole('school_admin')) {
+      addButton = <Nav className="mr-auto">
+                    <Nav.Link onClick={that.add}>Add</Nav.Link>
+                  </Nav>
+    }
+
     var body = null
     if (this.state.homeworks.length > 0) {
       body = (<Row>
@@ -135,9 +144,7 @@ export default class Homeworks extends React.Component {
         <Container>
           <Navbar bg="dark" variant="dark">
             <Navbar.Brand>Homework</Navbar.Brand>
-            <Nav className="mr-auto">
-              <Nav.Link onClick={that.add}>Add</Nav.Link>
-            </Nav>
+            {addButton}
             <Nav>
               <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
             </Nav>

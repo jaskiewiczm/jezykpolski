@@ -7,6 +7,8 @@ import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
 
+import g_roles from './components/GlobalRoles.jsx'
+
 export default class Application extends React.Component {
 
   constructor(props) {
@@ -22,8 +24,7 @@ export default class Application extends React.Component {
     this.state = {
       loggedIn: false,
       loginFailed: false,
-      email: null,
-      roles: []
+      email: null
     }
   }
 
@@ -46,11 +47,12 @@ export default class Application extends React.Component {
       }
     }).then((response)=>{
       if (response != null) {
+        g_roles.roles = response.roles
+
         that.setState({
           loggedIn: true,
           loginFailed: false,
-          email: response.user.email,
-          roles: response.roles
+          email: response.user.email
         })
         that.props.history.push('/homeworks')
       }
@@ -73,11 +75,11 @@ export default class Application extends React.Component {
       }
     }).then((response)=>{
       if (response != null) {
+        g_roles.roles = response.roles
         that.setState({
           loggedIn: true,
           loginFailed: false,
-          email: response.email,
-          roles: response.roles
+          email: response.email
         })
         that.props.history.push('/homeworks')
       } else {
@@ -96,11 +98,11 @@ export default class Application extends React.Component {
       }
     }).then((response)=>{
       if (response.status == 200) {
+        g_roles.clearRoles()
         this.setState({
           loggedIn: false,
           loginFailed: false,
-          email: null,
-          roles: []
+          email: null
         })
 
         this.props.history.push('/welcome')
@@ -162,26 +164,25 @@ export default class Application extends React.Component {
     var classesLink = null
     var gradebookLink = null
     var studentReportLink = null
-    if (this.state.roles.length > 0) {
-      if (this.state.roles.find((role) => {return role.code.includes('admin')}) != null) {
-        homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
-        usersLink = <div><Link to="/users">Users</Link>&nbsp;&nbsp;&nbsp;</div>
-        classesLink = <div><Link to="/klasses">Classes</Link>&nbsp;&nbsp;&nbsp;</div>
-        gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
-        studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
-      }
-      if (this.state.roles.find((role) => {return role.code.includes('teacher')}) != null) {
-        homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
-        gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
-      }
-      if (this.state.roles.find((role) => {return role.code.includes('student')}) != null) {
-        homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
-        studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
-      }
-      if (this.state.roles.find((role) => {return role.code.includes('parent')}) != null) {
-        homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
-        studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
-      }
+
+    if (g_roles.containsRole('admin') || g_roles.containsRole('school_admin')) {
+      homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
+      usersLink = <div><Link to="/users">Users</Link>&nbsp;&nbsp;&nbsp;</div>
+      classesLink = <div><Link to="/klasses">Classes</Link>&nbsp;&nbsp;&nbsp;</div>
+      gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
+      studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
+    }
+    if (g_roles.containsRole('teacher')) {
+      homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
+      gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
+    }
+    if (g_roles.containsRole('student')) {
+      homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
+      studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
+    }
+    if (g_roles.containsRole('parent')) {
+      homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
+      studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
     }
 
     return (

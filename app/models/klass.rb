@@ -41,6 +41,10 @@ class Klass < ApplicationRecord
       values.append(earned_grade.grading_scale_grade.value)
     end
 
-    return values.reduce(:+) / values.size.to_f
+    if values.length > 0
+      return values.reduce(:+) / values.size.to_f
+    else
+      0
+    end
   end
 end

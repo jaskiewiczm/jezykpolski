@@ -22,14 +22,12 @@ export default class Users extends React.Component {
     super(props)
 
     var schoolId = localStorage.getItem('usersSelectedSchoolId')
-    var klassId = localStorage.getItem('usersSelectedKlassId')
 
     this.state = {
       masterUsers: [],
       visibleUsers: [],
       editMode: false,
-      selectedSchoolId: schoolId,
-      selectedKlassId: klassId
+      selectedSchoolId: schoolId
     }
 
     this.getMasterUsers()
@@ -81,14 +79,6 @@ export default class Users extends React.Component {
     localStorage.setItem('usersSelectedSchoolId', schoolId)
   }
 
-  klassSelected = (klassId) => {
-    this.setState({
-      selectedKlassId: klassId
-    }, this.getHomeworks)
-
-    localStorage.setItem('usersSelectedKlassId', klassId)
-  }
-
   userSelectedCallback = (name) => {
     var visibleUsers = [this.state.masterUsers.find(user => {return user.name == name})]
     this.setState({
@@ -106,12 +96,6 @@ export default class Users extends React.Component {
     var that = this
 
     var editContent = this.state.editMode ? <UserEditor callback={this.closeEditor} title={'Add User'} schoolId={this.state.selectedSchoolId}/> : null
-
-    var klassSelector = null
-    if (this.state.selectedSchoolId != null) {
-      klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected} klassId={this.state.selectedKlassId}/>
-    }
-
 
     var body = null
     var userSearch = null
@@ -156,10 +140,6 @@ export default class Users extends React.Component {
             </Nav>
             <Nav>
               <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
-            </Nav>
-            &nbsp;
-            <Nav>
-              {klassSelector}
             </Nav>
             &nbsp;
             <Nav>

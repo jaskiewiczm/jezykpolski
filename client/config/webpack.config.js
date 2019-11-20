@@ -5,6 +5,8 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const { LoaderOptionsPlugin, ContextReplacementPlugin, DefinePlugin } = webpack;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 
@@ -118,23 +120,12 @@ module.exports = function(env = 'development') {
       ]
     },
     plugins: [
-      // new ContextReplacementPlugin(/moment[\/\\]locale/, /en$/), // only include the english locale of momentjs https://github.com/webpack/webpack/issues/59#issuecomment-158029777
-      // new DefinePlugin({
-      //   'process.env': {
-      //     'NODE_ENV': JSON.stringify(env)
-      //   }
-      // }),
-      //new ExtractTextPlugin("[name].css")
-      // new webpack.ProvidePlugin({
-      //     $: "jquery",
-      //     jQuery: "jquery"
-      // })
-
       new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css',
         ignoreOrder: false, // Enable to remove warnings about conflicting order
-      })
+      }),
+      new BundleAnalyzerPlugin()
     ]
   };
 
