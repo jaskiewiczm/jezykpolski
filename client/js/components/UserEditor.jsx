@@ -1,6 +1,7 @@
 import React from "react"
 
 import Enrollment from './Enrollment.jsx'
+import UserSearch from './UserSearch.jsx'
 
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
@@ -17,6 +18,9 @@ export default class UserEditor extends React.Component {
 
   constructor(props) {
     super(props)
+
+    var parentList = this.props.masterUsers.filter(user => user.userRoles.find(role => role.code == 'parent') != null)
+
     this.state = {
       name: this.props.name,
       email: this.props.email,
@@ -29,7 +33,8 @@ export default class UserEditor extends React.Component {
       showAddEnrollments: false,
       addOrEdit: this.props.title == null ? 'edit' : 'add',
       roles: [],
-      userRoles: this.props.userRoles == null ? [] : this.props.userRoles
+      userRoles: this.props.userRoles == null ? [] : this.props.userRoles,
+      parentList: parentList
     }
 
     this.getEnrollments()
@@ -223,11 +228,11 @@ export default class UserEditor extends React.Component {
             </Form.Group>
             <Form.Group>
               <Form.Label>Parent #1</Form.Label>
-              <Form.Control type='text'/>
+              <UserSearch users={this.state.parentList} clearCallback={this.clearSearchCallback} selectedCallback={this.userSelectedCallback}/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Parent #2</Form.Label>
-              <Form.Control type='text'/>
+              <UserSearch users={this.state.parentList} clearCallback={this.clearSearchCallback} selectedCallback={this.userSelectedCallback}/>
             </Form.Group>
 
             <Form.Group>

@@ -39,7 +39,6 @@ export default class UserSearch extends React.Component {
     this.props.selectedCallback(name)
   }
 
-  // Use your imagination to render suggestions.
   renderSuggestion = suggestion => (
     <div className='userSearchEntry' onClick={() => this.selectionClicked(suggestion.name)}>
       {suggestion.name}
@@ -97,13 +96,28 @@ export default class UserSearch extends React.Component {
   render() {
     const { value, suggestions } = this.state;
 
+        //<OverlayTrigger trigger="click" placement="left" overlay={this.searchPopover()} ref={(ref) => this.overlay = ref}>
+        //  <Button>Search</Button>
+        //</OverlayTrigger>
+
+    //<Button onClick={this.clearSearch}>Clear</Button>
+
+    const inputProps = {
+      placeholder: 'Enter a name',
+      value,
+      onChange: this.onChange
+    };
+
     return (
-      <div>
-        <OverlayTrigger trigger="click" placement="left" overlay={this.searchPopover()} ref={(ref) => this.overlay = ref}>
-          <Button>Search</Button>
-        </OverlayTrigger>
-        &nbsp;
-        <Button onClick={this.clearSearch}>Clear</Button>
+      <div class='masterUserSearch'>
+        <Autosuggest
+          suggestions={this.state.suggestions}
+          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+          getSuggestionValue={this.getSuggestionValue}
+          renderSuggestion={this.renderSuggestion}
+          inputProps={inputProps}
+        />
       </div>
     )
   }

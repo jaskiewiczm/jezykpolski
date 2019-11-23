@@ -4,6 +4,25 @@ class GlobalRoles {
     this.roles = []
   }
 
+  _getRolesFromServer = () => {
+    var that = this
+    fetch('/get_roles', {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
+    }).then((response)=>{
+      if (response != null) {
+        that.roles = response
+      }
+    })
+  }
+
   getRoles = () => {
     return this.roles;
   }

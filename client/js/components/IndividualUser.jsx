@@ -101,7 +101,7 @@ export default class IndividualUser extends React.Component {
   }
 
   render() {
-    var editContent = this.state.editMode ? <UserEditor userId={this.state.userId} name={this.state.name} email={this.state.email} schoolId={this.state.schoolId} callback={this.editClosed} userRoles={this.state.userRoles}/> : null
+    var editContent = this.state.editMode ? <UserEditor masterUsers={this.props.masterUsers} userId={this.state.userId} name={this.state.name} email={this.state.email} schoolId={this.state.schoolId} callback={this.editClosed} userRoles={this.state.userRoles}/> : null
     var individualUserId = 'individual_user_' + String(this.state.userId)
 
     return (

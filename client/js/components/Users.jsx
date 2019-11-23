@@ -95,7 +95,7 @@ export default class Users extends React.Component {
   render() {
     var that = this
 
-    var editContent = this.state.editMode ? <UserEditor callback={this.closeEditor} title={'Add User'} schoolId={this.state.selectedSchoolId}/> : null
+    var editContent = this.state.editMode ? <UserEditor masterUsers={this.state.masterUsers} callback={this.closeEditor} title={'Add User'} schoolId={this.state.selectedSchoolId}/> : null
 
     var body = null
     var userSearch = null
@@ -106,7 +106,7 @@ export default class Users extends React.Component {
                   <ListGroup className={styles.homeworks}>
                     {
                       this.state.visibleUsers.map(function(key, index){
-                        return <ListGroup.Item action key={key.id}><IndividualUser userRoles={key.userRoles} userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback} schoolId={that.state.selectedSchoolId}/></ListGroup.Item>
+                        return <ListGroup.Item action key={key.id}><IndividualUser masterUsers={that.state.masterUsers} userRoles={key.userRoles} userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback} schoolId={that.state.selectedSchoolId}/></ListGroup.Item>
                       })
                     }
                   </ListGroup>

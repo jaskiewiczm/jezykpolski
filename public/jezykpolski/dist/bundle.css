@@ -106,12 +106,37 @@
   background-color: white;
   opacity: 0.75; }
 
-.schoolAdminRoleClass {
-  background-color: #FDFD96 !important; }
+.masterUserSearch {
+  width: 220px; }
 
 .userSearchEntry {
   padding: 5px;
-  cursor: pointer; }
+  margin-left: -40px;
+  cursor: pointer;
+  background: red;
+  width: 127%; }
+
+.react-autosuggest__suggestions-container {
+  position: absolute;
+  z-index: 100;
+  width: 100%; }
+
+.react-autosuggest__container {
+  position: relative;
+  overflow: visible;
+  width: 100%; }
+
+.react-autosuggest__suggestion {
+  width: 100% !important; }
+
+ul {
+  list-style-type: none; }
+
+li {
+  list-style-type: none; }
+
+.schoolAdminRoleClass {
+  background-color: #FDFD96 !important; }
 
 .grade {
   cursor: pointer; }

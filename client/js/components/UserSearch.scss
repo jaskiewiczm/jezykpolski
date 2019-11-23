@@ -1,5 +1,36 @@
 
+.masterUserSearch {
+  width: 220px;
+}
+
 .userSearchEntry {
   padding: 5px;
+  margin-left: -40px;
   cursor: pointer;
+  background: red;
+  width: 127%;
+}
+
+.react-autosuggest__suggestions-container {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+}
+
+.react-autosuggest__container {
+  position: relative;
+  overflow: visible;
+  width: 100%;
+}
+
+.react-autosuggest__suggestion {
+  width: 100% !important;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  list-style-type: none;
 }
