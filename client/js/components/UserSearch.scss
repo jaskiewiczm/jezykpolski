@@ -7,8 +7,11 @@
   padding: 5px;
   margin-left: -40px;
   cursor: pointer;
-  background: red;
+  background: #F5F5F5;
   width: 127%;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #DCDCDC;
 }
 
 .react-autosuggest__suggestions-container {
