@@ -25,7 +25,7 @@ export default class UserSearch extends React.Component {
     const inputLength = inputValue.length;
 
     return inputLength === 0 ? [] : this.props.users.filter(user =>
-      user.name.toLowerCase().slice(0, inputLength) === inputValue
+      user.name.toLowerCase().includes(inputValue)
     );
   };
 
@@ -35,7 +35,6 @@ export default class UserSearch extends React.Component {
   getSuggestionValue = suggestion => suggestion.name;
 
   selectionClicked = (name) => {
-    this.overlay.hide()
     this.props.selectedCallback(name)
   }
 
@@ -49,6 +48,10 @@ export default class UserSearch extends React.Component {
     this.setState({
       value: newValue
     });
+
+    if (newValue == '') {
+      this.props.clearCallback()
+    }
   };
 
   // Autosuggest will call this function every time you need to update suggestions.
@@ -66,41 +69,8 @@ export default class UserSearch extends React.Component {
     });
   };
 
-  searchPopover = (userId, homeworkId) => {
-    const {value, suggestions} = this.state
-    const inputProps = {
-      placeholder: 'Enter a name',
-      value,
-      onChange: this.onChange
-    };
-
-    var that = this
-    return (<Popover id="popover-basic">
-        <Popover.Content>
-          <Autosuggest
-            suggestions={this.state.suggestions}
-            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-            getSuggestionValue={this.getSuggestionValue}
-            renderSuggestion={this.renderSuggestion}
-            inputProps={inputProps}
-          />
-        </Popover.Content>
-      </Popover>)
-  }
-
-  clearSearch = () => {
-    this.props.clearCallback()
-  }
-
   render() {
     const { value, suggestions } = this.state;
-
-        //<OverlayTrigger trigger="click" placement="left" overlay={this.searchPopover()} ref={(ref) => this.overlay = ref}>
-        //  <Button>Search</Button>
-        //</OverlayTrigger>
-
-    //<Button onClick={this.clearSearch}>Clear</Button>
 
     const inputProps = {
       placeholder: 'Enter a name',
@@ -109,7 +79,7 @@ export default class UserSearch extends React.Component {
     };
 
     return (
-      <div class='masterUserSearch'>
+      <div className='masterUserSearch'>
         <Autosuggest
           suggestions={this.state.suggestions}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}

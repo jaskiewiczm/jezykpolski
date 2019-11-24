@@ -139,12 +139,14 @@ export default class Users extends React.Component {
               <Nav.Link onClick={that.add}>Add</Nav.Link>
             </Nav>
             <Nav>
-              <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
-            </Nav>
-            &nbsp;
-            <Nav>
               {userSearch}
             </Nav>
+            &nbsp;&nbsp;&nbsp;
+            <Nav>
+              <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
+            </Nav>
+
+
           </Navbar>
           {body}
         </Container>
