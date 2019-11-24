@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_11_034120) do
+ActiveRecord::Schema.define(version: 2019_11_24_035930) do
 
   create_table "books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "title"
@@ -121,6 +121,15 @@ ActiveRecord::Schema.define(version: 2019_11_11_034120) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "parent_id"
+    t.bigint "child_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["child_id"], name: "fk_rails_9b9d9fe572"
+    t.index ["parent_id"], name: "fk_rails_97d3981df2"
+  end
+
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -140,6 +149,8 @@ ActiveRecord::Schema.define(version: 2019_11_11_034120) do
 
   add_foreign_key "homeworks", "klasses"
   add_foreign_key "klasses", "schools"
+  add_foreign_key "user_users", "users", column: "child_id"
+  add_foreign_key "user_users", "users", column: "parent_id"
   add_foreign_key "users", "users", column: "parent_1_id"
   add_foreign_key "users", "users", column: "parent_2_id"
 end

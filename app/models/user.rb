@@ -12,4 +12,10 @@ class User < ApplicationRecord
   has_many :klasses, :through => :user_klasses
   has_many :roles, through: :user_roles
   has_many :books, through: :reading_logs
+
+  has_many :parent_users, foreign_key: :child_id, class_name: 'UserUser'
+  has_many :parents, through: :parent_users
+  has_many :child_users, foreign_key: :parent_id, class_name: 'UserUser'
+  has_many :children, through: :child_users
+
 end
