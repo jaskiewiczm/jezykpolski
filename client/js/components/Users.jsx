@@ -106,7 +106,7 @@ export default class Users extends React.Component {
                   <ListGroup className={styles.homeworks}>
                     {
                       this.state.visibleUsers.map(function(key, index){
-                        return <ListGroup.Item action key={key.id}><IndividualUser masterUsers={that.state.masterUsers} userRoles={key.userRoles} userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback} schoolId={that.state.selectedSchoolId}/></ListGroup.Item>
+                        return <ListGroup.Item action key={key.id}><IndividualUser user={key} masterUsers={that.state.masterUsers} userRoles={key.userRoles} userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback} schoolId={that.state.selectedSchoolId}/></ListGroup.Item>
                       })
                     }
                   </ListGroup>

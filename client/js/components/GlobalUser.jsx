@@ -1,15 +1,33 @@
 
 class GlobalUser {
   constructor() {
-    this.school = null
+    this.schools = []
     this.klasses = []
   }
 
-  setSchool = (school) => {
-    this.school = school
+  initialize = () => {
+    this.initializeSchools()
   }
 
-  getSchool = () => { return this.school }
+  initializeSchools = () => {
+    var that = this
+    fetch('/get_schools', {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      if (response.status == 200) {
+        return response.json()
+      }
+    }).then((response)=>{
+      if (response != null) {
+        that.schools = response
+      }
+    })
+  }
+
+  getSchools = () => { return this.schools }
 
   setKlasses = (klasses) => {
     this.klasses = klasses
@@ -18,7 +36,7 @@ class GlobalUser {
   getKlasses = () => { return this.klasses }
 
   clear = () => {
-    this.school = null
+    this.schools = []
     this.klasses = []
   }
 

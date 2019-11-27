@@ -19,11 +19,17 @@ class UsersController < ApplicationController
       userRoles[user.id] = roles
     end
 
+    parents = {}
+    users.each do |user|
+      parents[user.id] = user.parents.map {|parent| parent.id}
+    end
+
     users = users.map(&:attributes)
-    users = users.map{|user| user.select {|k,v| [:email.to_s, :id.to_s, :name.to_s, :parent_1_id.to_s, :parent_2_id.to_s].include?(k)}}
+    users = users.map{|user| user.select {|k,v| [:email.to_s, :id.to_s, :name.to_s].include?(k)}}
 
     users.each do |user|
       user['userRoles'] = userRoles[user['id']]
+      user['parents'] = parents[user['id']]
     end
 
     render json: users
@@ -38,6 +44,8 @@ class UsersController < ApplicationController
     u.email = params[:email]
     u.password = 'TEMP_PASSWORD'
     u.password_confirmation = 'TEMP_PASSWORD'
+
+    _parent_update(u)
 
     params[:roles].each do |role_id|
       u.roles.append(Role.find_by_id(role_id))
@@ -57,6 +65,14 @@ class UsersController < ApplicationController
     render json: {}, status: 200
   end
 
+  def _parent_update(u)
+    u.parents.clear()
+    parent_1 = User.find_by_id(params[:parent1Id]) if params.has_key? :parent1Id
+    parent_2 = User.find_by_id(params[:parent2Id]) if params.has_key? :parent2Id
+    u.parents.append(parent_1) if parent_1.present?
+    u.parents.append(parent_2) if parent_2.present?
+  end
+
   def update_user
     params.require(:userId)
     params.require(:name)
@@ -66,6 +82,7 @@ class UsersController < ApplicationController
     u.name = params[:name]
     u.email = params[:email]
 
+    _parent_update(u)
 
     is_system_admin = u.roles.where('code = ?', 'admin').count > 0
 

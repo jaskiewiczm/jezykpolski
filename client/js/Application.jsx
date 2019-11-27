@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
 
 import g_roles from './components/GlobalRoles.jsx'
+import g_user from './components/GlobalUser.jsx'
 
 export default class Application extends React.Component {
 
@@ -48,6 +49,7 @@ export default class Application extends React.Component {
     }).then((response)=>{
       if (response != null) {
         g_roles.roles = response.roles
+        g_user.initialize()
 
         that.setState({
           loggedIn: true,
@@ -76,6 +78,7 @@ export default class Application extends React.Component {
     }).then((response)=>{
       if (response != null) {
         g_roles.roles = response.roles
+        g_user.initialize()
         that.setState({
           loggedIn: true,
           loginFailed: false,
@@ -91,6 +94,7 @@ export default class Application extends React.Component {
   }
 
   logout() {
+    g_user.clear()
     fetch('/logout', {
       method: 'POST',
       headers: {

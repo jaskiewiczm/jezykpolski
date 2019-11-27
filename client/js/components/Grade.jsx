@@ -6,6 +6,7 @@ import Popover from 'react-bootstrap/Popover'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Button from 'react-bootstrap/Button'
 import ListGroup from 'react-bootstrap/ListGroup'
+import Table from 'react-bootstrap/Table'
 
 import {grade} from './Grade.scss'
 
@@ -61,17 +62,31 @@ export default class Grade extends React.Component {
     })
   }
 
+  getGradeRows = () => {
+    var clone = this.props.gradingScale.slice(0)
+    var rows = []
+
+    for (var i=0; i<clone.length; i+=3) {
+      rows.push([clone[i], clone[i+1], clone[i+2]])
+    }
+
+    return rows
+  }
+
   gradePopover = (userId, homeworkId) => {
     var that = this
+    var rows = this.getGradeRows()
     return (<Popover id="popover-basic">
         <Popover.Content>
-          <ListGroup>
-            {this.props.gradingScale.map(function(gradingScaleGradeObj, index){
-              return <ListGroup.Item
-                      action key={index}
-                      onClick={() => {that.saveGrade(gradingScaleGradeObj, that.props.userId, that.props.homeworkId)}}>{gradingScaleGradeObj.name}</ListGroup.Item>
+          <Table>
+            {rows.map(function(obj, index){
+              return  <tr key={index}>
+                        <td className='gradeSelect' onClick={() => {that.saveGrade(obj[0], that.props.userId, that.props.homeworkId)}}>{obj[0].name}</td>
+                        <td className='gradeSelect' onClick={() => {that.saveGrade(obj[1], that.props.userId, that.props.homeworkId)}}>{obj[1].name}</td>
+                        <td className='gradeSelect' onClick={() => {that.saveGrade(obj[2], that.props.userId, that.props.homeworkId)}}>{obj[2].name}</td>
+                      </tr>
             })}
-          </ListGroup>
+          </Table>
         </Popover.Content>
       </Popover>)
   }
@@ -80,7 +95,7 @@ export default class Grade extends React.Component {
     var variant = this.state == null ? 'light' : (this.state.displayGrade == 'N/A' ? 'light' : 'success')
     return (
       <div className='grade'>
-        <OverlayTrigger trigger="click" placement="left" overlay={this.gradePopover()} ref={(ref) => this.overlay = ref}>
+        <OverlayTrigger trigger="click" placement="bottom" overlay={this.gradePopover()} ref={(ref) => this.overlay = ref}>
           <Button variant={variant}>{this.state.displayGrade}</Button>
         </OverlayTrigger>
       </div>

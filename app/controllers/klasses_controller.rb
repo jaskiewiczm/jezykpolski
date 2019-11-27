@@ -2,7 +2,7 @@
 
 class KlassesController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_permissions
+  before_action :check_permissions, except: [:get_klasses]
 
   def initialize
     @permitted_role_codes = ['teacher', 'admin', 'school_admin']

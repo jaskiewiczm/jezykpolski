@@ -1,3 +1,15 @@
 .grade {
   cursor: pointer;
 }
+
+.gradeSelect {
+  cursor: pointer;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #DCDCDC;
+  margin: 3px;
+}
+
+.gradeSelect:hover {
+  background-color: #77dd77;
+}

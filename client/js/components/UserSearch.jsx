@@ -16,7 +16,7 @@ export default class UserSearch extends React.Component {
 
     this.state = {
       suggestions: [],
-      value: ''
+      value: this.props.defaultValue != null ? this.props.defaultValue : ''
     }
   }
 

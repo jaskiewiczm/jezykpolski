@@ -19,6 +19,7 @@ export default class UserEditor extends React.Component {
   constructor(props) {
     super(props)
 
+    var user = this.props.user
     var parentList = this.props.masterUsers.filter(user => user.userRoles.find(role => role.code == 'parent') != null)
 
     this.state = {
@@ -35,8 +36,8 @@ export default class UserEditor extends React.Component {
       roles: [],
       userRoles: this.props.userRoles == null ? [] : this.props.userRoles,
       parentList: parentList,
-      parent1Id: null,
-      parent2Id: null
+      parent1Id: user != null ? user.parents[0] : null,
+      parent2Id: user != null ? user.parents[1] : null
     }
 
     this.getEnrollments()
@@ -120,6 +121,13 @@ export default class UserEditor extends React.Component {
     }).then((response)=>{
       if (response.status == 200) {
         this.props.callback(this.state.email, this.state.name, this.state.userRoles)
+        this.props.user.parents = []
+        if (this.state.parent1Id != null) {
+          this.props.user.parents.push(this.state.parent1Id)
+        }
+        if (this.state.parent2Id != null) {
+          this.props.user.parents.push(this.state.parent2Id)
+        }
       } else {
         this.props.callback()
       }
@@ -234,6 +242,15 @@ export default class UserEditor extends React.Component {
       enrollment = <Enrollment userId={this.state.userId} schoolId={this.state.schoolId} callback={this.addEnrollmentCallback}/>
     }
 
+    var parent1 = this.state.parentList.find(parent => parent.id == this.state.parent1Id)
+    var parent2 = this.state.parentList.find(parent => parent.id == this.state.parent2Id)
+    if (parent1 != null) {
+      parent1 = parent1.name
+    }
+    if (parent2 != null) {
+      parent2 = parent2.name
+    }
+
     return (
       <Modal show={this.state.show} size="lg">
         <Modal.Header>
@@ -259,11 +276,11 @@ export default class UserEditor extends React.Component {
             </Form.Group>
             <Form.Group>
               <Form.Label>Parent #1</Form.Label>
-              <UserSearch users={this.state.parentList} clearCallback={this.clearParent1SearchCallback} selectedCallback={this.userParent1SelectedCallback}/>
+              <UserSearch defaultValue={parent1} users={this.state.parentList} clearCallback={this.clearParent1SearchCallback} selectedCallback={this.userParent1SelectedCallback}/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Parent #2</Form.Label>
-              <UserSearch users={this.state.parentList} clearCallback={this.clearParent2SearchCallback} selectedCallback={this.userParent2SelectedCallback}/>
+              <UserSearch defaultValue={parent2}  users={this.state.parentList} clearCallback={this.clearParent2SearchCallback} selectedCallback={this.userParent2SelectedCallback}/>
             </Form.Group>
 
             <Form.Group>
