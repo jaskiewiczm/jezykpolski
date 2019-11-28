@@ -65,9 +65,28 @@ export default class Grade extends React.Component {
   getGradeRows = () => {
     var clone = this.props.gradingScale.slice(0)
     var rows = []
+    var currentRow = {colspan: 0, cells: []}
+    var currentGroup = clone[0].group
+    var widestRowLength = 0
 
-    for (var i=0; i<clone.length; i+=3) {
-      rows.push([clone[i], clone[i+1], clone[i+2]])
+    for (var i=0; i<clone.length; i+=1) {
+      if (currentGroup != clone[i].group) {
+        rows.push(currentRow)
+        currentRow = {colspan: 0, cells: []}
+        currentGroup = clone[i].group
+      }
+
+      currentRow.cells.push(clone[i])
+
+      if (currentRow.cells.length > widestRowLength) {
+        widestRowLength = currentRow.cells.length
+      }
+    }
+    rows.push(currentRow)
+
+    for (var j=0; j<rows.length; j++) {
+      var row = rows[j]
+      row.colspan = Math.floor(widestRowLength / row.cells.length)
     }
 
     return rows
@@ -79,12 +98,13 @@ export default class Grade extends React.Component {
     return (<Popover id="popover-basic">
         <Popover.Content>
           <Table>
-            {rows.map(function(obj, index){
-              return  <tr key={index}>
-                        <td className='gradeSelect' onClick={() => {that.saveGrade(obj[0], that.props.userId, that.props.homeworkId)}}>{obj[0].name}</td>
-                        <td className='gradeSelect' onClick={() => {that.saveGrade(obj[1], that.props.userId, that.props.homeworkId)}}>{obj[1].name}</td>
-                        <td className='gradeSelect' onClick={() => {that.saveGrade(obj[2], that.props.userId, that.props.homeworkId)}}>{obj[2].name}</td>
-                      </tr>
+            {rows.map(function(row, rowIndex){
+              return (
+                <tr key={rowIndex}>
+                  {row.cells.map(function(cell, cellIndex){
+                    return <td key={cellIndex} align='center' colspan={row.colspan} className='gradeSelect' onClick={() => {that.saveGrade(cell, that.props.userId, that.props.homeworkId)}}>{cell.name}</td>
+                  })}
+                </tr>)
             })}
           </Table>
         </Popover.Content>

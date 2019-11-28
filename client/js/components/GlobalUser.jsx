@@ -1,8 +1,11 @@
 
+import schoolStore from '../redux/Store.jsx'
+import {updateSchools} from '../redux/Actions.jsx'
+
+
 class GlobalUser {
   constructor() {
-    this.schools = []
-    this.klasses = []
+
   }
 
   initialize = () => {
@@ -22,22 +25,23 @@ class GlobalUser {
       }
     }).then((response)=>{
       if (response != null) {
-        that.schools = response
+        schoolStore.dispatch(updateSchools(response));
+        console.log('After:', schoolStore.getState());
       }
     })
   }
 
-  getSchools = () => { return this.schools }
-
-  setKlasses = (klasses) => {
-    this.klasses = klasses
+  getSchools = () => {
+    var schools = schoolStore.getState().schools
+    if (schools.length > 0) {
+      return schools[0].schools
+    } else {
+      return []
+    }
   }
 
-  getKlasses = () => { return this.klasses }
-
   clear = () => {
-    this.schools = []
-    this.klasses = []
+
   }
 
 }

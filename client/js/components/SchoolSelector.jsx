@@ -3,46 +3,49 @@ import React from "react"
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 
+import g_user from './GlobalUser.jsx'
+import schoolStore from '../redux/Store.jsx'
+
 export default class SchoolSelector extends React.Component {
 
   constructor(props) {
     super(props)
 
+    var gSchools = g_user.getSchools()
     this.state = {
-      schools: [],
-      title: 'School',
-      selectedSchoolId: this.props.schoolId
+      schools: gSchools,
+      title: this.getTitle(gSchools, parseInt(this.props.schoolId)),
+      selectedSchoolId: parseInt(this.props.schoolId)
     }
 
-    this.getSchools()
+    schoolStore.subscribe(() => {
+      this.schoolsUpdated()
+    });
   }
 
-  getSchools = () => {
-    fetch('/get_schools', {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    }).then((response)=>{
-      if (response.status == 200) {
-        return response.json()
-      }
-    }).then((response)=>{
-      if (response != null) {
-        var school = response.find((element) => {
-          return element.id == parseInt(this.state.selectedSchoolId);
-        })
+  getTitle = (schools, selectedSchoolId) => {
+    var that = this
+    var title = 'School'
+    if (selectedSchoolId == null) {
+      return title
+    } else {
+      var school = schools.find((element) => {
+        return element.id == selectedSchoolId;
+      })
 
-        var title = this.state.title
-        if (school != null) {
-          title = school.name
-        }
-
-        this.setState({
-          schools: response,
-          title: title
-        })
+      if (school != null) {
+        title = school.name
       }
+      return title
+    }
+  }
+
+  schoolsUpdated = () => {
+    var schools = g_user.getSchools()
+
+    this.setState({
+      schools: schools,
+      title: this.getTitle(schools, this.state.selectedSchoolId)
     })
   }
 
