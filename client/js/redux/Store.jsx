@@ -1,5 +1,5 @@
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import schoolsReducer from './Reducers.jsx';
 
-const schoolStore = createStore(schoolsReducer);
+const schoolStore = createStore(combineReducers({schools: schoolsReducer}));
 export default schoolStore

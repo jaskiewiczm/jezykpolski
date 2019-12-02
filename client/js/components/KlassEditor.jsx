@@ -7,6 +7,8 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
+import UserEnrollment from './UserEnrollment.jsx'
+
 import "./HomeworkEditor.scss"
 
 export default class KlassEditor extends React.Component {
@@ -75,6 +77,9 @@ export default class KlassEditor extends React.Component {
             <Form.Group>
               <Form.Label>Name</Form.Label>
               <Form.Control type='text' value={this.state.name} onChange={this.nameChanged}/>
+              <br />
+              <Form.Label>Enrollments</Form.Label>
+              <UserEnrollment schoolId={this.props.schoolId} klassId={this.props.klassId}/>
             </Form.Group>
           </Form>
         </Modal.Body>

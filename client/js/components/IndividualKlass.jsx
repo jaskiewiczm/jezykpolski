@@ -76,7 +76,7 @@ export default class IndividualKlass extends React.Component {
   }
 
   render() {
-    var editContent = this.state.editMode ? <KlassEditor klassId={this.state.klassId} name={this.state.name} callback={this.editClosed} /> : null
+    var editContent = this.state.editMode ? <KlassEditor schoolId={this.props.schoolId} klassId={this.state.klassId} name={this.state.name} callback={this.editClosed} /> : null
 
     return (
       <div>

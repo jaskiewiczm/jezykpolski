@@ -7,6 +7,16 @@ class UsersController < ApplicationController
     render 'layouts/application'
   end
 
+  def students
+    params.require(:schoolId)
+
+    users = User.joins(:user_roles).joins(:roles).where(roles: {code: 'student'})
+    users = users.map(&:attributes)
+    users = users.map{|user| user.select {|k,v| [:email.to_s, :id.to_s, :name.to_s].include?(k)}}
+
+    render json: users, status: 200
+  end
+
   def users
     users = User.all.order(:name)
 

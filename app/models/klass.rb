@@ -4,7 +4,12 @@ require 'axlsx'
 class Klass < ApplicationRecord
   has_many :calendar_entries
   has_many :user_klasses
-  has_many :users, :through => :user_klasses
+  #has_many :users, -> { where(soft_unenrolled: 0) }, :through => :user_klasses
+  has_many :users, :through => :user_klasses do
+   def active
+     where("user_klasses.soft_unenrolled = ?", 0)
+   end
+  end
   has_many :documents
   has_one :gradebook
   has_many :homeworks

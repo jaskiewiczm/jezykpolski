@@ -98,14 +98,16 @@ export default class Grade extends React.Component {
     return (<Popover id="popover-basic">
         <Popover.Content>
           <Table>
-            {rows.map(function(row, rowIndex){
-              return (
-                <tr key={rowIndex}>
-                  {row.cells.map(function(cell, cellIndex){
-                    return <td key={cellIndex} align='center' colspan={row.colspan} className='gradeSelect' onClick={() => {that.saveGrade(cell, that.props.userId, that.props.homeworkId)}}>{cell.name}</td>
-                  })}
-                </tr>)
-            })}
+            <tbody>
+              {rows.map(function(row, rowIndex){
+                return (
+                  <tr key={rowIndex}>
+                    {row.cells.map(function(cell, cellIndex){
+                      return <td key={cellIndex} align='center' colspan={row.colspan} className='gradeSelect' onClick={() => {that.saveGrade(cell, that.props.userId, that.props.homeworkId)}}>{cell.name}</td>
+                    })}
+                  </tr>)
+              })}
+            </tbody>
           </Table>
         </Popover.Content>
       </Popover>)

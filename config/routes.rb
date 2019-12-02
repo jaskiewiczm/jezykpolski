@@ -14,6 +14,7 @@ Jezykpolski::Application.routes.draw do
   post '/update_homework_description' => 'homeworks#update_homework_description'
 
   get '/users' => 'users#index'
+  post '/students' => 'users#students'
   get '/get_users' => 'users#users'
   post '/add_user' => 'users#add_user'
   post '/delete_user' => 'users#delete_user'
@@ -29,6 +30,7 @@ Jezykpolski::Application.routes.draw do
   post '/delete_klass' => 'klasses#delete'
   get '/download_enrollment/:gradebookId' => 'klasses#download'
 
+  post '/get_enrolled_users' => 'enrollments#get_enrolled_users'
   post '/get_enrollments' => 'enrollments#get_enrollments'
   post '/add_enrollment' => 'enrollments#add_enrollment'
   post '/delete_enrollment' => 'enrollments#delete_enrollment'

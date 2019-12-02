@@ -32,7 +32,7 @@ class GlobalUser {
   }
 
   getSchools = () => {
-    var schools = schoolStore.getState().schools
+    var schools = schoolStore.getState().schools.schools
     if (schools.length > 0) {
       return schools[0].schools
     } else {

@@ -9,7 +9,12 @@ class User < ApplicationRecord
   has_many :user_roles
   has_many :reading_logs
   has_many :user_klasses
-  has_many :klasses, :through => :user_klasses
+  #has_many :klasses, -> { where(UserKlass.soft_unenrolled: 0) }, :through => :user_klasses
+  has_many :klasses, :through => :user_klasses do
+   def active
+     where("user_klasses.soft_unenrolled = ?", 0)
+   end
+  end
   has_many :roles, through: :user_roles
   has_many :books, through: :reading_logs
 
