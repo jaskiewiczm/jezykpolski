@@ -24,6 +24,10 @@ export default class UserEditor extends React.Component {
 
     this.state = {
       name: this.props.name,
+      uniqueName: false,
+      uniqueEmail: false,
+      validatedName: false,
+      validatedEmail: false,
       email: this.props.email,
       show: true,
       title: this.props.title == null ? 'Edit User' : this.props.title,
@@ -165,15 +169,44 @@ export default class UserEditor extends React.Component {
   }
 
   nameChanged = (evt) => {
-    this.setState({
-      name: evt.currentTarget.value
-    })
+    var successCallback = () => {
+      this.setState({
+        name: evt.currentTarget.value,
+        uniqueName: true,
+        validatedName: true
+      })
+    }
+
+    var failureCallback = () => {
+      this.setState({
+        name: evt.currentTarget.value,
+        uniqueName: false,
+        validatedName: true
+      })
+    }
+
+    this.validateUserNameUniqueness(evt.currentTarget.value, successCallback, failureCallback)
+
   }
 
   emailChanged = (evt) => {
-    this.setState({
-      email: evt.currentTarget.value
-    })
+    var successCallback = () => {
+      this.setState({
+        email: evt.currentTarget.value,
+        uniqueEmail: true,
+        validatedEmail: true
+      })
+    }
+
+    var failureCallback = () => {
+      this.setState({
+        email: evt.currentTarget.value,
+        uniqueEmail: false,
+        validatedEmail: true
+      })
+    }
+
+    this.validateEmailUniqueness(evt.currentTarget.value, successCallback, failureCallback)
   }
 
   addEnrollment = () => {
@@ -234,6 +267,52 @@ export default class UserEditor extends React.Component {
     })
   }
 
+  validateEmailUniqueness = (newEmail, successCallback, failureCallback) => {
+    var that = this
+    fetch('/validate_user_email_uniqueness', {
+      method: 'POST',
+      body: JSON.stringify({email: newEmail}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response) => {
+      if (response.status == 200) {
+        return response.json()
+      }
+    }).then((response) => {
+      if (response != null) {
+        if (response.unique == false) {
+          failureCallback()
+        } else {
+          successCallback()
+        }
+      }
+    })
+  }
+
+  validateUserNameUniqueness = (newName, successCallback, failureCallback) => {
+    var that = this
+    fetch('/validate_user_name_uniqueness', {
+      method: 'POST',
+      body: JSON.stringify({name: newName}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response) => {
+      if (response.status == 200) {
+        return response.json()
+      }
+    }).then((response) => {
+      if (response != null) {
+        if (response.unique == false) {
+          failureCallback()
+        } else {
+          successCallback()
+        }
+      }
+    })
+  }
+
   render() {
     var that = this
 
@@ -250,21 +329,26 @@ export default class UserEditor extends React.Component {
     if (parent2 != null) {
       parent2 = parent2.name
     }
-
+    console.log('validatedEmail ' + this.state.validatedEmail)
+    console.log('uniqueEmail ' + this.state.uniqueEmail)
+    var invalidEmail = this.state.validatedEmail && !this.state.uniqueEmail
+    console.log('invalidEmail ' + invalidEmail)
     return (
       <Modal show={this.state.show} size="lg">
         <Modal.Header>
           <Modal.Title>{this.state.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form validated={this.state.validatedName || this.state.validatedEmail}>
             <Form.Group>
               <Form.Label>Name</Form.Label>
-              <Form.Control type='text' value={this.state.name} onChange={this.nameChanged}/>
+              <Form.Control type='text' value={this.state.name} onChange={this.nameChanged} isInvalid={this.state.validatedName && !this.state.uniqueName}/>
+              <Form.Control.Feedback type='invalid'>This name is not unique.</Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
               <Form.Label>Email</Form.Label>
-              <Form.Control type='email' value={this.state.email} onChange={this.emailChanged}/>
+              <Form.Control type='email' value={this.state.email} onChange={this.emailChanged} isInvalid={this.state.validatedEmail && !this.state.uniqueEmail}/>
+              <Form.Control.Feedback type='invalid'>This email is not unique.</Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
               <Form.Label>Permissions</Form.Label>

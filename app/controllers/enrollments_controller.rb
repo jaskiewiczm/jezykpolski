@@ -28,7 +28,7 @@ class EnrollmentsController < ApplicationController
   def get_enrollments
     params.require(:userId)
 
-    klasses = User.find_by_id(params[:userId]).klasses.map(&:attributes)
+    klasses = User.find_by_id(params[:userId]).klasses.active.map(&:attributes)
 
     render json: klasses, status: 200
   end
@@ -48,9 +48,14 @@ class EnrollmentsController < ApplicationController
     user = User.find_by_id(params[:userId])
     klass = Klass.find_by_id(params[:klassId])
 
-    user.klasses.append(klass)
-
-    render json: {}, status: 200
+    if not user.klasses.include? klass
+      user.klasses.append(klass)
+    else
+      user_klass = user.user_klasses.where(:klass_id => klass.id).first
+      user_klass.soft_unenrolled = 0
+      user_klass.save!
+    end
+    render json: {}, status: 201
   end
 
   def delete_enrollment

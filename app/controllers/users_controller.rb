@@ -115,4 +115,24 @@ class UsersController < ApplicationController
     roles = current_user.roles.map(&:attributes)
     render json: roles, status: 200
   end
+
+  def validate_user_email_uniqueness
+    params.require(:email)
+
+    if User.where(:email => params[:email]).count > 0
+      render json: {unique: false}, status: 200
+    else
+      render json: {unique: true}, status: 200
+    end
+  end
+
+  def validate_user_name_uniqueness
+    params.require(:name)
+
+    if User.where(:name => params[:name]).count > 0
+      render json: {unique: false}, status: 200
+    else
+      render json: {unique: true}, status: 200
+    end
+  end
 end

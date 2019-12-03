@@ -20,6 +20,8 @@ Jezykpolski::Application.routes.draw do
   post '/delete_user' => 'users#delete_user'
   post '/update_user' => 'users#update_user'
   get '/get_user_roles' => 'users#get_user_roles'
+  post '/validate_user_name_uniqueness' => 'users#validate_user_name_uniqueness'
+  post '/validate_user_email_uniqueness' => 'users#validate_user_email_uniqueness'
 
   get '/get_schools' => 'schools#get_schools'
 

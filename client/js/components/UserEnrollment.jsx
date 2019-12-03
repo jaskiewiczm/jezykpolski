@@ -8,8 +8,7 @@ import Image from 'react-bootstrap/Image'
 
 import UserSearch from './UserSearch.jsx'
 
-import styles from './Homeworks.scss'
-
+import styles from './UserEnrollment.scss'
 
 export default class UserEnrollment extends React.Component {
 
@@ -18,7 +17,8 @@ export default class UserEnrollment extends React.Component {
 
     this.state = {
       users: [],
-      students: []
+      students: [],
+      searchValue: null
     }
 
     this.getEnrolledUsers()
@@ -69,23 +69,33 @@ export default class UserEnrollment extends React.Component {
     })
   }
 
-  addUser = (user) => {
-    fetch('/add_enrollment', {
-      method: 'POST',
-      body: JSON.stringify({userId: user.id, klassId: this.props.klassId}),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    }).then((response)=>{
-      if (response.status == 200) {
-        return response.json()
-      }
-      return null
-    }).then((response)=>{
-      if (response != null) {
+  addUser = () => {
+    var that = this
+    var searchValue = this.state.searchValue
+    var user = this.state.students.find((user) => {return user.name == searchValue})
 
-      }
-    })
+    if (user != null) {
+      fetch('/add_enrollment', {
+        method: 'POST',
+        body: JSON.stringify({userId: user.id, klassId: this.props.klassId}),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }).then((response)=>{
+        if (response.status == 201) {
+          return response.json()
+        }
+        return null
+      }).then((response)=>{
+        if (response != null) {
+          var users = that.state.users
+          users.unshift(user)
+          that.setState({
+            users: users
+          })
+        }
+      })
+    }
   }
 
   deleteUser = (user) => {
@@ -113,11 +123,15 @@ export default class UserEnrollment extends React.Component {
   }
 
   selectedCallback = (value) => {
-
+    this.setState({
+      searchValue: value
+    })
   }
 
   clearCallback = () => {
-
+    this.setState({
+      searchValue: null
+    })
   }
 
   render() {
@@ -127,7 +141,14 @@ export default class UserEnrollment extends React.Component {
       <div>
         <Row>
           <Col>
-            <UserSearch users={this.state.students} selectedCallback={this.selectedCallback} clearCallback={this.clearCallback}/>
+            <div style={{display: 'flex'}}>
+              <div className='userEnrollmentUserSearch'>
+                <UserSearch users={this.state.students} selectedCallback={this.selectedCallback} clearCallback={this.clearCallback}/>
+              </div>
+              <div className='userEnrollmentButton'>
+                <Button variant={'light'} onClick={this.addUser}>Add</Button>
+              </div>
+            </div>
           </Col>
         </Row>
         <br />

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_02_005628) do
+ActiveRecord::Schema.define(version: 2019_12_03_041600) do
 
   create_table "books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "title"
@@ -144,7 +144,9 @@ ActiveRecord::Schema.define(version: 2019_12_02_005628) do
     t.bigint "parent_2_id"
     t.string "name"
     t.bigint "school_id"
+    t.index ["email", "school_id"], name: "index_users_on_email_and_school_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["name", "school_id"], name: "index_users_on_name_and_school_id", unique: true
     t.index ["parent_1_id"], name: "fk_rails_e17b45d8c8"
     t.index ["parent_2_id"], name: "fk_rails_f1d8d6e861"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
