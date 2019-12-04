@@ -47,23 +47,32 @@ class UsersController < ApplicationController
 
   def add_user
     params.require(:name)
-    params.require(:email)
 
-    u = User.new
-    u.name = params[:name]
-    u.email = params[:email]
-    u.password = 'TEMP_PASSWORD'
-    u.password_confirmation = 'TEMP_PASSWORD'
-
-    _parent_update(u)
-
-    params[:roles].each do |role_id|
-      u.roles.append(Role.find_by_id(role_id))
+    name_unique = validate_user_name_uniqueness(params[:name])
+    email_unique = true
+    if params.has_key? :email
+      email_unique = validate_user_email_uniqueness(params[:email])
     end
 
-    u.save!
+    if !name_unique || !email_unique
+      render json: {name_unique: name_unique, email_unique: email_unique}, status: 406
+    else
+      u = User.new
+      u.name = params[:name]
+      u.email = params[:email]
+      u.password = 'TEMP_PASSWORD'
+      u.password_confirmation = 'TEMP_PASSWORD'
 
-    render json: {}, status: 200
+      _parent_update(u)
+
+      params[:roles].each do |role_id|
+        u.roles.append(Role.find_by_id(role_id))
+      end
+
+      u.save!
+
+      render json: {name_unique: name_unique, email_unique: email_unique}, status: 200
+    end
   end
 
   def delete_user
@@ -86,29 +95,41 @@ class UsersController < ApplicationController
   def update_user
     params.require(:userId)
     params.require(:name)
-    params.require(:email)
 
     u = User.find_by_id(params[:userId])
-    u.name = params[:name]
-    u.email = params[:email]
-
-    _parent_update(u)
-
-    is_system_admin = u.roles.where('code = ?', 'admin').count > 0
-
-    u.roles.clear
-
-    params[:roles].each do |role_id|
-      u.roles.append(Role.find_by_id(role_id))
+    name_unique = validate_user_name_uniqueness(params[:name], u)
+    email_unique = true
+    p email_unique
+    if params.has_key? :email
+      email_unique = validate_user_email_uniqueness(params[:email], u)
+      p email_unique
     end
 
-    if is_system_admin
-      u.roles.append(Role.where('code = ?', 'admin').first)
+    p email_unique
+    if !name_unique || !email_unique
+      render json: {name_unique: name_unique, email_unique: email_unique}, status: 406
+    else
+      u.name = params[:name]
+      u.email = params[:email]
+
+      _parent_update(u)
+
+      is_system_admin = u.roles.where('code = ?', 'admin').count > 0
+
+      u.roles.clear
+
+      params[:roles].each do |role_id|
+        u.roles.append(Role.find_by_id(role_id))
+      end
+
+      if is_system_admin
+        u.roles.append(Role.where('code = ?', 'admin').first)
+      end
+
+      u.save!
+
+      render json: {name_unique: name_unique, email_unique: email_unique}, status: 200
     end
-
-    u.save!
-
-    render json: {}, status: 200
   end
 
   def get_user_roles
@@ -116,23 +137,31 @@ class UsersController < ApplicationController
     render json: roles, status: 200
   end
 
-  def validate_user_email_uniqueness
-    params.require(:email)
-
-    if User.where(:email => params[:email]).count > 0
-      render json: {unique: false}, status: 200
-    else
-      render json: {unique: true}, status: 200
+  def validate_user_email_uniqueness(email, target_user=nil)
+    if target_user.present?
+      if email == target_user.email
+        return true
+      elsif User.where(:email => email).count > 0
+        return false
+      end
+    elsif User.where(:email => email).count > 0
+      return false
     end
+
+    return true
   end
 
-  def validate_user_name_uniqueness
-    params.require(:name)
-
-    if User.where(:name => params[:name]).count > 0
-      render json: {unique: false}, status: 200
-    else
-      render json: {unique: true}, status: 200
+  def validate_user_name_uniqueness(name, target_user=nil)
+    if target_user.present?
+      if name == target_user.name
+        return true
+      elsif User.where(:name => name).count > 0
+        return false
+      end
+    elsif User.where(:name => name).count > 0
+      return false
     end
+
+    return true
   end
 end

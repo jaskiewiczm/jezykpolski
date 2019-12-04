@@ -100,9 +100,7 @@ export default class UserEditor extends React.Component {
   }
 
   handleSave = () => {
-    this.setState({
-      show: false
-    })
+    var that = this
 
     var path = ''
     if (this.state.addOrEdit == 'edit') {
@@ -122,7 +120,7 @@ export default class UserEditor extends React.Component {
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
-    }).then((response)=>{
+    }).then((response) => {
       if (response.status == 200) {
         this.props.callback(this.state.email, this.state.name, this.state.userRoles)
         this.props.user.parents = []
@@ -132,8 +130,24 @@ export default class UserEditor extends React.Component {
         if (this.state.parent2Id != null) {
           this.props.user.parents.push(this.state.parent2Id)
         }
-      } else {
-        this.props.callback()
+        that.setState({
+          show: false
+        })
+        return null
+      }
+
+      return response.json()
+      //else {
+      //  this.props.callback()
+      //}
+    }).then((response) => {
+      if (response != null) {
+        that.setState({
+          uniqueName: response.name_unique,
+          validatedName: true,
+          uniqueEmail: response.email_unique,
+          validatedEmail: true
+        })
       }
     })
   }
@@ -169,44 +183,19 @@ export default class UserEditor extends React.Component {
   }
 
   nameChanged = (evt) => {
-    var successCallback = () => {
-      this.setState({
+    this.setState({
         name: evt.currentTarget.value,
-        uniqueName: true,
-        validatedName: true
-      })
-    }
-
-    var failureCallback = () => {
-      this.setState({
-        name: evt.currentTarget.value,
-        uniqueName: false,
-        validatedName: true
-      })
-    }
-
-    this.validateUserNameUniqueness(evt.currentTarget.value, successCallback, failureCallback)
-
+        validatedName: false,
+        uniqueName: false
+    })
   }
 
   emailChanged = (evt) => {
-    var successCallback = () => {
-      this.setState({
+    this.setState({
         email: evt.currentTarget.value,
-        uniqueEmail: true,
-        validatedEmail: true
-      })
-    }
-
-    var failureCallback = () => {
-      this.setState({
-        email: evt.currentTarget.value,
-        uniqueEmail: false,
-        validatedEmail: true
-      })
-    }
-
-    this.validateEmailUniqueness(evt.currentTarget.value, successCallback, failureCallback)
+        validatedEmail: false,
+        uniqueEmail: false
+    })
   }
 
   addEnrollment = () => {
@@ -267,52 +256,6 @@ export default class UserEditor extends React.Component {
     })
   }
 
-  validateEmailUniqueness = (newEmail, successCallback, failureCallback) => {
-    var that = this
-    fetch('/validate_user_email_uniqueness', {
-      method: 'POST',
-      body: JSON.stringify({email: newEmail}),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    }).then((response) => {
-      if (response.status == 200) {
-        return response.json()
-      }
-    }).then((response) => {
-      if (response != null) {
-        if (response.unique == false) {
-          failureCallback()
-        } else {
-          successCallback()
-        }
-      }
-    })
-  }
-
-  validateUserNameUniqueness = (newName, successCallback, failureCallback) => {
-    var that = this
-    fetch('/validate_user_name_uniqueness', {
-      method: 'POST',
-      body: JSON.stringify({name: newName}),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    }).then((response) => {
-      if (response.status == 200) {
-        return response.json()
-      }
-    }).then((response) => {
-      if (response != null) {
-        if (response.unique == false) {
-          failureCallback()
-        } else {
-          successCallback()
-        }
-      }
-    })
-  }
-
   render() {
     var that = this
 
@@ -329,10 +272,7 @@ export default class UserEditor extends React.Component {
     if (parent2 != null) {
       parent2 = parent2.name
     }
-    console.log('validatedEmail ' + this.state.validatedEmail)
-    console.log('uniqueEmail ' + this.state.uniqueEmail)
-    var invalidEmail = this.state.validatedEmail && !this.state.uniqueEmail
-    console.log('invalidEmail ' + invalidEmail)
+
     return (
       <Modal show={this.state.show} size="lg">
         <Modal.Header>
@@ -347,7 +287,7 @@ export default class UserEditor extends React.Component {
             </Form.Group>
             <Form.Group>
               <Form.Label>Email</Form.Label>
-              <Form.Control type='email' value={this.state.email} onChange={this.emailChanged} isInvalid={this.state.validatedEmail && !this.state.uniqueEmail}/>
+              <Form.Control type='text' value={this.state.email} onChange={this.emailChanged} isInvalid={this.state.validatedEmail && !this.state.uniqueEmail}/>
               <Form.Control.Feedback type='invalid'>This email is not unique.</Form.Control.Feedback>
             </Form.Group>
             <Form.Group>

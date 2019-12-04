@@ -23,4 +23,9 @@ class User < ApplicationRecord
   has_many :child_users, foreign_key: :parent_id, class_name: 'UserUser'
   has_many :children, through: :child_users
 
+  protected
+  def email_required?
+    false
+  end
+
 end
