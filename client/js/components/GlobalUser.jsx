@@ -1,18 +1,12 @@
 
-import schoolStore from '../redux/Store.jsx'
 import {updateSchools} from '../redux/Actions.jsx'
 
 
 class GlobalUser {
   constructor() {
-
   }
 
   initialize = () => {
-    this.initializeSchools()
-  }
-
-  initializeSchools = () => {
     var that = this
     fetch('/get_schools', {
       method: 'GET',
@@ -25,25 +19,10 @@ class GlobalUser {
       }
     }).then((response)=>{
       if (response != null) {
-        schoolStore.dispatch(updateSchools(response));
-        console.log('After:', schoolStore.getState());
+        updateSchools(response)
       }
     })
   }
-
-  getSchools = () => {
-    var schools = schoolStore.getState().schools.schools
-    if (schools.length > 0) {
-      return schools[0].schools
-    } else {
-      return []
-    }
-  }
-
-  clear = () => {
-
-  }
-
 }
 
 const g_user = new GlobalUser()

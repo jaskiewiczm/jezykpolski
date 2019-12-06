@@ -29,8 +29,10 @@ export default class Homeworks extends React.Component {
       selectedSchoolId: schoolId,
       selectedKlassId: klassId
     }
+  }
 
-    if (schoolId != null && klassId != null) {
+  componentDidMount() {
+    if (this.state.selectedSchoolId != null && this.state.selectedKlassId != null) {
       this.getHomeworks()
     }
   }

@@ -1,10 +1,12 @@
 
+import {updateRoles} from '../redux/Actions.jsx'
+
+
 class GlobalRoles {
   constructor() {
-    this.roles = []
   }
 
-  _getRolesFromServer = () => {
+  initialize = () => {
     var that = this
     fetch('/get_roles', {
       method: 'GET',
@@ -18,27 +20,21 @@ class GlobalRoles {
       return null
     }).then((response)=>{
       if (response != null) {
-        that.roles = response
+        updateRoles(response);
       }
     })
   }
 
-  getRoles = () => {
-    return this.roles;
+  containsRole = (roleCode, roles) => {
+    if (roles != null) {
+      return roles.find((role) => {return role.code == roleCode})
+    } else {
+      return null
+    }
   }
 
-  setRoles = (newRoles) => {
-    this.roles = roles
-  }
-
-  containsRole = (roleCode) => {
-    return this.roles.find(role => role.code == roleCode)
-  }
-
-  clearRoles = () => {
-    this.roles = []
-  }
 }
+
 
 const g_roles = new GlobalRoles()
 export default g_roles

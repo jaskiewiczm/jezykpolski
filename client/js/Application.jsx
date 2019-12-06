@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from "react-redux";
 import {Link} from 'react-router-dom'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
@@ -10,7 +11,8 @@ import Alert from 'react-bootstrap/Alert'
 import g_roles from './components/GlobalRoles.jsx'
 import g_user from './components/GlobalUser.jsx'
 
-export default class Application extends React.Component {
+
+class Application extends React.Component {
 
   constructor(props) {
     super(props)
@@ -48,7 +50,7 @@ export default class Application extends React.Component {
       }
     }).then((response)=>{
       if (response != null) {
-        g_roles.roles = response.roles
+        g_roles.initialize()
         g_user.initialize()
 
         that.setState({
@@ -77,8 +79,9 @@ export default class Application extends React.Component {
       }
     }).then((response)=>{
       if (response != null) {
-        g_roles.roles = response.roles
+        g_roles.initialize()
         g_user.initialize()
+
         that.setState({
           loggedIn: true,
           loginFailed: false,
@@ -102,7 +105,7 @@ export default class Application extends React.Component {
       }
     }).then((response)=>{
       if (response.status == 200) {
-        g_roles.clearRoles()
+
         this.setState({
           loggedIn: false,
           loginFailed: false,
@@ -169,22 +172,22 @@ export default class Application extends React.Component {
     var gradebookLink = null
     var studentReportLink = null
 
-    if (g_roles.containsRole('admin') || g_roles.containsRole('school_admin')) {
+    if (g_roles.containsRole('admin', this.props.roles) || g_roles.containsRole('school_admin', this.props.roles)) {
       homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
       usersLink = <div><Link to="/users">Users</Link>&nbsp;&nbsp;&nbsp;</div>
       classesLink = <div><Link to="/klasses">Classes</Link>&nbsp;&nbsp;&nbsp;</div>
       gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
       studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
     }
-    if (g_roles.containsRole('teacher')) {
+    if (g_roles.containsRole('teacher', this.props.roles)) {
       homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
       gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
     }
-    if (g_roles.containsRole('student')) {
+    if (g_roles.containsRole('student', this.props.roles)) {
       homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
       studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
     }
-    if (g_roles.containsRole('parent')) {
+    if (g_roles.containsRole('parent', this.props.roles)) {
       homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
       studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
     }
@@ -213,3 +216,11 @@ export default class Application extends React.Component {
     )
   }
 }
+
+
+export default connect(state => {
+    return {
+        roles: state.roles,
+        schools: state.schools
+    }
+})(Application)

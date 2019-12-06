@@ -1,20 +1,20 @@
-import { SCHOOLS_UPDATED } from './Actions.jsx';
+import { SCHOOLS_UPDATED, ROLES_UPDATED } from './Actions.jsx';
 
 const initialState = {
-  schools: []
+  schools: [],
+  roles: []
 };
 
 function schoolsReducer(state = initialState, action) {
   switch(action.type) {
     case SCHOOLS_UPDATED:
-      return {
-        schools: [
-          {
-            schools: action.schools
-          }
-        ]
-      };
-
+      return Object.assign({}, state, {
+        schools: action.schools
+      })
+    case ROLES_UPDATED:
+      return Object.assign({}, state, {
+        roles: action.roles
+      })
     default:
       return state;
   };

@@ -1,5 +1,6 @@
 
 import React from "react"
+import { Provider } from 'react-redux'
 import ReactDOM from "react-dom"
 import {IndexRedirect, Route, Router} from 'react-router'
 import {BrowserRouter} from 'react-router-dom'
@@ -13,7 +14,11 @@ import Klasses from 'components/Klasses.jsx'
 import Gradebook from 'components/Gradebook.jsx'
 import UserReport from 'components/UserReport.jsx'
 
+import { createStore, combineReducers } from 'redux';
+import schoolsReducer from './redux/Reducers.jsx';
+
 const bindNode = document.getElementById('data-bind-node');
+export const reduxStore = createStore(schoolsReducer);
 
 
 if (!bindNode) {
@@ -21,15 +26,17 @@ if (!bindNode) {
 } else {
   ReactDOM.render(
     (
-      <BrowserRouter>
-        <Route path="/" component={Application} />
-        <Route path="/users" component={Users} />
-        <Route path="/homeworks" component={Homeworks}/>
-        <Route path="/welcome" component={Welcome} />
-        <Route path="/klasses" component={Klasses} />
-        <Route path="/gradebook" component={Gradebook} />
-        <Route path="/user_report" component={UserReport} />
-      </BrowserRouter>
+      <Provider store={reduxStore}>
+        <BrowserRouter>
+          <Route path="/" component={Application} />
+          <Route path="/users" component={Users} />
+          <Route path="/homeworks" component={Homeworks}/>
+          <Route path="/welcome" component={Welcome} />
+          <Route path="/klasses" component={Klasses} />
+          <Route path="/gradebook" component={Gradebook} />
+          <Route path="/user_report" component={UserReport} />
+        </BrowserRouter>
+      </Provider>
     ), bindNode
   )
 }

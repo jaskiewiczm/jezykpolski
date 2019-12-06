@@ -1,32 +1,29 @@
 import React from "react"
+import { connect } from "react-redux";
 
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 
 import g_user from './GlobalUser.jsx'
+import g_roles from './GlobalRoles.jsx'
 import schoolStore from '../redux/Store.jsx'
 
-export default class SchoolSelector extends React.Component {
+
+class SchoolSelector extends React.Component {
 
   constructor(props) {
     super(props)
 
-    var gSchools = g_user.getSchools()
     this.state = {
-      schools: gSchools,
-      title: this.getTitle(gSchools, parseInt(this.props.schoolId)),
+      title: this.getTitle(this.props.schools, parseInt(this.props.schoolId)),
       selectedSchoolId: parseInt(this.props.schoolId)
     }
-
-    schoolStore.subscribe(() => {
-      this.schoolsUpdated()
-    });
   }
 
   getTitle = (schools, selectedSchoolId) => {
     var that = this
     var title = 'School'
-    if (selectedSchoolId == null) {
+    if (schools == null || selectedSchoolId == null) {
       return title
     } else {
       var school = schools.find((element) => {
@@ -40,19 +37,10 @@ export default class SchoolSelector extends React.Component {
     }
   }
 
-  schoolsUpdated = () => {
-    var schools = g_user.getSchools()
-
-    this.setState({
-      schools: schools,
-      title: this.getTitle(schools, this.state.selectedSchoolId)
-    })
-  }
-
   schoolSelected = (schoolId) => {
     this.props.callback(schoolId)
 
-    var school = this.state.schools.find((element) => {
+    var school = this.props.schools.find((element) => {
       return element.id == schoolId;
     })
 
@@ -63,16 +51,28 @@ export default class SchoolSelector extends React.Component {
 
   render() {
     var that = this
-    return (
-      <div>
-        <DropdownButton title={this.state.title} id='foobar' drop={'left'} onSelect={that.schoolSelected}>
-          {
-            this.state.schools.map(function(key, index){
-              return <Dropdown.Item eventKey={key.id} key={index}>{key.name}</Dropdown.Item>
-            })
-          }
-        </DropdownButton>
-      </div>
-    )
+
+    if (g_roles.containsRole('admin', this.props.roles)) {
+      return (
+        <div>
+          <DropdownButton title={this.getTitle(this.props.schools, parseInt(this.state.selectedSchoolId))} id='foobar' drop={'left'} onSelect={that.schoolSelected}>
+            {
+              this.props.schools.map(function(key, index){
+                return <Dropdown.Item eventKey={key.id} key={index}>{key.name}</Dropdown.Item>
+              })
+            }
+          </DropdownButton>
+        </div>
+      )
+    } else {
+      return <div />
+    }
   }
 }
+
+export default connect(state => {
+    return {
+        roles: state.roles,
+        schools: state.schools
+    }
+})(SchoolSelector)
