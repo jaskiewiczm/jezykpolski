@@ -7,6 +7,22 @@ class UserReportsController < ApplicationController
     render 'layouts/application'
   end
 
+  def get_class_homework_distributions
+    user = User.find_by_id current_user.id
+
+    klasses_array = []
+    user.klasses.each do |klass|
+      gradebook = klass.gradebook
+      homeworks = Homework.where('klass_id = ?', klass.id).order('due_date asc')
+      homeworks.each do |homework|
+        earned_grades = EarnedGrade.where({:homework_id => homework.id, :gradebook_id => gradebook.id})
+                                   .group(:grading_scale_grade_id)
+                                   .count
+
+      end
+    end
+  end
+
   def get_user_report
 
     user = User.find_by_id current_user.id
@@ -17,7 +33,7 @@ class UserReportsController < ApplicationController
       klass_obj = klass.attributes
       klass_obj['homeworks'] = []
 
-      homeworks = Homework.where('klass_id = ?', klass.id)
+      homeworks = Homework.where('klass_id = ?', klass.id).order('due_date asc')
 
       homeworks.each do |homework|
         homework_obj = homework.attributes

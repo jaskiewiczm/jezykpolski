@@ -160,6 +160,12 @@ li {
 .gradeSelect:hover {
   background-color: #77dd77; }
 
+.gradebookHomeworkHeader {
+  cursor: pointer; }
+
+.gradebookHomeworkHeaderParentHover {
+  background: lightgray; }
+
 .gradebook {
   background-color: white;
   opacity: 1; }

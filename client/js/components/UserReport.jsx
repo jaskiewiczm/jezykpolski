@@ -9,6 +9,7 @@ import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import ListGroup from 'react-bootstrap/ListGroup'
 
 import "./UserReport.scss"
 
@@ -75,10 +76,19 @@ export default class UserReport extends React.Component {
                                 <Card.Body>
                                   <Row>
                                     <Col>
-                                      <LineChart key={klass.id} data={that.getKlassChartData(klass)} download={true}/>
+                                      <ListGroup>
+                                        {klass.homeworks.map(function(homework){
+                                          return  <ListGroup.Item key={homework.id}>
+                                                    <Row>
+                                                      <Col xs={8}>{homework.title}</Col>
+                                                      <Col xs={1}>{homework.grade}</Col>
+                                                    </Row>
+                                                  </ListGroup.Item>
+                                        })}
+                                      </ListGroup>
                                     </Col>
                                     <Col>
-
+                                      <LineChart key={klass.id} data={that.getKlassChartData(klass)} download={true}/>
                                     </Col>
                                   </Row>
                                 </Card.Body>
