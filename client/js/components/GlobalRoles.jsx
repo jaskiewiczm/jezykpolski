@@ -1,5 +1,5 @@
 
-import {updateRoles} from '../redux/Actions.jsx'
+import {updateRoles, updateMyRoles} from '../redux/Actions.jsx'
 
 
 class GlobalRoles {

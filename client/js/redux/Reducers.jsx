@@ -1,8 +1,9 @@
-import { SCHOOLS_UPDATED, ROLES_UPDATED } from './Actions.jsx';
+import { SCHOOLS_UPDATED, ROLES_UPDATED, MY_ROLES_UPDATED } from './Actions.jsx';
 
 const initialState = {
   schools: [],
-  roles: []
+  roles: [],
+  myRoles: []
 };
 
 function schoolsReducer(state = initialState, action) {
@@ -14,6 +15,10 @@ function schoolsReducer(state = initialState, action) {
     case ROLES_UPDATED:
       return Object.assign({}, state, {
         roles: action.roles
+      })
+    case MY_ROLES_UPDATED:
+      return Object.assign({}, state, {
+        myRoles: action.myRoles
       })
     default:
       return state;

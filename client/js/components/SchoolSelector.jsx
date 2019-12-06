@@ -6,7 +6,6 @@ import Dropdown from 'react-bootstrap/Dropdown'
 
 import g_user from './GlobalUser.jsx'
 import g_roles from './GlobalRoles.jsx'
-import schoolStore from '../redux/Store.jsx'
 
 
 class SchoolSelector extends React.Component {
@@ -72,7 +71,7 @@ class SchoolSelector extends React.Component {
 
 export default connect(state => {
     return {
-        roles: state.roles,
+        roles: state.myRoles,
         schools: state.schools
     }
 })(SchoolSelector)

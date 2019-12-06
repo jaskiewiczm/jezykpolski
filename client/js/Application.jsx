@@ -7,9 +7,12 @@ import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
+import Toast from 'react-bootstrap/Toast'
 
 import g_roles from './components/GlobalRoles.jsx'
 import g_user from './components/GlobalUser.jsx'
+
+import {updateMyRoles, updateSchools} from './redux/Actions.jsx'
 
 
 class Application extends React.Component {
@@ -52,6 +55,7 @@ class Application extends React.Component {
       if (response != null) {
         g_roles.initialize()
         g_user.initialize()
+        updateMyRoles(response.roles)
 
         that.setState({
           loggedIn: true,
@@ -81,6 +85,7 @@ class Application extends React.Component {
       if (response != null) {
         g_roles.initialize()
         g_user.initialize()
+        updateMyRoles(response.roles)
 
         that.setState({
           loggedIn: true,
@@ -97,7 +102,8 @@ class Application extends React.Component {
   }
 
   logout() {
-    g_user.clear()
+    updateMyRoles([])
+    updateSchools([])
     fetch('/logout', {
       method: 'POST',
       headers: {
@@ -220,7 +226,7 @@ class Application extends React.Component {
 
 export default connect(state => {
     return {
-        roles: state.roles,
+        roles: state.myRoles,
         schools: state.schools
     }
 })(Application)
