@@ -6,6 +6,7 @@ import Popover from 'react-bootstrap/Popover'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Button from 'react-bootstrap/Button'
 import ListGroup from 'react-bootstrap/ListGroup'
+import Badge from 'react-bootstrap/Badge'
 
 import $ from 'jquery'
 
@@ -55,7 +56,7 @@ export default class GradebookHomeworkHeader extends React.Component {
     return (
       <div ref={this.ref} className='gradebookHomeworkHeader' onClick={this.displayHomeworkEmailModal} onMouseEnter={() => this.setHover(true)} onMouseLeave={() => this.setHover(false)}>
         <div>{this.props.homework.due_date}</div>
-        <div>{this.props.homework.title}</div>
+        <div><Badge>{this.props.homework.title}</Badge></div>
         {modal}
       </div>
     )

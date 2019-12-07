@@ -182,3 +182,16 @@ li {
   background-color: white;
   opacity: 0.75; }
 
+.userReportNameRow {
+  background-color: gray;
+  border-radius: 5px; }
+
+.userReportKlassNameRow {
+  background-color: lightgray;
+  border-radius: 5px 5px 5px 5px;
+  margin-top: 5px; }
+
+.userReportHomeworkRow {
+  padding-top: 5px;
+  margin-bottom: 5px; }
+

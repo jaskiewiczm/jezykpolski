@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ListGroup from 'react-bootstrap/ListGroup'
+import Badge from 'react-bootstrap/Badge'
 
 import "./UserReport.scss"
 
@@ -52,12 +53,81 @@ export default class UserReport extends React.Component {
 
     var dataObj = {}
     klass.homeworks.forEach(function(homework){
-      dataObj[homework.due_date] = '+' + homework.grade
+      dataObj[homework.due_date] = homework.grade
     })
 
     data[0]['data'] = dataObj
 
     return data
+  }
+
+  visualizationToVariant = (variant) => {
+    if (variant == 'none') {
+      return 'secondary'
+    } else if (variant == 'bad') {
+      return 'danger'
+    } else if (variant == 'medium') {
+      return 'warning'
+    } else if (variant == 'good') {
+      return 'success'
+    }
+    return 'secondary'
+  }
+
+  renderUser = (userObj) => {
+    var that = this
+    return <ListGroup.Item>
+        <Row className='userReportNameRow'>
+          <Col><h1>{userObj.user.name}</h1></Col>
+        </Row>
+        {userObj.klasses.map(function(klass){
+          return <Row key={klass.id}>
+            <Col>
+              <Container>
+                <Row className='userReportKlassNameRow'>
+                  <Col>
+                    <h2>{klass.name}</h2>
+                  </Col>
+                </Row>
+                <Row className='userReportHomeworkRow'>
+                  <Col>
+                    <ListGroup>{that.renderKlass(klass)}</ListGroup>
+                  </Col>
+                  <Col>
+                    <Container>
+                      <Row>Grades over Time</Row>
+                      <Row>
+                        <LineChart key={klass.id} data={that.getKlassChartData(klass)} download={true}/>
+                      </Row>
+                    </Container>
+                  </Col>
+                </Row>
+              </Container>
+            </Col>
+          </Row>
+        })}
+      </ListGroup.Item>
+  }
+
+  renderKlass = (klass) => {
+    var that = this
+
+    return <div>
+        {klass.homeworks.map(function(homework){
+          return  <ListGroup.Item key={homework.id}>
+                    <Row>
+                      <Col xs={10}>
+                        <h3>{homework.title}</h3>
+                      </Col>
+                      <Col xs={1}>
+                        <h3>
+                          <Badge variant={that.visualizationToVariant(homework.visualization)}>{homework.grade}</Badge>
+                        </h3>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+        })}
+      </div>
   }
 
   render() {
@@ -66,36 +136,9 @@ export default class UserReport extends React.Component {
     var body = (<div />)
     if (this.state.userData != null) {
       body = (<div>
-                <Accordion>
-                  {this.state.userData.map(function(klass){
-                    return  <Card key={klass.id}>
-                              <Card.Header>
-                                <Accordion.Toggle as={Button} variant="link" eventKey="0">{klass.name}</Accordion.Toggle>
-                              </Card.Header>
-                              <Accordion.Collapse eventKey="0">
-                                <Card.Body>
-                                  <Row>
-                                    <Col>
-                                      <ListGroup>
-                                        {klass.homeworks.map(function(homework){
-                                          return  <ListGroup.Item key={homework.id}>
-                                                    <Row>
-                                                      <Col xs={8}>{homework.title}</Col>
-                                                      <Col xs={1}>{homework.grade}</Col>
-                                                    </Row>
-                                                  </ListGroup.Item>
-                                        })}
-                                      </ListGroup>
-                                    </Col>
-                                    <Col>
-                                      <LineChart key={klass.id} data={that.getKlassChartData(klass)} download={true}/>
-                                    </Col>
-                                  </Row>
-                                </Card.Body>
-                              </Accordion.Collapse>
-                            </Card>
-                  })}
-                </Accordion>
+                {this.state.userData.map(function(userObj){
+                  return <div>{that.renderUser(userObj)}</div>
+                })}
               </div>)
     }
 

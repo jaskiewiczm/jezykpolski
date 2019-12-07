@@ -92,6 +92,27 @@ class UsersController < ApplicationController
     u.parents.append(parent_2) if parent_2.present?
   end
 
+  def password_reset
+    params.require(:newPassword)
+    params.require(:userId)
+
+    if current_user.roles.where('code like ?', '%admin%')
+      u = User.find_by_id(params[:userId])
+      u.password = params[:newPassword]
+      u.password_confirmation = params[:newPassword]
+      u.save!
+    else
+      params.require(:oldPassword)
+      if current_user.id == params[:userId] && current_user.valid_password?(params[:oldPassword])
+        current_user.password = params[:newPassword]
+        current_user.password_confirmation = params[:newPassword]
+        current_user.save!
+      end
+    end
+
+    render json: {}, status: 200
+  end
+
   def update_user
     params.require(:userId)
     params.require(:name)

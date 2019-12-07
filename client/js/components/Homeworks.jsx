@@ -1,4 +1,5 @@
 import React from "react"
+import { connect } from "react-redux";
 import IndividualHomework from './IndividualHomework.jsx'
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
@@ -15,7 +16,7 @@ import Nav from 'react-bootstrap/Nav'
 import g_roles from './GlobalRoles.jsx'
 
 
-export default class Homeworks extends React.Component {
+class Homeworks extends React.Component {
 
   constructor(props) {
     super(props)
@@ -105,7 +106,9 @@ export default class Homeworks extends React.Component {
     }
 
     var addButton = <Nav className="mr-auto" />
-    if (g_roles.containsRole('teacher') || g_roles.containsRole('admin') || g_roles.containsRole('school_admin')) {
+    if (g_roles.containsRole('teacher', this.props.roles)
+        || g_roles.containsRole('admin', this.props.roles)
+        || g_roles.containsRole('school_admin', this.props.roles)) {
       addButton = <Nav className="mr-auto">
                     <Nav.Link onClick={that.add}>Add</Nav.Link>
                   </Nav>
@@ -162,3 +165,9 @@ export default class Homeworks extends React.Component {
     )
   }
 }
+
+export default connect(state => {
+    return {
+        roles: state.myRoles
+    }
+})(Homeworks)

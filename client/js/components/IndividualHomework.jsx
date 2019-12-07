@@ -1,4 +1,5 @@
 import React from "react"
+import { connect } from "react-redux";
 import HomeworkEditor from './HomeworkEditor.jsx'
 
 import swal from 'sweetalert';
@@ -7,10 +8,11 @@ import Row from 'react-bootstrap/Row'
 import Container from 'react-bootstrap/Container'
 import Image from 'react-bootstrap/Image'
 
+import g_roles from './GlobalRoles.jsx'
 
 import styles from "./IndividualHomework.scss"
 
-export default class IndividualHomework extends React.Component {
+class IndividualHomework extends React.Component {
 
   constructor(props) {
     super(props)
@@ -83,6 +85,20 @@ export default class IndividualHomework extends React.Component {
   render() {
     var editContent = this.state.editMode ? <HomeworkEditor homeworkId={this.state.homeworkId} homeworkTitle={this.state.homeworkTitle} description={this.state.description} callback={this.editClosed} dueDate={this.state.dueDate}/> : null
 
+    var editButton = null
+    if (g_roles.containsRole('student', this.props.roles) || g_roles.containsRole('parent', this.props.roles)) {
+
+    } else {
+      editButton = <Image src="pencil.png" onClick={this.editHomework} />
+    }
+
+    var readOrDeleteButton = null
+    if (g_roles.containsRole('student', this.props.roles) || g_roles.containsRole('parent', this.props.roles)) {
+
+    } else {
+      readOrDeleteButton = <Image src="trash.png" onClick={this.deleteHomework} />
+    }
+
     return (
       <div>
         <Container>
@@ -90,10 +106,10 @@ export default class IndividualHomework extends React.Component {
             <Col xs={2}>{this.state.dueDate}</Col>
             <Col xs={8} dangerouslySetInnerHTML={{__html: this.state.description}} />
             <Col xs={1}>
-              <Image src="pencil.png" onClick={this.editHomework} />
+              {editButton}
             </Col>
             <Col xs={1}>
-              <Image src="trash.png" onClick={this.deleteHomework} />
+              {readOrDeleteButton}
             </Col>
           </Row>
         </Container>
@@ -102,3 +118,9 @@ export default class IndividualHomework extends React.Component {
     )
   }
 }
+
+export default connect(state => {
+    return {
+        roles: state.myRoles
+    }
+})(IndividualHomework)
