@@ -98,6 +98,8 @@
   background-color: #e6e6e6; }
 
 
+.imageButtons {
+  cursor: pointer; }
 
 .homeworks {
   opacity: 0.75; }

@@ -103,6 +103,27 @@ export default class HomeworkEditor extends React.Component {
 
 
   render() {
+    var buttons = null
+    var rte = null
+    if (!this.props.homeworkEditorDisableFields) {
+      buttons =     <div>
+                      <Button variant="secondary" onClick={this.handleClose}>
+                        Close
+                      </Button>
+                      <Button variant="primary" onClick={this.handleSave}>
+                        Save Changes
+                      </Button>
+                    </div>
+      rte = <RichTextEditor
+              value={this.state.value}
+              onChange={this.onChange}/>
+    } else {
+      buttons =     <Button variant="primary" onClick={this.handleClose}>
+                      Close
+                    </Button>
+      rte = <div dangerouslySetInnerHTML={{__html: this.props.description}}></div>
+    }
+
     return (
       <Modal show={this.state.show} size="lg">
         <Modal.Header>
@@ -112,27 +133,20 @@ export default class HomeworkEditor extends React.Component {
           <Form>
             <Form.Group>
               <Form.Label>Title</Form.Label>
-              <Form.Control required type="text" onChange={this.onTitleChange} value={this.state.homeworkTitle}/>
+              <Form.Control disabled={this.props.homeworkEditorDisableFields} required type="text" onChange={this.onTitleChange} value={this.state.homeworkTitle}/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Due Date</Form.Label>
-              <Form.Control type="date" onChange={this.onDueDateChange} value={this.state.dueDate}/>
+              <Form.Control disabled={this.props.homeworkEditorDisableFields} type="date" onChange={this.onDueDateChange} value={this.state.dueDate}/>
             </Form.Group>
             <Form.Group>
               <Form.Label>Assignment</Form.Label>
-              <RichTextEditor
-                  value={this.state.value}
-                  onChange={this.onChange}/>
+              {rte}
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={this.handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={this.handleSave}>
-            Save Changes
-          </Button>
+          {buttons}
         </Modal.Footer>
       </Modal>
     )

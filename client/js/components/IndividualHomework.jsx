@@ -18,6 +18,7 @@ class IndividualHomework extends React.Component {
     super(props)
 
     this.state = {
+      homeworkEditorDisableFields: false,
       editMode: false,
       description: this.props.description,
       homeworkId: this.props.homeworkId,
@@ -64,7 +65,15 @@ class IndividualHomework extends React.Component {
 
   editHomework = () => {
     this.setState({
-      editMode: true
+      editMode: true,
+      homeworkEditorDisableFields: false
+    })
+  }
+
+  readHomework = () => {
+    this.setState({
+      editMode: true,
+      homeworkEditorDisableFields: true
     })
   }
 
@@ -83,20 +92,17 @@ class IndividualHomework extends React.Component {
   }
 
   render() {
-    var editContent = this.state.editMode ? <HomeworkEditor homeworkId={this.state.homeworkId} homeworkTitle={this.state.homeworkTitle} description={this.state.description} callback={this.editClosed} dueDate={this.state.dueDate}/> : null
-
-    var editButton = null
-    if (g_roles.containsRole('student', this.props.roles) || g_roles.containsRole('parent', this.props.roles)) {
-
-    } else {
-      editButton = <Image src="pencil.png" onClick={this.editHomework} />
-    }
+    var editContent = this.state.editMode ? <HomeworkEditor homeworkEditorDisableFields={this.state.homeworkEditorDisableFields} homeworkId={this.state.homeworkId} homeworkTitle={this.state.homeworkTitle} description={this.state.description} callback={this.editClosed} dueDate={this.state.dueDate}/> : null
 
     var readOrDeleteButton = null
-    if (g_roles.containsRole('student', this.props.roles) || g_roles.containsRole('parent', this.props.roles)) {
-
+    var editButton = null
+    if (g_roles.containsRole('admin', this.props.roles)
+        || g_roles.containsRole('school_admin', this.props.roles)
+        || g_roles.containsRole('teacher', this.props.roles)) {
+      editButton = <Image className='imageButtons' src="pencil.png" onClick={this.editHomework} />
+      readOrDeleteButton = <Image className='imageButtons' src="trash.png" onClick={this.deleteHomework} />
     } else {
-      readOrDeleteButton = <Image src="trash.png" onClick={this.deleteHomework} />
+      readOrDeleteButton = <Image className='imageButtons' src="search.svg" onClick={this.readHomework} />
     }
 
     return (
@@ -104,7 +110,11 @@ class IndividualHomework extends React.Component {
         <Container>
           <Row>
             <Col xs={2}>{this.state.dueDate}</Col>
-            <Col xs={8} dangerouslySetInnerHTML={{__html: this.state.description}} />
+            <Col xs={8}>
+              <Container>
+                <Row><Col>{this.state.homeworkTitle}</Col></Row>
+              </Container>
+            </Col>
             <Col xs={1}>
               {editButton}
             </Col>
