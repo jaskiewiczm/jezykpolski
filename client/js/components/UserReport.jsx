@@ -53,7 +53,7 @@ export default class UserReport extends React.Component {
 
     var dataObj = {}
     klass.homeworks.forEach(function(homework){
-      dataObj[homework.due_date] = homework.grade
+      dataObj[homework.due_date] = homework.value
     })
 
     data[0]['data'] = dataObj

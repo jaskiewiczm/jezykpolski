@@ -27,7 +27,7 @@ class UserReportsController < ApplicationController
     user = User.find_by_id student_id
 
     klasses_array = []
-    user.klasses.each do |klass|
+    user.klasses.order(:created_at).each do |klass|
       gradebook = klass.gradebook
       klass_obj = klass.attributes
       klass_obj['homeworks'] = []
@@ -41,6 +41,7 @@ class UserReportsController < ApplicationController
         earned_grades.each do |earned_grade|
           gsg = GradingScaleGrade.find_by_id(earned_grade.grading_scale_grade_id)
           homework_obj['grade'] = gsg.name
+          homework_obj['value'] = gsg.value
           homework_obj['visualization'] = gsg.visualization_level
         end
 
@@ -60,7 +61,7 @@ class UserReportsController < ApplicationController
   def get_user_report
     users_array = []
     if current_user.is_parent?
-      current_user.children.each do |child|
+      current_user.children.order(:name).each do |child|
         users_array << _get_user_report(child)
       end
     elsif current_user.is_student?

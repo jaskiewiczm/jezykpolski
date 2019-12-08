@@ -109,7 +109,7 @@ export default class HomeworkEditor extends React.Component {
       buttons =     <div>
                       <Button variant="secondary" onClick={this.handleClose}>
                         Close
-                      </Button>
+                      </Button>&nbsp;
                       <Button variant="primary" onClick={this.handleSave}>
                         Save Changes
                       </Button>

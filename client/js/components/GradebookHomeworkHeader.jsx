@@ -56,7 +56,7 @@ export default class GradebookHomeworkHeader extends React.Component {
     return (
       <div ref={this.ref} className='gradebookHomeworkHeader' onClick={this.displayHomeworkEmailModal} onMouseEnter={() => this.setHover(true)} onMouseLeave={() => this.setHover(false)}>
         <div>{this.props.homework.due_date}</div>
-        <div><Badge>{this.props.homework.title}</Badge></div>
+        <div><Badge variant='info'>{this.props.homework.title}</Badge></div>
         {modal}
       </div>
     )
