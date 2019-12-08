@@ -24,7 +24,15 @@ class GradebooksController < ApplicationController
     klass = Klass.find_by_id params[:klassId]
     users = klass.users
     homeworks = klass.homeworks.where(:disabled => false)
-    grades = klass.gradebook.earned_grades
+    grades = klass.gradebook.earned_grades.includes(:email)
+    return_grades = grades.map(&:attributes)
+
+    grades.each_with_index do |grade, index|
+      return_grade = return_grades[index]
+      if grade.email.present?
+        return_grade['email'] = 'pending' if grade.email.sent_at.nil?
+      end
+    end
 
     homeworks = homeworks.map(&:attributes)
     homeworks = homeworks.sort_by {|h| h['due_date']}
@@ -33,7 +41,7 @@ class GradebooksController < ApplicationController
       gradebook_id: klass.gradebook.id,
       users: users.map(&:attributes),
       homeworks: homeworks,
-      grades: grades.map(&:attributes)
+      grades: return_grades
     }
 
     render json: json, status: 200
@@ -47,6 +55,7 @@ class GradebooksController < ApplicationController
     gradebook = homework.klass.gradebook
     grading_scale_grade = GradingScaleGrade.find_by_id params[:gradingScaleGradeId]
 
+    earned_grade = nil
     if params[:earnedGradeId].nil?
       earned_grade = EarnedGrade.new
       earned_grade.user = user
@@ -58,6 +67,10 @@ class GradebooksController < ApplicationController
 
     earned_grade.grading_scale_grade = grading_scale_grade
     earned_grade.save!
+
+    email = Email.new
+    email.update_attribute(:emailable, earned_grade)
+    email.save!
 
     render json: {grade: earned_grade}, status: 200
   end
