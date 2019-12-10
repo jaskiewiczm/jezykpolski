@@ -31,6 +31,16 @@ class User < ApplicationRecord
     return self.roles.where(:code => 'student').count == 1
   end
 
+  def emailable_users
+    users = [self]
+
+    if is_student?
+      users = users + parents
+    end
+
+    users
+  end
+
   protected
   def email_required?
     false

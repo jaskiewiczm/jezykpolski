@@ -20,6 +20,8 @@ gem 'pg', '~> 1.1.4'
 gem 'pry'
 gem 'sanitize', '~> 5.1.0'
 gem 'axlsx_rails'
+gem 'delayed_job_active_record'
+gem 'sendgrid-ruby'
 
 
 group :development, :test do

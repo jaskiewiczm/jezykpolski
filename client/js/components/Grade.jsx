@@ -103,7 +103,7 @@ export default class Grade extends React.Component {
                 return (
                   <tr key={rowIndex}>
                     {row.cells.map(function(cell, cellIndex){
-                      return <td key={cellIndex} align='center' colspan={row.colspan} className='gradeSelect' onClick={() => {that.saveGrade(cell, that.props.userId, that.props.homeworkId)}}>{cell.name}</td>
+                      return <td key={cellIndex} align='center' colSpan={row.colspan} className='gradeSelect' onClick={() => {that.saveGrade(cell, that.props.userId, that.props.homeworkId)}}>{cell.name}</td>
                     })}
                   </tr>)
               })}
@@ -115,11 +115,19 @@ export default class Grade extends React.Component {
 
   render() {
     var variant = this.state == null ? 'light' : (this.state.displayGrade == 'N/A' ? 'light' : 'success')
+    var star = null
+    if (this.props.earnedGrade != null && this.props.earnedGrade.email == 'pending') {
+      star = '<span>*</span>'
+    }
     return (
       <div className='grade'>
-        <OverlayTrigger trigger="click" placement="bottom" overlay={this.gradePopover()} ref={(ref) => this.overlay = ref}>
-          <Button variant={variant}>{this.state.displayGrade}</Button>
-        </OverlayTrigger>
+        <div className='overlayTriggerWrapper'>
+          <OverlayTrigger trigger="click" placement="bottom" overlay={this.gradePopover()} ref={(ref) => this.overlay = ref}>
+            <Button variant={variant}>{this.state.displayGrade}</Button>
+          </OverlayTrigger>
+          &nbsp;
+        </div>
+        <div className='pendingEmailMarker' dangerouslySetInnerHTML={{__html: star}}></div>
       </div>
     )
   }

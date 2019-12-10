@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Table from 'react-bootstrap/Table'
+import Image from 'react-bootstrap/Image'
 
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
@@ -130,6 +131,25 @@ export default class Gradebook extends React.Component {
     })
   }
 
+  sendEmails = () => {
+    fetch('/send_grade_emails', {
+      method: 'POST',
+      body: JSON.stringify({gradebookId: this.state.gradebookId}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    })
+
+    var grades = this.state.grades
+    grades.forEach(grade => {
+      grade.email = ''
+    })
+
+    this.setState({
+      grades: grades
+    })
+  }
+
   render() {
     var that = this
 
@@ -144,7 +164,9 @@ export default class Gradebook extends React.Component {
       body = (<Table responsive striped hover>
           <thead className='gradebook'>
             <tr>
-              <th></th>
+              <th className='envelopeButtonParent' onClick={this.sendEmails}>
+                <Image className='envelopeButton' src="envelope.svg" />
+              </th>
               {this.state.homeworks.map(function(homework, index) {
                 return <th key={index}><GradebookHomeworkHeader homework={homework}/></th>
               })}

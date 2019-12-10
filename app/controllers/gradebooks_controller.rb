@@ -81,4 +81,20 @@ class GradebooksController < ApplicationController
     send_file(gradebook.gradebook_to_excel_file)
   end
 
+  def send_grade_emails
+    params.require(:gradebookId)
+    gradebook_id = params['gradebookId']
+
+    gradebook = Gradebook.find_by_id gradebook_id
+    earned_grades = gradebook.earned_grades.joins(:jezyk_polski_email).where('jezyk_polski_emails.sent_at is null')
+
+    earned_grades.each do |eg|
+      email_obj = eg.get_earned_grade_posted_email
+      eg.user.emailable_users.each do |user|
+        email_obj[:to] = user.email
+        SendGridHelper.delay.send_email(email_obj)
+      end
+    end
+  end
+
 end

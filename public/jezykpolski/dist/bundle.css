@@ -162,6 +162,13 @@ li {
 .gradeSelect:hover {
   background-color: #77dd77; }
 
+.pendingEmailMarker {
+  color: red;
+  float: left; }
+
+.overlayTriggerWrapper {
+  float: left; }
+
 .gradebookHomeworkHeader {
   cursor: pointer; }
 
@@ -179,6 +186,13 @@ li {
 
 .exportLink {
   color: gray !important; }
+
+.envelopeButton {
+  width: 48px; }
+
+.envelopeButtonParent {
+  cursor: pointer;
+  text-align: center; }
 
 .userReport {
   background-color: white;

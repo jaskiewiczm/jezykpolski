@@ -48,6 +48,13 @@ export default class GradebookHomeworkHeader extends React.Component {
   }
 
   render() {
+    return (
+      <div className='gradebookHomeworkHeader'>
+        <div>{this.props.homework.due_date}</div>
+        <div><Badge variant='info'>{this.props.homework.title}</Badge></div>
+      </div>
+    )
+    /*
     var modal = null
     if (this.state.displayHomeworkEmailModal) {
       modal = <HomeworkEmailModal callback={this.displayHomeworkEmailModalCallback}/>
@@ -60,5 +67,6 @@ export default class GradebookHomeworkHeader extends React.Component {
         {modal}
       </div>
     )
+    */
   }
 }
