@@ -164,7 +164,8 @@ li {
 
 .pendingEmailMarker {
   color: red;
-  float: left; }
+  float: left;
+  font-size: 150%; }
 
 .overlayTriggerWrapper {
   float: left; }
@@ -192,7 +193,8 @@ li {
 
 .envelopeButtonParent {
   cursor: pointer;
-  text-align: center; }
+  text-align: center;
+  width: 220px; }
 
 .userReport {
   background-color: white;

@@ -53,6 +53,10 @@ export default class Grade extends React.Component {
       return null
     }).then((response) => {
       if (response != null) {
+        if (this.props.earnedGrade != null) {
+          this.props.earnedGrade.email = 'pending'
+        }
+        response.grade.email = 'pending'
         this.overlay.hide()
         this.setState({
           displayGrade: gradingScaleGradeObj.name,
@@ -116,7 +120,7 @@ export default class Grade extends React.Component {
   render() {
     var variant = this.state == null ? 'light' : (this.state.displayGrade == 'N/A' ? 'light' : 'success')
     var star = null
-    if (this.props.earnedGrade != null && this.props.earnedGrade.email == 'pending') {
+    if (this.state.earnedGrade != null && this.state.earnedGrade.email == 'pending') {
       star = '<span>*</span>'
     }
     return (

@@ -17,6 +17,10 @@ export default class KlassEditor extends React.Component {
     super(props)
 
     var name = this.props.name != null ? this.props.name : ''
+    var selectedTeacherId = null
+    if (this.props.klass != null) {
+      selectedTeacherId = this.props.klass.teacher_id
+    }
 
     this.state = {
       klassId: this.props.klassId,
@@ -25,7 +29,13 @@ export default class KlassEditor extends React.Component {
       show: true,
       title: this.props.title == null ? 'Edit Class' : this.props.title,
       addOrEdit: this.props.title == null ? 'edit' : 'add',
+      teachers: [],
+      selectedTeacherId: selectedTeacherId
     }
+  }
+
+  componentDidMount() {
+    this.getTeachers()
   }
 
   handleClose = () => {
@@ -36,7 +46,32 @@ export default class KlassEditor extends React.Component {
     this.props.callback(this.state.name)
   }
 
+  getTeachers = () => {
+    fetch('/teachers', {
+      method: 'POST',
+      body: JSON.stringify({schoolId: this.props.schoolId}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
+    }).then((response) => {
+      if (response != null) {
+        this.setState({
+          teachers: response
+        })
+      }
+    })
+  }
+
   handleSave = () => {
+    if (this.props.klass != null) {
+      this.props.klass.teacher_id = this.state.selectedTeacherId
+    }
+
     this.setState({
       show: false
     })
@@ -50,7 +85,7 @@ export default class KlassEditor extends React.Component {
 
     fetch(path, {
       method: 'POST',
-      body: JSON.stringify({name: this.state.name, klassId: this.props.klassId, schoolId: this.props.schoolId}),
+      body: JSON.stringify({name: this.state.name, klassId: this.props.klassId, schoolId: this.props.schoolId, teacherId: this.state.selectedTeacherId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -66,7 +101,22 @@ export default class KlassEditor extends React.Component {
     this.setState({name: evt.currentTarget.value})
   }
 
+  teacherChanged = (evt) => {
+    var x= 0
+    x = 1
+    var teacher = this.state.teachers.find(function(teacher){
+      return teacher.name == evt.currentTarget.value
+    })
+
+    if (teacher != null) {
+      this.setState({
+        selectedTeacherId: teacher.id
+      })
+    }
+  }
+
   render() {
+    var that = this
     return (
       <Modal show={this.state.show} size="lg">
         <Modal.Header>
@@ -77,6 +127,13 @@ export default class KlassEditor extends React.Component {
             <Form.Group>
               <Form.Label>Name</Form.Label>
               <Form.Control type='text' value={this.state.name} onChange={this.nameChanged}/>
+              <Form.Label>Teacher</Form.Label>
+              <Form.Control as='select' onChange={this.teacherChanged}>
+                <option></option>
+                {this.state.teachers.map(function(teacher){
+                  return <option key={teacher.id} selected={teacher.id == that.state.selectedTeacherId ? 'selected' : false}>{teacher.name}</option>
+                })}
+              </Form.Control>
               <br />
               <Form.Label>Enrollments</Form.Label>
               <UserEnrollment schoolId={this.props.schoolId} klassId={this.props.klassId}/>

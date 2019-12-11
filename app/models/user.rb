@@ -9,7 +9,6 @@ class User < ApplicationRecord
   has_many :user_roles
   has_many :reading_logs
   has_many :user_klasses
-  #has_many :klasses, -> { where(UserKlass.soft_unenrolled: 0) }, :through => :user_klasses
   has_many :klasses, :through => :user_klasses do
    def active
      where("user_klasses.soft_unenrolled = ?", 0)
@@ -22,6 +21,7 @@ class User < ApplicationRecord
   has_many :parents, through: :parent_users
   has_many :child_users, foreign_key: :parent_id, class_name: 'UserUser'
   has_many :children, through: :child_users
+  has_many :taught_klasses, foreign_key: :teacher_id, class_name: 'Klass'
 
   def is_parent?
     return self.roles.where(:code => 'parent').count == 1

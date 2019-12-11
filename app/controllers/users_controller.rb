@@ -10,11 +10,25 @@ class UsersController < ApplicationController
   def students
     params.require(:schoolId)
 
-    users = User.joins(:user_roles).joins(:roles).where(roles: {code: 'student'})
+    #users = User.joins(:user_roles).joins(:roles).where(roles: {code: 'student'})
+    #users = users.map(&:attributes)
+    #users = users.map{|user| user.select {|k,v| [:email.to_s, :id.to_s, :name.to_s].include?(k)}}
+
+    users = get_by_role(params[:schoolId], 'student')
+    render json: users, status: 200
+  end
+
+  def teachers
+    params.require(:schoolId)
+    users = get_by_role(params[:schoolId], 'teacher')
+    render json: users, status: 200
+  end
+
+  def get_by_role(schoolId, role)
+    users = User.joins(:user_roles).joins(:roles).where(roles: {code: role}).order(:name).distinct
     users = users.map(&:attributes)
     users = users.map{|user| user.select {|k,v| [:email.to_s, :id.to_s, :name.to_s].include?(k)}}
-
-    render json: users, status: 200
+    users
   end
 
   def users

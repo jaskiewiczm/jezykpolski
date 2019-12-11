@@ -24,13 +24,13 @@ class GradebooksController < ApplicationController
     klass = Klass.find_by_id params[:klassId]
     users = klass.users
     homeworks = klass.homeworks.where(:disabled => false)
-    grades = klass.gradebook.earned_grades.includes(:email)
+    grades = klass.gradebook.earned_grades.includes(:jezyk_polski_email)
     return_grades = grades.map(&:attributes)
 
     grades.each_with_index do |grade, index|
       return_grade = return_grades[index]
-      if grade.email.present?
-        return_grade['email'] = 'pending' if grade.email.sent_at.nil?
+      if grade.jezyk_polski_email.present?
+        return_grade['email'] = 'pending' if grade.jezyk_polski_email.where(:sent_at => nil).count > 0
       end
     end
 
@@ -68,7 +68,7 @@ class GradebooksController < ApplicationController
     earned_grade.grading_scale_grade = grading_scale_grade
     earned_grade.save!
 
-    email = Email.new
+    email = JezykPolskiEmail.new
     email.update_attribute(:emailable, earned_grade)
     email.save!
 
@@ -92,9 +92,10 @@ class GradebooksController < ApplicationController
       email_obj = eg.get_earned_grade_posted_email
       eg.user.emailable_users.each do |user|
         email_obj[:to] = user.email
-        SendGridHelper.delay.send_email(email_obj)
+        eg.jezyk_polski_email.first.delay.send_email(email_obj)
       end
     end
+    render json: {}, status: 200
   end
 
 end

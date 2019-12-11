@@ -13,6 +13,7 @@ class Klass < ApplicationRecord
   has_many :documents
   has_one :gradebook
   has_many :homeworks
+  belongs_to :teacher, :foreign_key => 'teacher_id', :class_name => :User
 
   def initialize(args)
     super(args)

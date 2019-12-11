@@ -29,6 +29,11 @@ class KlassesController < ApplicationController
 
     klass = Klass.find_by_id params[:klassId]
     klass.name = params[:name]
+
+    if params.has_key? :teacherId
+      klass.teacher_id = params[:teacherId]
+    end
+
     klass.save!
 
     render json: {}, status: 200
@@ -41,6 +46,11 @@ class KlassesController < ApplicationController
     klass = Klass.new
     klass.name = params[:name]
     klass.school_id = params[:schoolId]
+
+    if params.has_key? :teacherId
+      klass.teacher_id = params[:teacherId]
+    end
+
     klass.save!
 
     render json: {}, status: 200
