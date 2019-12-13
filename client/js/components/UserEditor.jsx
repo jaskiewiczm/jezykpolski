@@ -205,13 +205,19 @@ export default class UserEditor extends React.Component {
   }
 
   addEnrollmentCallback = (klass) => {
-    var enrollments = this.state.enrollments
-    enrollments.push(klass)
+    if (klass != null) {
+      var enrollments = this.state.enrollments
+      enrollments.push(klass)
 
-    this.setState({
-      showAddEnrollments: false,
-      enrollments: enrollments
-    })
+      this.setState({
+        showAddEnrollments: false,
+        enrollments: enrollments
+      })
+    } else {
+      this.setState({
+        showAddEnrollments: false
+      })
+    }
   }
 
   permissionsChanged = (event) => {

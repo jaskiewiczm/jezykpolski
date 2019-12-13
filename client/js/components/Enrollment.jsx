@@ -66,7 +66,7 @@ export default class Enrollment extends React.Component {
           "Content-Type": "application/json; charset=utf-8"
         }
       }).then((response)=>{
-        if (response.status == 200) {
+        if (response.status == 201) {
           var klass = this.state.klasses.find((member) => {
             return member.id == this.state.selectedKlassId
           })
