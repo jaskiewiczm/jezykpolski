@@ -22,6 +22,7 @@ gem 'sanitize', '~> 5.1.0'
 gem 'axlsx_rails'
 gem 'delayed_job_active_record'
 gem 'sendgrid-ruby'
+gem 'jwt'
 
 
 group :development, :test do

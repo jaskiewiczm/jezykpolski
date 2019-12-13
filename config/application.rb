@@ -54,5 +54,6 @@ module Jezykpolski
     config.assets.version = '1.0'
     config.active_job.queue_adapter = :delayed_job
     config.sendgrid = config_for(:sendgrid)
+    config.jwt = config_for(:jwt)
   end
 end

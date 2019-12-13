@@ -31,4 +31,27 @@ class LoginController < ApplicationController
     sign_out current_user
     render json: {}, status: 200
   end
+
+  def password_reset
+    if current_user.present?
+      params.require(:oldPassword).require(:newPassword).require(:newPasswordConfirmation)
+      if current_user.valid_password?(params[:oldPassword])
+        current_user.password = params[:newPassword]
+        current_user.password_confirmation = params[:newPasswordConfirmation]
+        current_user.save!
+        render json: {}, status: 200
+      else
+        render json: {}, status: 403
+      end
+    else
+      params.require [:jwt, :newPassword, :newPasswordConfirmation]
+      secret = Rails.application.config.jwt['JWT_SECRET']
+      decoded_token = JWT.decode params[:jwt], secret, true, { algorithm: 'HS256' }
+      user_id = decoded_token['user_id']
+
+      user = User.find_by_id user_id
+    end
+
+    render json: {}, status: 403
+  end
 end

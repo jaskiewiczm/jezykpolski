@@ -31,6 +31,10 @@ class User < ApplicationRecord
     return self.roles.where(:code => 'student').count == 1
   end
 
+  def is_admin?
+    return self.roles.where('code like ?', '%admin%').count > 0
+  end
+
   def emailable_users
     users = [self]
 
