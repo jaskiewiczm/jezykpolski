@@ -50,12 +50,17 @@ class EnrollmentsController < ApplicationController
 
     if not user.klasses.include? klass
       user.klasses.append(klass)
+      render json: {}, status: 201
     else
       user_klass = user.user_klasses.where(:klass_id => klass.id).first
-      user_klass.soft_unenrolled = 0
-      user_klass.save!
+      if user_klass.soft_unenrolled == 1
+        user_klass.soft_unenrolled = 0
+        user_klass.save!
+        render json: {}, status: 201
+      else
+        render json: {}, status: 403
+      end
     end
-    render json: {}, status: 201
   end
 
   def delete_enrollment
