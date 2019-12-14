@@ -14,6 +14,8 @@ import g_user from './components/GlobalUser.jsx'
 
 import {updateMyRoles, updateSchools} from './redux/Actions.jsx'
 
+import {styles} from './Application.scss'
+
 
 class Application extends React.Component {
 
@@ -136,6 +138,10 @@ class Application extends React.Component {
       return (
           <Form inline>
             <span style={{fontSize: '1.25em', color: 'white', paddingRight: '10px'}}>{this.state.email}</span>
+            <Link to="/user_settings">
+              <img className='userButton' src='/user.svg' />
+            </Link>
+            &nbsp;&nbsp;
             <Button variant="outline-info" onClick={this.logout}>Logout</Button>
           </Form>
         )

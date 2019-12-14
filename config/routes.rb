@@ -50,4 +50,6 @@ Jezykpolski::Application.routes.draw do
 
   get '/get_roles' => 'roles#get_roles'
 
+  get '/user_settings' => 'user_settings#index'
+
 end

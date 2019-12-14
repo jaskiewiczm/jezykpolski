@@ -1,3 +1,6 @@
+.userButton {
+  width: 32px; }
+
 
 .react-calendar {
   width: 350px;
@@ -192,7 +195,6 @@ li {
   width: 48px; }
 
 .envelopeButtonParent {
-  cursor: pointer;
   text-align: center;
   width: 220px; }
 
@@ -212,4 +214,11 @@ li {
 .userReportHomeworkRow {
   padding-top: 5px;
   margin-bottom: 5px; }
+
+.userSettingsContainer {
+  background: white;
+  padding: 20px; }
+
+.userSettingsSaveButton {
+  float: right; }
 

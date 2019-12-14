@@ -36,6 +36,7 @@ export default class Grade extends React.Component {
   }
 
   saveGrade = (gradingScaleGradeObj, userId, homeworkId) => {
+    var that = this
     var earnedGradeId = null
     if (this.state.earnedGrade != null) {
       earnedGradeId = this.state.earnedGrade.id
@@ -62,6 +63,7 @@ export default class Grade extends React.Component {
           displayGrade: gradingScaleGradeObj.name,
           earnedGrade: response.grade
         })
+        that.props.gradeSetCallback()
       }
     })
   }

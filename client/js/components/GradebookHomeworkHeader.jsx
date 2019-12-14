@@ -51,7 +51,7 @@ export default class GradebookHomeworkHeader extends React.Component {
     return (
       <div className='gradebookHomeworkHeader'>
         <div>{this.props.homework.due_date}</div>
-        <div><Badge variant='info'>{this.props.homework.title}</Badge></div>
+        <div>{this.props.homework.title}</div>
       </div>
     )
     /*

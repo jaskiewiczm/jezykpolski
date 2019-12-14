@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Table from 'react-bootstrap/Table'
 import Image from 'react-bootstrap/Image'
+import Button from 'react-bootstrap/Button'
 
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
@@ -30,7 +31,9 @@ export default class Gradebook extends React.Component {
       grades: [],
       users: [],
       sortedHomeworkIds: [],
-      gradingScale: []
+      gradingScale: [],
+
+      emailDisabled: true
     }
 
     this.getGradingScale()
@@ -51,6 +54,12 @@ export default class Gradebook extends React.Component {
     localStorage.setItem('gradebookSelectedKlassId', klassId)
   }
 
+  gradeSetCallback = () => {
+    this.setState({
+      emailDisabled: false
+    })
+  }
+
   getGradebook = () => {
     var that = this
     fetch('/get_gradebook', {
@@ -66,12 +75,15 @@ export default class Gradebook extends React.Component {
       return null
     }).then((response) => {
       if (response != null) {
+        var emailDisabled = response.grades.find(function(grade){ return grade.email == 'pending' }) == null
+
         this.setState({
           grades: response.grades,
           homeworks: response.homeworks,
           users: response.users,
           sortedHomeworkIds: response.homeworks.map(function(item){ return item.id }),
-          gradebookId: response.gradebook_id
+          gradebookId: response.gradebook_id,
+          emailDisabled: emailDisabled
         })
       }
     })
@@ -146,7 +158,8 @@ export default class Gradebook extends React.Component {
     })
 
     this.setState({
-      grades: grades
+      grades: grades,
+      emailDisabled: true
     })
   }
 
@@ -164,8 +177,10 @@ export default class Gradebook extends React.Component {
       body = (<Table responsive striped hover>
           <thead className='gradebook'>
             <tr>
-              <th className='envelopeButtonParent' onClick={this.sendEmails}>
-                <Image className='envelopeButton' src="envelope.svg" />
+              <th className='envelopeButtonParent'>
+                <Button disabled={this.state.emailDisabled} variant={this.state.emailDisabled ? 'outline-info': 'danger'} onClick={this.sendEmails}>
+                  <Image className='envelopeButton' src="envelope.svg" />
+                </Button>
               </th>
               {this.state.homeworks.map(function(homework, index) {
                 return <th key={index}><GradebookHomeworkHeader homework={homework}/></th>
@@ -177,7 +192,7 @@ export default class Gradebook extends React.Component {
               return <tr key={index}>
                   <td>{user.name}</td>
                   {that.state.sortedHomeworkIds.map(function(homeworkId, hIndex){
-                    return <td key={hIndex}><Grade userId={user.id} homeworkId={homeworkId} earnedGrade={that.getEarnedGrade(user.id, homeworkId)} gradingScale={that.state.gradingScale}/></td>
+                    return <td key={hIndex}><Grade gradeSetCallback={that.gradeSetCallback} userId={user.id} homeworkId={homeworkId} earnedGrade={that.getEarnedGrade(user.id, homeworkId)} gradingScale={that.state.gradingScale}/></td>
                   })}
                 </tr>
             })}
