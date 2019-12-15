@@ -13,6 +13,7 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
+import Toast from 'react-bootstrap/Toast'
 
 import {styles} from './UserSettings.scss'
 
@@ -32,14 +33,13 @@ class UserSettings extends React.Component {
       oldPassword: '',
       newPassword: '',
       passwordConfirmation: '',
-      name: userName
+      name: userName,
+      isNameUnique: true,
     }
   }
 
-  save = () => {
-    var that = this
-
-    if (!this.passwordError()) {
+  savePassword = () => {
+    if (this.passwordChangeAttempt() && !this.passwordError()) {
       fetch('/password_reset', {
         method: 'POST',
         body: JSON.stringify({
@@ -53,13 +53,37 @@ class UserSettings extends React.Component {
         }
       }).then((response) => {
         if (response.status == 200) {
-          updateUser(response)
+
         } else if (response.status == 403) {
 
         }
         return null
       })
     }
+  }
+
+  save = () => {
+    var that = this
+
+    fetch('/update_user', {
+      method: 'POST',
+      body: JSON.stringify({userId: this.props.user.id, name: this.state.name}),
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    }).then((response) => {
+      if (response.status == 200) {
+        var newUser = this.props.user
+        newUser.name = that.state.name
+
+        that.savePassword()
+
+      } else if (response.status == 406) {
+
+      }
+    })
+  }
+
+  passwordChangeAttempt = () => {
+    return this.state.oldPassword || this.state.newPassword || this.state.passwordConfirmation
   }
 
   passwordError = () => {
@@ -92,6 +116,23 @@ class UserSettings extends React.Component {
     this.setState({
       name: evt.currentTarget.value
     })
+  }
+
+  nameInvalid = () => {
+    if (!this.state.isNameUnique) {
+      return true
+    }
+    return false
+  }
+
+  nameInvalidMessage = () => {
+    if (!this.state.isNameUnique) {
+      return 'The name must be unique.'
+    } else if (this.state.name.length == 0) {
+      return 'Name is required.'
+    }
+
+    return ''
   }
 
   oldPasswordInvalid = () => {

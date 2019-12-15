@@ -1,4 +1,5 @@
 import React from "react"
+import { connect } from "react-redux";
 
 import Enrollment from './Enrollment.jsx'
 import UserSearch from './UserSearch.jsx'
@@ -14,7 +15,7 @@ import Image from 'react-bootstrap/Image'
 
 import "./HomeworkEditor.scss"
 
-export default class UserEditor extends React.Component {
+class UserEditor extends React.Component {
 
   constructor(props) {
     super(props)
@@ -350,3 +351,10 @@ export default class UserEditor extends React.Component {
     )
   }
 }
+
+export default connect(state => {
+    return {
+        user: state.user
+    }
+})(UserEditor)
+

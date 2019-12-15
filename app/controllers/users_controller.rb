@@ -99,11 +99,13 @@ class UsersController < ApplicationController
   end
 
   def _parent_update(u)
-    u.parents.clear()
-    parent_1 = User.find_by_id(params[:parent1Id]) if params.has_key? :parent1Id
-    parent_2 = User.find_by_id(params[:parent2Id]) if params.has_key? :parent2Id
-    u.parents.append(parent_1) if parent_1.present?
-    u.parents.append(parent_2) if parent_2.present?
+    if params.has_key?(:parent1Id) || params.has_key?(:parent2Id)
+      u.parents.clear()
+      parent_1 = User.find_by_id(params[:parent1Id]) if params.has_key? :parent1Id
+      parent_2 = User.find_by_id(params[:parent2Id]) if params.has_key? :parent2Id
+      u.parents.append(parent_1) if parent_1.present?
+      u.parents.append(parent_2) if parent_2.present?
+    end
   end
 
   def password_reset
@@ -134,41 +136,42 @@ class UsersController < ApplicationController
 
   def update_user
     params.require(:userId)
-    params.require(:name)
 
     u = User.find_by_id(params[:userId])
     name_unique = validate_user_name_uniqueness(params[:name], u)
     email_unique = true
-    p email_unique
+
     if params.has_key? :email
       email_unique = validate_user_email_uniqueness(params[:email], u)
-      p email_unique
     end
 
-    p email_unique
     if !name_unique || !email_unique
       render json: {name_unique: name_unique, email_unique: email_unique}, status: 406
     else
-      u.name = params[:name]
-      u.email = params[:email]
+      if params.has_key? :email
+        u.email = params[:email]
+      end
+      if params.has_key? :name
+        u.name = params[:name]
+      end
 
       _parent_update(u)
 
-      is_system_admin = u.roles.where('code = ?', 'admin').count > 0
+      if params.has_key? :roles
+        is_system_admin = u.roles.where('code = ?', 'admin').count > 0
+        u.roles.clear
+        params[:roles].each do |role_id|
+          u.roles.append(Role.find_by_id(role_id))
+        end
 
-      u.roles.clear
-
-      params[:roles].each do |role_id|
-        u.roles.append(Role.find_by_id(role_id))
-      end
-
-      if is_system_admin
-        u.roles.append(Role.where('code = ?', 'admin').first)
+        if is_system_admin
+          u.roles.append(Role.where('code = ?', 'admin').first)
+        end
       end
 
       u.save!
 
-      render json: {name_unique: name_unique, email_unique: email_unique}, status: 200
+      render json: {name_unique: name_unique, email_unique: email_unique, user: u}, status: 200
     end
   end
 
