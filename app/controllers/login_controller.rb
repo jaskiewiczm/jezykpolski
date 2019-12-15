@@ -32,7 +32,7 @@ class LoginController < ApplicationController
     render json: {}, status: 200
   end
 
-  def password_reset
+  def update_self
     if current_user.present?
       params.require(:oldPassword).require(:newPassword).require(:newPasswordConfirmation)
       if current_user.valid_password?(params[:oldPassword])

@@ -109,22 +109,27 @@ class UsersController < ApplicationController
   def password_reset
     params.require(:newPassword)
     params.require(:userId)
+    params.require(:passwordConfirmation)
 
-    if current_user.roles.where('code like ?', '%admin%')
+    return_user = nil
+    if current_user.id != params[:userId] && current_user.roles.where('code like ?', '%admin%')
+      # From the users page, doing a password reset for another user.
       u = User.find_by_id(params[:userId])
       u.password = params[:newPassword]
-      u.password_confirmation = params[:newPassword]
+      u.password_confirmation = params[:passwordConfirmation]
       u.save!
+      return_user = u
     else
       params.require(:oldPassword)
       if current_user.id == params[:userId] && current_user.valid_password?(params[:oldPassword])
         current_user.password = params[:newPassword]
-        current_user.password_confirmation = params[:newPassword]
+        current_user.password_confirmation = params[:passwordConfirmation]
         current_user.save!
+        return_user = current_user
       end
     end
 
-    render json: {}, status: 200
+    render json: return_user, status: 200
   end
 
   def update_user

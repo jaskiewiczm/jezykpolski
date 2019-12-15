@@ -12,7 +12,7 @@ import Toast from 'react-bootstrap/Toast'
 import g_roles from './components/GlobalRoles.jsx'
 import g_user from './components/GlobalUser.jsx'
 
-import {updateMyRoles, updateSchools} from './redux/Actions.jsx'
+import {updateMyRoles, updateSchools, updateUser} from './redux/Actions.jsx'
 
 import {styles} from './Application.scss'
 
@@ -58,6 +58,7 @@ class Application extends React.Component {
         g_roles.initialize()
         g_user.initialize()
         updateMyRoles(response.roles)
+        updateUser(response.user)
 
         that.setState({
           loggedIn: true,
@@ -88,11 +89,13 @@ class Application extends React.Component {
         g_roles.initialize()
         g_user.initialize()
         updateMyRoles(response.roles)
+        updateUser(response)
 
         that.setState({
           loggedIn: true,
           loginFailed: false,
-          email: response.email
+          email: response.email,
+          user: response
         })
         that.props.history.push('/homeworks')
       } else {
@@ -119,6 +122,8 @@ class Application extends React.Component {
           loginFailed: false,
           email: null
         })
+
+        updateUser(null)
 
         this.props.history.push('/welcome')
       }

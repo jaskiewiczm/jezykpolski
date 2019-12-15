@@ -1,7 +1,9 @@
 import React from "react"
+import { connect } from "react-redux";
 
 import Enrollment from './Enrollment.jsx'
 import UserSearch from './UserSearch.jsx'
+import {updateUser} from '../redux/Actions.jsx'
 
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
@@ -17,32 +19,41 @@ import {styles} from './UserSettings.scss'
 
 import "./HomeworkEditor.scss"
 
-export default class UserSettings extends React.Component {
+class UserSettings extends React.Component {
 
   constructor(props) {
     super(props)
 
+    var userName = null
+    if (this.props.user) {
+      userName = this.props.user.name
+    }
     this.state = {
-      oldPassword: null,
-      newPassword: null,
-      passwordConfirmation: null,
-      name: null
+      oldPassword: '',
+      newPassword: '',
+      passwordConfirmation: '',
+      name: userName
     }
   }
 
   save = () => {
     var that = this
 
-    if (this.passwordError()) {
+    if (!this.passwordError()) {
       fetch('/password_reset', {
         method: 'POST',
-        body: JSON.stringify({oldPassword: this.state.oldPassword, newPassword: this.state.newPassword, passwordConfirmation: this.state.passwordConfirmation}),
+        body: JSON.stringify({
+                    oldPassword: this.state.oldPassword,
+                    newPassword: this.state.newPassword,
+                    passwordConfirmation: this.state.passwordConfirmation,
+                    userId: this.props.user.id
+                  }),
         headers: {
           "Content-Type": "application/json; charset=utf-8"
         }
       }).then((response) => {
         if (response.status == 200) {
-
+          updateUser(response)
         } else if (response.status == 403) {
 
         }
@@ -53,7 +64,9 @@ export default class UserSettings extends React.Component {
 
   passwordError = () => {
     var passwordError = this.oldPasswordInvalid() || this.newPasswordInvalid() || this.passwordConfirmationInvalid()
-    this.forceUpdate()
+    if (!passwordError) {
+      this.forceUpdate()
+    }
     return passwordError
   }
 
@@ -82,8 +95,12 @@ export default class UserSettings extends React.Component {
   }
 
   oldPasswordInvalid = () => {
-    if (this.state.oldPassword != null || this.state.newPassword != null || this.state.passwordConfirmation != null) {
-      if (this.state.oldPassword == null){
+    if (this.state.oldPassword == '' && this.state.newPassword == '' && this.state.passwordConfirmation == '') {
+      return false
+    }
+
+    if (this.state.oldPassword != '' || this.state.newPassword != '' || this.state.passwordConfirmation != '') {
+      if (this.state.oldPassword == ''){
         return true
       }
     }
@@ -92,8 +109,12 @@ export default class UserSettings extends React.Component {
   }
 
   newPasswordInvalid = () => {
-    if (this.state.oldPassword != null || this.state.newPassword != null || this.state.passwordConfirmation != null) {
-      if (this.state.newPassword == null || this.state.newPassword != this.state.passwordConfirmation) {
+    if (this.state.oldPassword == '' && this.state.newPassword == '' && this.state.passwordConfirmation == '') {
+      return false
+    }
+
+    if (this.state.oldPassword != '' || this.state.newPassword != '' || this.state.passwordConfirmation != '') {
+      if (this.state.newPassword == '' || this.state.newPassword != this.state.passwordConfirmation) {
         return true
       }
     }
@@ -102,8 +123,12 @@ export default class UserSettings extends React.Component {
   }
 
   passwordConfirmationInvalid = () => {
-    if (this.state.oldPassword != null || this.state.newPassword != null || this.state.passwordConfirmation != null) {
-      if (this.state.passwordConfirmation == null || this.state.newPassword != this.state.passwordConfirmation) {
+    if (this.state.oldPassword == '' && this.state.newPassword == '' && this.state.passwordConfirmation == '') {
+      return false
+    }
+
+    if (this.state.oldPassword != '' || this.state.newPassword != '' || this.state.passwordConfirmation != '') {
+      if (this.state.passwordConfirmation == '' || this.state.newPassword != this.state.passwordConfirmation) {
         return true
       }
     }
@@ -112,22 +137,26 @@ export default class UserSettings extends React.Component {
   }
 
   oldPasswordInvalidMessage = () => {
-    if (this.state.oldPassword == null) {
+    if (this.state.oldPassword == '') {
       return 'Old password cannot be empty.'
     }
     return ''
   }
 
   newPasswordInvalidMessage = () => {
-    if (this.state.newPassword == null) {
+    if (this.state.newPassword == '') {
       return 'New password cannot be empty.'
+    } else if (this.state.newPassword != this.state.passwordConfirmation) {
+      return 'New password must match password confirmation.'
     }
     return ''
   }
 
   passwordConfirmationInvalidMessage = () => {
-    if (this.state.passwordConfirmation == null) {
+    if (this.state.passwordConfirmation == '') {
       return 'Password confirmation cannot be empty.'
+    } else if (this.state.newPassword != this.state.passwordConfirmation) {
+      return 'New password must match password confirmation.'
     }
     return ''
   }
@@ -139,7 +168,7 @@ export default class UserSettings extends React.Component {
     if (this.props.withoutConfirmation == null) {
       withoutConfirmation =  <Form.Group>
                             <Form.Label>Old Password</Form.Label>
-                            <Form.Control type='password' value={this.state.oldPassword} onChange={this.oldPasswordChanged} isInvalid={this.oldPasswordInvalid}/>
+                            <Form.Control type='password' value={this.state.oldPassword} onChange={this.oldPasswordChanged} isInvalid={this.oldPasswordInvalid()}/>
                             <Form.Control.Feedback type='valid'>{this.oldPasswordInvalidMessage()}</Form.Control.Feedback>
                           </Form.Group>
     }
@@ -160,12 +189,12 @@ export default class UserSettings extends React.Component {
               {withoutConfirmation}
               <Form.Group>
                 <Form.Label>New Password</Form.Label>
-                <Form.Control type='password' value={this.state.newPassword} onChange={this.newPasswordChanged} isInvalid={this.newPasswordInvalid}/>
+                <Form.Control type='password' value={this.state.newPassword} onChange={this.newPasswordChanged} isInvalid={this.newPasswordInvalid()}/>
                 <Form.Control.Feedback type='invalid'>{this.newPasswordInvalidMessage()}</Form.Control.Feedback>
               </Form.Group>
               <Form.Group>
                 <Form.Label>Password Confirmation</Form.Label>
-                <Form.Control type='password' value={this.state.passwordConfirmation} onChange={this.passwordConfirmationChanged} isInvalid={this.passwordConfirmationInvalid}/>
+                <Form.Control type='password' value={this.state.passwordConfirmation} onChange={this.passwordConfirmationChanged} isInvalid={this.passwordConfirmationInvalid()}/>
                 <Form.Control.Feedback type='invalid'>{this.passwordConfirmationInvalidMessage()}</Form.Control.Feedback>
               </Form.Group>
               &nbsp;
@@ -178,3 +207,9 @@ export default class UserSettings extends React.Component {
     )
   }
 }
+
+export default connect(state => {
+    return {
+        user: state.user
+    }
+})(UserSettings)
