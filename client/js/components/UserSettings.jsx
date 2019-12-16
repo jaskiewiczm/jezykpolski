@@ -42,17 +42,20 @@ class UserSettings extends React.Component {
   save = () => {
     var that = this
 
-    if (this.passwordChangeAttempt() && this.passwordError()) {
-      return
-    }
-
     var user =  {
                   userId: this.props.user.id,
                   name: this.state.name,
-                  oldPassword: this.state.oldPassword,
-                  newPassword: this.state.newPassword,
-                  passwordConfirmation: this.state.passwordConfirmation
                 }
+
+    if (this.passwordChangeAttempt()) {
+      if (this.passwordError()) {
+        return
+      }
+
+      user['oldPassword'] = this.state.oldPassword
+      user['newPassword'] = this.state.newPassword,
+      user['passwordConfirmation'] = this.state.passwordConfirmation
+    }
 
     fetch('/update_user', {
       method: 'POST',
@@ -62,8 +65,6 @@ class UserSettings extends React.Component {
       if (response.status == 200) {
         var newUser = this.props.user
         newUser.name = that.state.name
-
-        that.savePassword()
       } else if (response.status == 401) {
         // original password is incorrect
         that.setState({
@@ -133,8 +134,8 @@ class UserSettings extends React.Component {
     return ''
   }
 
-  oldPasswordInvalid = () => {
-    if (this.state.originalPasswordIncorrect) {
+  oldPasswordInvalid = (originalPasswordIncorrectCheck) => {
+    if (originalPasswordIncorrectCheck && this.state.originalPasswordIncorrect) {
       return true
     }
 
@@ -180,10 +181,10 @@ class UserSettings extends React.Component {
   }
 
   oldPasswordInvalidMessage = () => {
-    if (this.state.oldPassword == '') {
-      return 'Old password cannot be empty.'
-    } else if (this.state.originalPasswordIncorrect) {
+    if (this.state.originalPasswordIncorrect) {
       return 'The old password is incorrect.'
+    } else if (this.state.oldPassword == '') {
+      return 'Old password cannot be empty.'
     }
     return ''
   }
@@ -213,8 +214,8 @@ class UserSettings extends React.Component {
     if (this.props.withoutConfirmation == null) {
       withoutConfirmation =  <Form.Group>
                             <Form.Label>Old Password</Form.Label>
-                            <Form.Control type='password' value={this.state.oldPassword} onChange={this.oldPasswordChanged} isInvalid={this.oldPasswordInvalid()}/>
-                            <Form.Control.Feedback type='valid'>{this.oldPasswordInvalidMessage()}</Form.Control.Feedback>
+                            <Form.Control type='password' value={this.state.oldPassword} onChange={this.oldPasswordChanged} isInvalid={this.oldPasswordInvalid(true)}/>
+                            <Form.Control.Feedback type='invalid'>{this.oldPasswordInvalidMessage()}</Form.Control.Feedback>
                           </Form.Group>
     }
 

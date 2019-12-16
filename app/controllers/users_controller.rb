@@ -110,7 +110,6 @@ class UsersController < ApplicationController
 
   def _password_reset
     params.require(:userId)
-
     if params.has_key?(:newPassword) && params.has_key?(:passwordConfirmation)
       if current_user.id != params[:userId] && current_user.roles.where('code like ?', '%admin%')
         # From the users page, doing a password reset for another user.
