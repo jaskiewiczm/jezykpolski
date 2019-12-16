@@ -13,6 +13,7 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
+import Alert from 'react-bootstrap/Alert'
 
 import {styles} from './UserSettings.scss'
 
@@ -35,7 +36,7 @@ class UserSettings extends React.Component {
       name: userName,
       isNameUnique: true,
       originalPasswordIncorrect: false,
-      nameUnique: true
+      showSuccess: false
     }
   }
 
@@ -65,15 +66,21 @@ class UserSettings extends React.Component {
       if (response.status == 200) {
         var newUser = this.props.user
         newUser.name = that.state.name
+
+        that.setState({
+          showSuccess: true
+        })
       } else if (response.status == 401) {
         // original password is incorrect
         that.setState({
-          originalPasswordIncorrect: true
+          originalPasswordIncorrect: true,
+          showSuccess: false
         })
       } else if (response.status == 406) {
         // name or email is not unique
         that.setState({
-          nameUnique: false
+          isNameUnique: false,
+          showSuccess: false
         })
       }
     })
@@ -113,7 +120,7 @@ class UserSettings extends React.Component {
   nameChanged = (evt) => {
     this.setState({
       name: evt.currentTarget.value,
-      nameUnique: true
+      isNameUnique: true
     })
   }
 
@@ -127,7 +134,7 @@ class UserSettings extends React.Component {
   nameInvalidMessage = () => {
     if (!this.state.isNameUnique) {
       return 'The name must be unique.'
-    } else if (this.state.name.length == 0) {
+    } else if (this.state.name != null && this.state.name.length == 0) {
       return 'Name is required.'
     }
 
@@ -219,6 +226,13 @@ class UserSettings extends React.Component {
                           </Form.Group>
     }
 
+    var successAlert = null
+    if (this.state.showSuccess) {
+      successAlert =  <Alert variant='success'>
+                        Your settings have been successfully changed.
+                      </Alert>
+    }
+
     return (
       <div>
         <br />
@@ -228,9 +242,11 @@ class UserSettings extends React.Component {
               <Navbar.Brand>User Settings</Navbar.Brand>
             </Navbar>
             <Form className='userSettingsContainer'>
+              {successAlert}
               <Form.Group>
                 <Form.Label>Name</Form.Label>
-                <Form.Control type='text' value={this.state.name} onChange={this.nameChanged}/>
+                <Form.Control type='text' value={this.state.name} onChange={this.nameChanged} isInvalid={this.nameInvalid()}/>
+                <Form.Control.Feedback type='invalid'>{this.nameInvalidMessage()}</Form.Control.Feedback>
               </Form.Group>
               {withoutConfirmation}
               <Form.Group>
