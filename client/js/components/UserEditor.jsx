@@ -15,7 +15,7 @@ import Image from 'react-bootstrap/Image'
 
 import "./HomeworkEditor.scss"
 
-class UserEditor extends React.Component {
+export default class UserEditor extends React.Component {
 
   constructor(props) {
     super(props)
@@ -351,10 +351,4 @@ class UserEditor extends React.Component {
     )
   }
 }
-
-export default connect(state => {
-    return {
-        user: state.user
-    }
-})(UserEditor)
 

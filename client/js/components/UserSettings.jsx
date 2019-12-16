@@ -13,7 +13,6 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
-import Toast from 'react-bootstrap/Toast'
 
 import {styles} from './UserSettings.scss'
 
@@ -35,39 +34,29 @@ class UserSettings extends React.Component {
       passwordConfirmation: '',
       name: userName,
       isNameUnique: true,
-    }
-  }
-
-  savePassword = () => {
-    if (this.passwordChangeAttempt() && !this.passwordError()) {
-      fetch('/password_reset', {
-        method: 'POST',
-        body: JSON.stringify({
-                    oldPassword: this.state.oldPassword,
-                    newPassword: this.state.newPassword,
-                    passwordConfirmation: this.state.passwordConfirmation,
-                    userId: this.props.user.id
-                  }),
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
-        }
-      }).then((response) => {
-        if (response.status == 200) {
-
-        } else if (response.status == 403) {
-
-        }
-        return null
-      })
+      originalPasswordIncorrect: false,
+      nameUnique: true
     }
   }
 
   save = () => {
     var that = this
 
+    if (this.passwordChangeAttempt() && this.passwordError()) {
+      return
+    }
+
+    var user =  {
+                  userId: this.props.user.id,
+                  name: this.state.name,
+                  oldPassword: this.state.oldPassword,
+                  newPassword: this.state.newPassword,
+                  passwordConfirmation: this.state.passwordConfirmation
+                }
+
     fetch('/update_user', {
       method: 'POST',
-      body: JSON.stringify({userId: this.props.user.id, name: this.state.name}),
+      body: JSON.stringify(user),
       headers: { "Content-Type": "application/json; charset=utf-8" }
     }).then((response) => {
       if (response.status == 200) {
@@ -75,9 +64,16 @@ class UserSettings extends React.Component {
         newUser.name = that.state.name
 
         that.savePassword()
-
+      } else if (response.status == 401) {
+        // original password is incorrect
+        that.setState({
+          originalPasswordIncorrect: true
+        })
       } else if (response.status == 406) {
-
+        // name or email is not unique
+        that.setState({
+          nameUnique: false
+        })
       }
     })
   }
@@ -96,7 +92,8 @@ class UserSettings extends React.Component {
 
   oldPasswordChanged = (evt) => {
     this.setState({
-      oldPassword: evt.currentTarget.value
+      oldPassword: evt.currentTarget.value,
+      originalPasswordIncorrect: false
     })
   }
 
@@ -114,7 +111,8 @@ class UserSettings extends React.Component {
 
   nameChanged = (evt) => {
     this.setState({
-      name: evt.currentTarget.value
+      name: evt.currentTarget.value,
+      nameUnique: true
     })
   }
 
@@ -136,6 +134,10 @@ class UserSettings extends React.Component {
   }
 
   oldPasswordInvalid = () => {
+    if (this.state.originalPasswordIncorrect) {
+      return true
+    }
+
     if (this.state.oldPassword == '' && this.state.newPassword == '' && this.state.passwordConfirmation == '') {
       return false
     }
@@ -180,6 +182,8 @@ class UserSettings extends React.Component {
   oldPasswordInvalidMessage = () => {
     if (this.state.oldPassword == '') {
       return 'Old password cannot be empty.'
+    } else if (this.state.originalPasswordIncorrect) {
+      return 'The old password is incorrect.'
     }
     return ''
   }

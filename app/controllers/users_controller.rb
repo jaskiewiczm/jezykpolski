@@ -108,30 +108,32 @@ class UsersController < ApplicationController
     end
   end
 
-  def password_reset
-    params.require(:newPassword)
+  def _password_reset
     params.require(:userId)
-    params.require(:passwordConfirmation)
 
-    return_user = nil
-    if current_user.id != params[:userId] && current_user.roles.where('code like ?', '%admin%')
-      # From the users page, doing a password reset for another user.
-      u = User.find_by_id(params[:userId])
-      u.password = params[:newPassword]
-      u.password_confirmation = params[:passwordConfirmation]
-      u.save!
-      return_user = u
-    else
-      params.require(:oldPassword)
-      if current_user.id == params[:userId] && current_user.valid_password?(params[:oldPassword])
-        current_user.password = params[:newPassword]
-        current_user.password_confirmation = params[:passwordConfirmation]
-        current_user.save!
-        return_user = current_user
+    if params.has_key?(:newPassword) && params.has_key?(:passwordConfirmation)
+      if current_user.id != params[:userId] && current_user.roles.where('code like ?', '%admin%')
+        # From the users page, doing a password reset for another user.
+        u = User.find_by_id(params[:userId])
+        u.password = params[:newPassword]
+        u.password_confirmation = params[:passwordConfirmation]
+        u.save!
+      elsif params.has_key?(:oldPassword)
+        if current_user.id == params[:userId]
+          if current_user.valid_password?(params[:oldPassword])
+            current_user.update_with_password({
+              current_password: params[:oldPassword],
+              password: params[:newPassword],
+              password_confirmation: params[:passwordConfirmation]
+            })
+            bypass_sign_in current_user
+          else
+            return false
+          end
+        end
       end
     end
-
-    render json: return_user, status: 200
+    return true
   end
 
   def update_user
@@ -156,22 +158,25 @@ class UsersController < ApplicationController
       end
 
       _parent_update(u)
+      successful_password_reset = _password_reset()
+      if !successful_password_reset
+        render json: {}, status: 401
+      else
+        if params.has_key? :roles
+          is_system_admin = u.roles.where('code = ?', 'admin').count > 0
+          u.roles.clear
+          params[:roles].each do |role_id|
+            u.roles.append(Role.find_by_id(role_id))
+          end
 
-      if params.has_key? :roles
-        is_system_admin = u.roles.where('code = ?', 'admin').count > 0
-        u.roles.clear
-        params[:roles].each do |role_id|
-          u.roles.append(Role.find_by_id(role_id))
+          if is_system_admin
+            u.roles.append(Role.where('code = ?', 'admin').first)
+          end
         end
 
-        if is_system_admin
-          u.roles.append(Role.where('code = ?', 'admin').first)
-        end
+        u.save!
+        render json: {name_unique: name_unique, email_unique: email_unique, user: u}, status: 200
       end
-
-      u.save!
-
-      render json: {name_unique: name_unique, email_unique: email_unique, user: u}, status: 200
     end
   end
 
