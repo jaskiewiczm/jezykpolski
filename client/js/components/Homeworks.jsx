@@ -81,10 +81,12 @@ class Homeworks extends React.Component {
 
   schoolSelected = (schoolId) => {
     this.setState({
-      selectedSchoolId: schoolId
+      selectedSchoolId: schoolId,
+      selectedKlassId: null
     })
 
     localStorage.setItem('homeworksSelectedSchoolId', schoolId)
+    localStorage.setItem('homeworksSelectedKlassId', null)
   }
 
   klassSelected = (klassId) => {

@@ -7,6 +7,8 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import g_user from './GlobalUser.jsx'
 import g_roles from './GlobalRoles.jsx'
 
+import {updateSelectedSchoolId} from '../redux/Actions.jsx'
+
 
 class SchoolSelector extends React.Component {
 
@@ -44,8 +46,11 @@ class SchoolSelector extends React.Component {
     })
 
     this.setState({
-      title: school.name
+      title: school.name,
+      selectedSchoolId: schoolId
     })
+
+    updateSelectedSchoolId(schoolId)
   }
 
   render() {

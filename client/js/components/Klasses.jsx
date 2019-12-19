@@ -71,12 +71,11 @@ export default class Klasses extends React.Component {
   }
 
   schoolSelected = (schoolId) => {
+    localStorage.setItem('klassesSelectedSchoolId', schoolId)
+    localStorage.setItem('klassesSelectedKlassId', null)
     this.setState({
       selectedSchoolId: schoolId
-    })
-
-    localStorage.setItem('klassesSelectedSchoolId', schoolId)
-    this.getKlasses()
+    }, this.getKlasses)
   }
 
   klassSelected = (klassId) => {
@@ -101,7 +100,13 @@ export default class Klasses extends React.Component {
                   <ListGroup className={styles.homeworks}>
                     {
                       this.state.klasses.map(function(key, index){
-                        return <ListGroup.Item action key={index}><IndividualKlass klass={key} schoolId={that.state.selectedSchoolId} klassId={key.id} name={key.name} deleteCallback={that.deleteCallback}/></ListGroup.Item>
+                        return  <ListGroup.Item action key={key.id}>
+                                  <IndividualKlass klass={key}
+                                                   schoolId={that.state.selectedSchoolId}
+                                                   klassId={key.id}
+                                                   name={key.name}
+                                                   deleteCallback={that.deleteCallback}/>
+                                </ListGroup.Item>
                       })
                     }
                   </ListGroup>

@@ -42,6 +42,16 @@ export default class Gradebook extends React.Component {
     }
   }
 
+  schoolSelected = (schoolId) => {
+    localStorage.setItem('gradebookSelectedSchoolId', schoolId)
+    localStorage.setItem('gradebookSelectedKlassId', null)
+
+    this.setState({
+      selectedSchoolId: schoolId,
+      selectedKlassId: null
+    }, this.getKlasses)
+  }
+
   klassSelected = (klassId) => {
     this.setState({
       selectedKlassId: klassId,
@@ -126,15 +136,6 @@ export default class Gradebook extends React.Component {
         klasses: response
       })
     })
-  }
-
-  schoolSelected = (schoolId) => {
-    this.setState({
-      selectedSchoolId: schoolId
-    })
-
-    localStorage.setItem('gradebookSelectedSchoolId', schoolId)
-    this.getKlasses()
   }
 
   getEarnedGrade = (userId, homeworkId) => {

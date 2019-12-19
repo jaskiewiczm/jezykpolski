@@ -188,6 +188,7 @@ class Application extends React.Component {
     var classesLink = null
     var gradebookLink = null
     var studentReportLink = null
+    var billingLink = null
 
     if (g_roles.containsRole('admin', this.props.roles) || g_roles.containsRole('school_admin', this.props.roles)) {
       homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
@@ -195,6 +196,7 @@ class Application extends React.Component {
       classesLink = <div><Link to="/klasses">Classes</Link>&nbsp;&nbsp;&nbsp;</div>
       gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
       studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
+      billingLink = <div><Link to="/billing">Billing</Link>&nbsp;&nbsp;&nbsp;</div>
     }
     if (g_roles.containsRole('teacher', this.props.roles)) {
       homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
@@ -211,11 +213,12 @@ class Application extends React.Component {
 
     return (
         <Nav className="mr-auto">
-          {homeworksLink}
-          {usersLink}
+          {billingLink}
           {classesLink}
           {gradebookLink}
+          {homeworksLink}
           {studentReportLink}
+          {usersLink}
         </Nav>
       )
   }
