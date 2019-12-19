@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_10_220831) do
+ActiveRecord::Schema.define(version: 2019_12_18_225031) do
+
+  create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "school_year_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float "paid_amount"
+    t.bigint "meta_bill_id"
+    t.index ["meta_bill_id"], name: "fk_rails_513a56ed10"
+    t.index ["school_year_id"], name: "fk_rails_62113e10cf"
+    t.index ["user_id"], name: "fk_rails_f5fcc78f42"
+  end
 
   create_table "books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "title"
@@ -56,6 +68,13 @@ ActiveRecord::Schema.define(version: 2019_12_10_220831) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "homework_id", null: false
+  end
+
+  create_table "grade_levels", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "level"
+    t.integer "level_integer"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "gradebooks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -111,6 +130,19 @@ ActiveRecord::Schema.define(version: 2019_12_10_220831) do
     t.index ["school_id"], name: "fk_rails_c5e5112d0b"
   end
 
+  create_table "meta_bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.float "amount"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rate_adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.float "delta"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "reading_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.integer "book_id"
@@ -127,6 +159,12 @@ ActiveRecord::Schema.define(version: 2019_12_10_220831) do
     t.integer "sort"
   end
 
+  create_table "school_years", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "period", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "schools", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -139,6 +177,15 @@ ActiveRecord::Schema.define(version: 2019_12_10_220831) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "soft_unenrolled", default: 0
+  end
+
+  create_table "user_rate_adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "bill_id"
+    t.bigint "rate_adjustment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bill_id"], name: "fk_rails_9b11f0e767"
+    t.index ["rate_adjustment_id"], name: "fk_rails_cac5dd7e41"
   end
 
   create_table "user_roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -169,17 +216,25 @@ ActiveRecord::Schema.define(version: 2019_12_10_220831) do
     t.bigint "parent_2_id"
     t.string "name"
     t.bigint "school_id"
+    t.bigint "grade_level_id"
     t.index ["email", "school_id"], name: "index_users_on_email_and_school_id", unique: true
+    t.index ["grade_level_id"], name: "fk_rails_ddf8e43c6b"
     t.index ["name", "school_id"], name: "index_users_on_name_and_school_id", unique: true
     t.index ["parent_1_id"], name: "fk_rails_e17b45d8c8"
     t.index ["parent_2_id"], name: "fk_rails_f1d8d6e861"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "bills", "meta_bills"
+  add_foreign_key "bills", "school_years"
+  add_foreign_key "bills", "users"
   add_foreign_key "homeworks", "klasses"
   add_foreign_key "klasses", "schools"
+  add_foreign_key "user_rate_adjustments", "bills"
+  add_foreign_key "user_rate_adjustments", "rate_adjustments"
   add_foreign_key "user_users", "users", column: "child_id"
   add_foreign_key "user_users", "users", column: "parent_id"
+  add_foreign_key "users", "grade_levels"
   add_foreign_key "users", "users", column: "parent_1_id"
   add_foreign_key "users", "users", column: "parent_2_id"
 end

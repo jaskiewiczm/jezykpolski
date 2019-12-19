@@ -11,8 +11,10 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
+import Card from 'react-bootstrap/Card'
+import Accordion from 'react-bootstrap/Accordion'
 
-
+import './UserEditor.scss'
 import "./HomeworkEditor.scss"
 
 export default class UserEditor extends React.Component {
@@ -287,55 +289,117 @@ export default class UserEditor extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <Form validated={this.state.validatedName || this.state.validatedEmail}>
-            <Form.Group>
-              <Form.Label>Name</Form.Label>
-              <Form.Control type='text' value={this.state.name} onChange={this.nameChanged} isInvalid={this.state.validatedName && !this.state.uniqueName}/>
-              <Form.Control.Feedback type='invalid'>This name is not unique.</Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Email</Form.Label>
-              <Form.Control type='text' value={this.state.email} onChange={this.emailChanged} isInvalid={this.state.validatedEmail && !this.state.uniqueEmail}/>
-              <Form.Control.Feedback type='invalid'>This email is not unique.</Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Permissions</Form.Label>
-              <Form.Control as='select' multiple onChange={this.permissionsChanged} value={this.state.userRoles.map(function(role){return role.name})}>
-                {this.state.roles.map(function(role){
-                  return <option key={role.id} role-id={role.id}>{role.name}</option>
-                })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Parent #1</Form.Label>
-              <UserSearch defaultValue={parent1} users={this.state.parentList} clearCallback={this.clearParent1SearchCallback} selectedCallback={this.userParent1SelectedCallback}/>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Parent #2</Form.Label>
-              <UserSearch defaultValue={parent2}  users={this.state.parentList} clearCallback={this.clearParent2SearchCallback} selectedCallback={this.userParent2SelectedCallback}/>
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label>Enrollments</Form.Label>
-              <Button variant="outline-primary" size='sm' onClick={this.addEnrollment} style={{float: 'right', paddingBottom: '5px'}}>Enroll</Button>
-            </Form.Group>
-            <Form.Group>
-              <ListGroup>
-                {
-                  this.state.enrollments.map(function(key, index){
-                    return <ListGroup.Item key={index}>
-                      <Row>
-                        <Col xs={10}>
-                          {key.name}
-                        </Col>
-                        <Col>
-                          <Image src="trash.png" onClick={() => {that.deleteEnrollment(key.id)}} />
-                        </Col>
-                      </Row>
-                      </ListGroup.Item>
-                  })
-                }
-              </ListGroup>
-            </Form.Group>
+            <Row className='userEditorRow'>
+              <Col>
+                <Card className='userEditorCard'>
+                  <Card.Title className='userEditorCardTitle'>
+                    Basic Settings
+                  </Card.Title>
+                  <Card.Body className='userEditorCardBody'>
+                    <Form.Group>
+                      <Form.Label>Name</Form.Label>
+                      <Form.Control type='text' value={this.state.name} onChange={this.nameChanged} isInvalid={this.state.validatedName && !this.state.uniqueName}/>
+                      <Form.Control.Feedback type='invalid'>This name is not unique.</Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Email</Form.Label>
+                      <Form.Control type='text' value={this.state.email} onChange={this.emailChanged} isInvalid={this.state.validatedEmail && !this.state.uniqueEmail}/>
+                      <Form.Control.Feedback type='invalid'>This email is not unique.</Form.Control.Feedback>
+                    </Form.Group>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col>
+                <Card className='userEditorCard'>
+                  <Card.Title className='userEditorCardTitle'>
+                    Permissions
+                  </Card.Title>
+                  <Card.Body className='userEditorCardBody'>
+                    <Form.Group>
+                      <Form.Label>Permissions</Form.Label>
+                      <Form.Control as='select' multiple onChange={this.permissionsChanged} value={this.state.userRoles.map(function(role){return role.name})}>
+                        {this.state.roles.map(function(role){
+                          return <option key={role.id} role-id={role.id}>{role.name}</option>
+                        })}
+                      </Form.Control>
+                    </Form.Group>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+            <Row className='userEditorRow'>
+              <Col>
+                <Card className='userEditorCard'>
+                  <Card.Title className='userEditorCardTitle'>
+                    Parents/Guardians
+                  </Card.Title>
+                  <Card.Body className='userEditorCardBody'>
+                    <Form.Group>
+                      <Form.Label>Parent #1</Form.Label>
+                      <UserSearch defaultValue={parent1} users={this.state.parentList} clearCallback={this.clearParent1SearchCallback} selectedCallback={this.userParent1SelectedCallback}/>
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Parent #2</Form.Label>
+                      <UserSearch defaultValue={parent2}  users={this.state.parentList} clearCallback={this.clearParent2SearchCallback} selectedCallback={this.userParent2SelectedCallback}/>
+                    </Form.Group>
+                    </Card.Body>
+                </Card>
+              </Col>
+              <Col>
+                <Card className='userEditorCard'>
+                  <Card.Title className='userEditorCardTitle'>
+                    Password Reset
+                  </Card.Title>
+                  <Card.Body className='userEditorCardBody'>
+                    <Form.Group>
+                      <Form.Label>New Password</Form.Label>
+                      <Form.Control type='password' value={this.state.email} onChange={this.emailChanged} isInvalid={this.state.validatedEmail && !this.state.uniqueEmail}/>
+                      <Form.Control.Feedback type='invalid'>This email is not unique.</Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Password Confirmation</Form.Label>
+                      <Form.Control type='password' value={this.state.email} onChange={this.emailChanged} isInvalid={this.state.validatedEmail && !this.state.uniqueEmail}/>
+                      <Form.Control.Feedback type='invalid'>This email is not unique.</Form.Control.Feedback>
+                    </Form.Group>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+            <Row className='userEditorRow'>
+              <Col>
+                <Card className='userEditorCard'>
+                  <Card.Title className='userEditorCardTitle'>
+                    Enrollments
+                  </Card.Title>
+                  <Card.Body className='userEditorCardBody'>
+                    <Form.Group>
+                      <Form.Label>Enrollments</Form.Label>
+                      <Button variant="outline-primary" size='sm' onClick={this.addEnrollment} style={{float: 'right', paddingBottom: '5px'}}>Enroll</Button>
+                    </Form.Group>
+                    <Form.Group>
+                      <ListGroup>
+                        {
+                          this.state.enrollments.map(function(key, index){
+                            return <ListGroup.Item key={index}>
+                              <Row>
+                                <Col xs={8}>
+                                  {key.name}
+                                </Col>
+                                <Col>
+                                  <Image src="trash.png" onClick={() => {that.deleteEnrollment(key.id)}} />
+                                </Col>
+                              </Row>
+                              </ListGroup.Item>
+                          })
+                        }
+                      </ListGroup>
+                    </Form.Group>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col>
+              </Col>
+            </Row>
           </Form>
         </Modal.Body>
         <Modal.Footer>

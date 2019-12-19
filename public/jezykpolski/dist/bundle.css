@@ -143,6 +143,19 @@ ul {
 li {
   list-style-type: none; }
 
+.userEditorRow {
+  margin-top: 16px; }
+
+.userEditorCard {
+  box-shadow: 1px 1px grey; }
+
+.userEditorCardTitle {
+  text-align: center;
+  padding-top: 6px; }
+
+.userEditorCardBody {
+  margin-top: -20px; }
+
 .schoolAdminRoleClass {
   background-color: #FDFD96 !important; }
 
