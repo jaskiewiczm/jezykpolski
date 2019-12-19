@@ -16,24 +16,24 @@ class KlassSelector extends React.Component {
       klasses: null,
       title: 'Class',
       selectedKlassId: this.props.klassId,
-      prevSchoolId: this.props.schoolId
+      prevSchoolId: this.props.selectedSchoolId
     }
 
     this.getKlasses()
   }
 
   componentDidUpdate() {
-    if (this.state.klasses == null && this.props.schoolId != null) {
+    if (this.state.klasses == null && this.props.selectedSchoolId != null) {
       this.getKlasses()
     }
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.schoolId !== state.prevSchoolId) {
+    if (props.selectedSchoolId !== state.prevSchoolId) {
       return {
         klasses: null,
         title: 'Class',
-        prevSchoolId: props.schoolId
+        prevSchoolId: props.selectedSchoolId
       };
     }
     return null;
@@ -51,10 +51,10 @@ class KlassSelector extends React.Component {
   }
 
   getKlasses = () => {
-    if (this.props.schoolId != null) {
+    if (this.props.selectedSchoolId != null) {
       fetch('/get_klasses', {
         method: 'POST',
-        body: JSON.stringify({schoolId: this.props.schoolId}),
+        body: JSON.stringify({schoolId: this.props.selectedSchoolId}),
         headers: {
           "Content-Type": "application/json; charset=utf-8"
         }
@@ -122,7 +122,7 @@ class KlassSelector extends React.Component {
 
 export default connect(state => {
     return {
-        selectedSchoolId: state.schoolId
+        selectedSchoolId: state.selectedSchoolId
     }
 })(KlassSelector)
 

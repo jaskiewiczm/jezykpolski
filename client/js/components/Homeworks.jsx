@@ -25,7 +25,7 @@ class Homeworks extends React.Component {
     var klassId = localStorage.getItem('homeworksSelectedKlassId')
 
     this.state = {
-      homeworks: [],
+      homeworks: null,
       editMode: false,
       selectedSchoolId: schoolId,
       selectedKlassId: klassId
@@ -36,6 +36,17 @@ class Homeworks extends React.Component {
     if (this.state.selectedSchoolId != null && this.state.selectedKlassId != null) {
       this.getHomeworks()
     }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.selectedSchoolId !== state.prevSchoolId) {
+      return {
+        klasses: null,
+        editMode: false,
+        prevSchoolId: props.selectedSchoolId,
+      };
+    }
+    return null;
   }
 
   getHomeworks = () => {
@@ -170,6 +181,8 @@ class Homeworks extends React.Component {
 
 export default connect(state => {
     return {
-        roles: state.myRoles
+        roles: state.myRoles,
+        selectedSchoolId: state.selectedSchoolId,
+        selectedKlassId: state.selectedKlassId
     }
 })(Homeworks)

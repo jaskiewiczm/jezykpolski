@@ -16,7 +16,7 @@ Jezykpolski::Application.routes.draw do
   get '/users' => 'users#index'
   post '/students' => 'users#students'
   post '/teachers' => 'users#teachers'
-  get '/get_users' => 'users#users'
+  post '/get_users' => 'users#users'
   post '/add_user' => 'users#add_user'
   post '/delete_user' => 'users#delete_user'
   post '/update_user' => 'users#update_user'

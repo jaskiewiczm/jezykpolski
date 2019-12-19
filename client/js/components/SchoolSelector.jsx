@@ -39,8 +39,6 @@ class SchoolSelector extends React.Component {
   }
 
   schoolSelected = (schoolId) => {
-    this.props.callback(schoolId)
-
     var school = this.props.schools.find((element) => {
       return element.id == schoolId;
     })

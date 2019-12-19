@@ -32,7 +32,8 @@ class UsersController < ApplicationController
   end
 
   def users
-    users = User.all.order(:name)
+    params.require(:schoolId)
+    users = User.where(:school_id => params[:schoolId]).order(:name)
 
     userRoles = {}
     users.each do |user|

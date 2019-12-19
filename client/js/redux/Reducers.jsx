@@ -29,11 +29,11 @@ function schoolsReducer(state = initialState, action) {
       })
     case SELECTED_SCHOOL_ID_UPDATED:
       return Object.assign({}, state, {
-        user: action.selectedSchoolId
+        selectedSchoolId: action.selectedSchoolId
       })
     case SELECTED_KLASS_ID_UPDATED:
       return Object.assign({}, state, {
-        user: action.selectedKlassId
+        selectedKlassId: action.selectedKlassId
       })
     default:
       return state;

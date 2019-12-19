@@ -1,4 +1,5 @@
 import React from "react"
+import { connect } from "react-redux";
 
 import IndividualUser from './IndividualUser.jsx'
 import UserEditor from './UserEditor.jsx'
@@ -16,27 +17,43 @@ import Nav from 'react-bootstrap/Nav'
 import styles from './Homeworks.scss'
 
 
-export default class Users extends React.Component {
+class Users extends React.Component {
 
   constructor(props) {
     super(props)
 
-    var schoolId = localStorage.getItem('usersSelectedSchoolId')
-
     this.state = {
-      masterUsers: [],
-      visibleUsers: [],
+      masterUsers: null,
+      visibleUsers: null,
       editMode: false,
-      selectedSchoolId: schoolId
+      prevSchoolId: null
     }
+  }
 
-    this.getMasterUsers()
+  componentDidUpdate() {
+    if (this.props.selectedSchoolId != null && this.state.masterUsers == null) {
+      this.getMasterUsers()
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.selectedSchoolId !== state.prevSchoolId) {
+      return {
+        prevSchoolId: props.selectedSchoolId,
+        masterUsers: [],
+        visibleUsers: [],
+        editMode: false,
+        prevSchoolId: null
+      };
+    }
+    return null;
   }
 
   getMasterUsers() {
     var that = this
     fetch('/get_users', {
-      method: 'GET',
+      method: 'POST',
+      body: JSON.stringify({schoolId: this.props.selectedSchoolId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -71,14 +88,6 @@ export default class Users extends React.Component {
     }, this.getMasterUsers)
   }
 
-  schoolSelected = (schoolId) => {
-    this.setState({
-      selectedSchoolId: schoolId
-    })
-
-    localStorage.setItem('usersSelectedSchoolId', schoolId)
-  }
-
   userSelectedCallback = (name) => {
     var visibleUsers = [this.state.masterUsers.find(user => {return user.name == name})]
     this.setState({
@@ -95,18 +104,18 @@ export default class Users extends React.Component {
   render() {
     var that = this
 
-    var editContent = this.state.editMode ? <UserEditor masterUsers={this.state.masterUsers} callback={this.closeEditor} title={'Add User'} schoolId={this.state.selectedSchoolId}/> : null
+    var editContent = this.state.editMode ? <UserEditor masterUsers={this.state.masterUsers} callback={this.closeEditor} title={'Add User'} schoolId={this.props.selectedSchoolId}/> : null
 
     var body = null
     var userSearch = null
-    if (this.state.visibleUsers.length > 0) {
+    if (this.state.visibleUsers != null && this.state.visibleUsers.length > 0) {
       body = (<Row>
                 <Col></Col>
                 <Col xs={12}>
                   <ListGroup className={styles.homeworks}>
                     {
                       this.state.visibleUsers.map(function(key, index){
-                        return <ListGroup.Item action key={key.id}><IndividualUser user={key} masterUsers={that.state.masterUsers} userRoles={key.userRoles} userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback} schoolId={that.state.selectedSchoolId}/></ListGroup.Item>
+                        return <ListGroup.Item action key={key.id}><IndividualUser user={key} masterUsers={that.state.masterUsers} userRoles={key.userRoles} userId={key.id} email={key.email} name={key.name} deleteCallback={that.deleteCallback} schoolId={that.props.selectedSchoolId}/></ListGroup.Item>
                       })
                     }
                   </ListGroup>
@@ -143,7 +152,7 @@ export default class Users extends React.Component {
             </Nav>
             &nbsp;&nbsp;&nbsp;
             <Nav>
-              <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
+              <SchoolSelector schoolId={this.props.selectedSchoolId}/>
             </Nav>
 
 
@@ -155,3 +164,9 @@ export default class Users extends React.Component {
     )
   }
 }
+
+export default connect(state => {
+    return {
+        selectedSchoolId: state.selectedSchoolId
+    }
+})(Users)

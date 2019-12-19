@@ -24,9 +24,9 @@ export function updateUser(user) {
 }
 
 export function updateSelectedSchoolId(schoolId) {
-  reduxStore.dispatch({type: SELECTED_SCHOOL_ID_UPDATED, schoolId: schoolId})
+  reduxStore.dispatch({type: SELECTED_SCHOOL_ID_UPDATED, selectedSchoolId: schoolId})
 }
 
 export function updateSelectedKlassId(klassId) {
-  reduxStore.dispatch({type: SELECTED_KLASS_ID_UPDATED, klassId: klassId})
+  reduxStore.dispatch({type: SELECTED_KLASS_ID_UPDATED, selectedKlassId: klassId})
 }

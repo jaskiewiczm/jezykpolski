@@ -1,4 +1,5 @@
 import React from "react"
+import { connect } from "react-redux";
 
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
@@ -15,28 +16,40 @@ import Nav from 'react-bootstrap/Nav'
 import styles from './Homeworks.scss'
 
 
-export default class Klasses extends React.Component {
+class Klasses extends React.Component {
 
   constructor(props) {
     super(props)
 
-    var schoolId = localStorage.getItem('klassesSelectedSchoolId')
-    var klassId = localStorage.getItem('klassesSelectedKlassId')
-
     this.state = {
-      klasses: [],
+      klasses: null,
       editMode: false,
-      selectedSchoolId: schoolId
+      prevSchoolId: null
     }
+  }
 
-    this.getKlasses()
+  componentDidUpdate() {
+    if (this.props.selectedSchoolId != null && this.state.klasses == null) {
+      this.getKlasses()
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.selectedSchoolId !== state.prevSchoolId) {
+      return {
+        klasses: null,
+        editMode: false,
+        prevSchoolId: props.selectedSchoolId,
+      };
+    }
+    return null;
   }
 
   getKlasses() {
     var that = this
     fetch('/get_klasses', {
       method: 'POST',
-      body: JSON.stringify({schoolId: this.state.selectedSchoolId}),
+      body: JSON.stringify({schoolId: this.props.selectedSchoolId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -70,29 +83,13 @@ export default class Klasses extends React.Component {
     }, this.getKlasses)
   }
 
-  schoolSelected = (schoolId) => {
-    localStorage.setItem('klassesSelectedSchoolId', schoolId)
-    localStorage.setItem('klassesSelectedKlassId', null)
-    this.setState({
-      selectedSchoolId: schoolId
-    }, this.getKlasses)
-  }
-
-  klassSelected = (klassId) => {
-    this.setState({
-      selectedKlassId: klassId
-    }, this.getHomeworks)
-
-    localStorage.setItem('klassesSelectedKlassId', klassId)
-  }
-
   render() {
     var that = this
 
     var editContent = this.state.editMode ? <KlassEditor callback={this.closeEditor} title={'Add Class'} schoolId={this.state.selectedSchoolId}/> : null
 
     var body = null
-    if (this.state.klasses.length > 0) {
+    if (this.state.klasses != null && this.state.klasses.length > 0) {
 
       body = (<Row>
                 <Col></Col>
@@ -149,3 +146,11 @@ export default class Klasses extends React.Component {
     )
   }
 }
+
+
+export default connect(state => {
+    return {
+        selectedSchoolId: state.selectedSchoolId
+    }
+})(Klasses)
+

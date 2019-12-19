@@ -1,4 +1,5 @@
 import React from "react"
+import { connect } from "react-redux";
 
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
@@ -11,7 +12,7 @@ import UserEnrollment from './UserEnrollment.jsx'
 
 import "./HomeworkEditor.scss"
 
-export default class KlassEditor extends React.Component {
+class KlassEditor extends React.Component {
 
   constructor(props) {
     super(props)
@@ -24,7 +25,6 @@ export default class KlassEditor extends React.Component {
 
     this.state = {
       klassId: this.props.klassId,
-      schoolId: this.props.schoolId,
       name: name,
       show: true,
       title: this.props.title == null ? 'Edit Class' : this.props.title,
@@ -49,7 +49,7 @@ export default class KlassEditor extends React.Component {
   getTeachers = () => {
     fetch('/teachers', {
       method: 'POST',
-      body: JSON.stringify({schoolId: this.props.schoolId}),
+      body: JSON.stringify({schoolId: this.props.selectedSchoolId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -85,7 +85,7 @@ export default class KlassEditor extends React.Component {
 
     fetch(path, {
       method: 'POST',
-      body: JSON.stringify({name: this.state.name, klassId: this.props.klassId, schoolId: this.props.schoolId, teacherId: this.state.selectedTeacherId}),
+      body: JSON.stringify({name: this.state.name, klassId: this.props.klassId, schoolId: this.props.selectedSchoolId, teacherId: this.state.selectedTeacherId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -136,7 +136,7 @@ export default class KlassEditor extends React.Component {
               </Form.Control>
               <br />
               <Form.Label>Enrollments</Form.Label>
-              <UserEnrollment schoolId={this.props.schoolId} klassId={this.props.klassId}/>
+              <UserEnrollment schoolId={this.props.selectedSchoolId} klassId={this.props.klassId}/>
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -152,3 +152,11 @@ export default class KlassEditor extends React.Component {
     )
   }
 }
+
+
+export default connect(state => {
+    return {
+        selectedSchoolId: state.selectedSchoolId
+    }
+})(KlassEditor)
+
