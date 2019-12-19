@@ -27,6 +27,12 @@ class Homeworks extends React.Component {
       prevSchoolId: null,
       prevKlassId: null
     }
+
+    if (this.props.selectedSchoolId != null
+        && this.props.selectedKlassId != null
+        && this.state.homeworks == null) {
+      this.getHomeworks()
+    }
   }
 
   componentDidUpdate() {
@@ -38,14 +44,7 @@ class Homeworks extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.selectedSchoolId !== state.prevSchoolId) {
-      return {
-        homeworks: null,
-        editMode: false,
-        prevSchoolId: props.selectedSchoolId,
-        prevKlassId: null
-      };
-    } else if (props.selectedKlassId !== state.prevKlassId) {
+    if (props.selectedSchoolId !== state.prevSchoolId || props.selectedKlassId !== state.prevKlassId) {
       return {
         homeworks: null,
         editMode: false,
@@ -104,7 +103,7 @@ class Homeworks extends React.Component {
 
     var klassSelector = null
     if (this.props.selectedSchoolId != null) {
-      klassSelector = <KlassSelector schoolId={this.props.selectedSchoolId} klassId={this.state.selectedKlassId}/>
+      klassSelector = <KlassSelector schoolId={this.props.selectedSchoolId} klassId={this.props.selectedKlassId}/>
     }
 
     var addButton = <Nav className="mr-auto" />

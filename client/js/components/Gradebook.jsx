@@ -1,4 +1,6 @@
 import React from "react"
+import { connect } from "react-redux";
+
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
@@ -14,54 +16,45 @@ import GradebookHomeworkHeader from './GradebookHomeworkHeader.jsx'
 import {gradebook} from './Gradebook.scss'
 
 
-export default class Gradebook extends React.Component {
+class Gradebook extends React.Component {
 
   constructor(props) {
     super(props)
 
-    var schoolId = localStorage.getItem('gradebookSelectedSchoolId')
-    var klassId = localStorage.getItem('gradebookSelectedKlassId')
-
     this.state = {
-      selectedSchoolId: schoolId,
-      selectedKlassId: klassId,
       klasses: null,
 
-      homeworks: [],
-      grades: [],
-      users: [],
-      sortedHomeworkIds: [],
-      gradingScale: [],
-
-      emailDisabled: true
+      homeworks: null,
+      grades: null,
+      users: null,
+      sortedHomeworkIds: null,
+      gradingScale: null,
+      emailDisabled: true,
+      prevSchoolId: null,
+      prevKlassId: null
     }
 
     this.getGradingScale()
-    if (klassId != null) {
+  }
+
+  componentDidUpdate() {
+    if (this.props.selectedSchoolId != null && this.props.selectedKlassId != null && this.state.grades == null) {
       this.getGradebook()
     }
   }
 
-  schoolSelected = (schoolId) => {
-    localStorage.setItem('gradebookSelectedSchoolId', schoolId)
-    localStorage.setItem('gradebookSelectedKlassId', null)
+  static getDerivedStateFromProps(props, state) {
+    if (props.selectedSchoolId != state.prevSchoolId || props.selectedKlassId != state.prevKlassId) {
+      return {
+        homeworks: null,
+        grades: null,
+        sortedHomeworkIds: null,
+        prevSchoolId: props.selectedSchoolId,
+        prevKlassId: props.selectedKlassId
+      }
+    }
 
-    this.setState({
-      selectedSchoolId: schoolId,
-      selectedKlassId: null
-    }, this.getKlasses)
-  }
-
-  klassSelected = (klassId) => {
-    this.setState({
-      selectedKlassId: klassId,
-      grades: [],
-      users: [],
-      sortedHomeworkIds: [],
-      homeworks: []
-    }, this.getGradebook)
-
-    localStorage.setItem('gradebookSelectedKlassId', klassId)
+    return null;
   }
 
   gradeSetCallback = () => {
@@ -74,7 +67,7 @@ export default class Gradebook extends React.Component {
     var that = this
     fetch('/get_gradebook', {
       method: 'POST',
-      body: JSON.stringify({klassId: this.state.selectedKlassId}),
+      body: JSON.stringify({klassId: this.props.selectedKlassId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -125,7 +118,7 @@ export default class Gradebook extends React.Component {
     var that = this
     fetch('/get_klasses', {
       method: 'POST',
-      body: JSON.stringify({schoolId: this.state.selectedSchoolId}),
+      body: JSON.stringify({schoolId: this.props.selectedSchoolId}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -168,13 +161,29 @@ export default class Gradebook extends React.Component {
     var that = this
 
     var klassSelector = null
-    if (this.state.selectedSchoolId != null) {
-      klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected} klassId={this.state.selectedKlassId}/>
+    if (this.props.selectedSchoolId != null) {
+      klassSelector = <KlassSelector schoolId={this.props.selectedSchoolId} klassId={this.props.selectedKlassId}/>
+    }
+
+    var homeworks = []
+    if (this.state.homeworks != null) {
+      homeworks = this.state.homeworks
+    }
+
+    var users = []
+    if (this.state.users != null) {
+      users = this.state.users
+    }
+
+    var sortedHomeworkIds = []
+    if (this.state.sortedHomeworkIds != null) {
+      sortedHomeworkIds = this.state.sortedHomeworkIds
     }
 
     var gradebookDownloadUrl = 'download_gradebook/' + this.state.gradebookId
     var body = null
-    if (this.state.selectedSchoolId != null && this.state.selectedKlassId != null) {
+
+    if (this.props.selectedSchoolId != null && this.props.selectedKlassId != null) {
       body = (<Table responsive striped hover>
           <thead className='gradebook'>
             <tr>
@@ -183,17 +192,17 @@ export default class Gradebook extends React.Component {
                   <Image className='envelopeButton' src="envelope.svg" />
                 </Button>
               </th>
-              {this.state.homeworks.map(function(homework, index) {
-                return <th key={index}><GradebookHomeworkHeader homework={homework}/></th>
+              {homeworks.map(function(homework, index) {
+                return <th key={homework.id}><GradebookHomeworkHeader homework={homework}/></th>
               })}
             </tr>
           </thead>
           <tbody className='gradebook'>
-            {this.state.users.map(function(user, index){
-              return <tr key={index}>
+            {users.map(function(user, index){
+              return <tr key={user.id}>
                   <td>{user.name}</td>
-                  {that.state.sortedHomeworkIds.map(function(homeworkId, hIndex){
-                    return <td key={hIndex}><Grade gradeSetCallback={that.gradeSetCallback} userId={user.id} homeworkId={homeworkId} earnedGrade={that.getEarnedGrade(user.id, homeworkId)} gradingScale={that.state.gradingScale}/></td>
+                  {sortedHomeworkIds.map(function(homeworkId, hIndex){
+                    return <td key={homeworkId}><Grade gradeSetCallback={that.gradeSetCallback} userId={user.id} homeworkId={homeworkId} earnedGrade={that.getEarnedGrade(user.id, homeworkId)} gradingScale={that.state.gradingScale}/></td>
                   })}
                 </tr>
             })}
@@ -211,7 +220,7 @@ export default class Gradebook extends React.Component {
               <a className='exportLink' href={gradebookDownloadUrl}>Export</a>
             </Nav>
             <Nav>
-              <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
+              <SchoolSelector schoolId={this.props.selectedSchoolId}/>
             </Nav>
             &nbsp;
             <Nav>
@@ -224,3 +233,12 @@ export default class Gradebook extends React.Component {
     )
   }
 }
+
+
+export default connect(state => {
+    return {
+        selectedSchoolId: state.selectedSchoolId,
+        selectedKlassId: state.selectedKlassId
+    }
+})(Gradebook)
+

@@ -26,6 +26,10 @@ class Klasses extends React.Component {
       editMode: false,
       prevSchoolId: null
     }
+
+    if (this.props.selectedSchoolId != null && this.state.klasses == null) {
+      this.getKlasses()
+    }
   }
 
   componentDidUpdate() {
@@ -136,7 +140,7 @@ class Klasses extends React.Component {
               <Nav.Link onClick={that.add}>Add</Nav.Link>
             </Nav>
             <Nav>
-              <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
+              <SchoolSelector callback={this.schoolSelected} schoolId={this.props.selectedSchoolId}/>
             </Nav>
           </Navbar>
           {body}

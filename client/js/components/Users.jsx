@@ -28,6 +28,10 @@ class Users extends React.Component {
       editMode: false,
       prevSchoolId: null
     }
+
+    if (this.props.selectedSchoolId != null && this.state.masterUsers == null) {
+      this.getMasterUsers()
+    }
   }
 
   componentDidUpdate() {
@@ -40,10 +44,9 @@ class Users extends React.Component {
     if (props.selectedSchoolId !== state.prevSchoolId) {
       return {
         prevSchoolId: props.selectedSchoolId,
-        masterUsers: [],
-        visibleUsers: [],
-        editMode: false,
-        prevSchoolId: null
+        masterUsers: null,
+        visibleUsers: null,
+        editMode: false
       };
     }
     return null;
