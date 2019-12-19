@@ -93,8 +93,6 @@ class KlassSelector extends React.Component {
     })
 
     updateSelectedKlassId(klassId)
-
-    this.props.callback(klassId)
   }
 
   render() {

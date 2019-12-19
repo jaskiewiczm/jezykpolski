@@ -86,7 +86,7 @@ class Klasses extends React.Component {
   render() {
     var that = this
 
-    var editContent = this.state.editMode ? <KlassEditor callback={this.closeEditor} title={'Add Class'} schoolId={this.state.selectedSchoolId}/> : null
+    var editContent = this.state.editMode ? <KlassEditor callback={this.closeEditor} title={'Add Class'} schoolId={this.props.selectedSchoolId}/> : null
 
     var body = null
     if (this.state.klasses != null && this.state.klasses.length > 0) {

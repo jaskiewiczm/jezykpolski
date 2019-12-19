@@ -21,19 +21,18 @@ class Homeworks extends React.Component {
   constructor(props) {
     super(props)
 
-    var schoolId = localStorage.getItem('homeworksSelectedSchoolId')
-    var klassId = localStorage.getItem('homeworksSelectedKlassId')
-
     this.state = {
       homeworks: null,
       editMode: false,
-      selectedSchoolId: schoolId,
-      selectedKlassId: klassId
+      prevSchoolId: null,
+      prevKlassId: null
     }
   }
 
-  componentDidMount() {
-    if (this.state.selectedSchoolId != null && this.state.selectedKlassId != null) {
+  componentDidUpdate() {
+    if (this.props.selectedSchoolId != null
+        && this.props.selectedKlassId != null
+        && this.state.homeworks == null) {
       this.getHomeworks()
     }
   }
@@ -41,9 +40,17 @@ class Homeworks extends React.Component {
   static getDerivedStateFromProps(props, state) {
     if (props.selectedSchoolId !== state.prevSchoolId) {
       return {
-        klasses: null,
+        homeworks: null,
         editMode: false,
         prevSchoolId: props.selectedSchoolId,
+        prevKlassId: null
+      };
+    } else if (props.selectedKlassId !== state.prevKlassId) {
+      return {
+        homeworks: null,
+        editMode: false,
+        prevSchoolId: props.selectedSchoolId,
+        prevKlassId: props.selectedKlassId
       };
     }
     return null;
@@ -54,8 +61,8 @@ class Homeworks extends React.Component {
     fetch('/get_homeworks', {
       method: 'POST',
       body: JSON.stringify({
-        schoolId: this.state.selectedSchoolId,
-        klassId: this.state.selectedKlassId
+        schoolId: this.props.selectedSchoolId,
+        klassId: this.props.selectedKlassId
       }),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
@@ -90,32 +97,14 @@ class Homeworks extends React.Component {
     }, this.getHomeworks())
   }
 
-  schoolSelected = (schoolId) => {
-    this.setState({
-      selectedSchoolId: schoolId,
-      selectedKlassId: null
-    })
-
-    localStorage.setItem('homeworksSelectedSchoolId', schoolId)
-    localStorage.setItem('homeworksSelectedKlassId', null)
-  }
-
-  klassSelected = (klassId) => {
-    this.setState({
-      selectedKlassId: klassId
-    }, this.getHomeworks)
-
-    localStorage.setItem('homeworksSelectedKlassId', klassId)
-  }
-
   render() {
     var that = this
 
-    var editContent = this.state.editMode ? <HomeworkEditor callback={this.closeEditor} title={'Add Homework'} selectedKlassId={this.state.selectedKlassId}/> : null
+    var editContent = this.state.editMode ? <HomeworkEditor callback={this.closeEditor} title={'Add Homework'} selectedKlassId={this.props.selectedKlassId}/> : null
 
     var klassSelector = null
-    if (this.state.selectedSchoolId != null) {
-      klassSelector = <KlassSelector schoolId={this.state.selectedSchoolId} callback={this.klassSelected} klassId={this.state.selectedKlassId}/>
+    if (this.props.selectedSchoolId != null) {
+      klassSelector = <KlassSelector schoolId={this.props.selectedSchoolId} klassId={this.state.selectedKlassId}/>
     }
 
     var addButton = <Nav className="mr-auto" />
@@ -128,7 +117,7 @@ class Homeworks extends React.Component {
     }
 
     var body = null
-    if (this.state.homeworks.length > 0) {
+    if (this.state.homeworks != null && this.state.homeworks.length > 0) {
       body = (<Row>
             <Col></Col>
             <Col xs={12}>
@@ -164,7 +153,7 @@ class Homeworks extends React.Component {
             <Navbar.Brand>Homework</Navbar.Brand>
             {addButton}
             <Nav>
-              <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
+              <SchoolSelector callback={this.schoolSelected} schoolId={this.props.selectedSchoolId}/>
             </Nav>
             &nbsp;
             <Nav>

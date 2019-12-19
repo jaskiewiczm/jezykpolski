@@ -7,7 +7,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import g_user from './GlobalUser.jsx'
 import g_roles from './GlobalRoles.jsx'
 
-import {updateSelectedSchoolId} from '../redux/Actions.jsx'
+import {updateSelectedSchoolId, updateSelectedKlassId} from '../redux/Actions.jsx'
 
 
 class SchoolSelector extends React.Component {
@@ -49,6 +49,7 @@ class SchoolSelector extends React.Component {
     })
 
     updateSelectedSchoolId(schoolId)
+    updateSelectedKlassId(null)
   }
 
   render() {
