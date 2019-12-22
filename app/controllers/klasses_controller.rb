@@ -19,13 +19,12 @@ class KlassesController < ApplicationController
   end
 
   def get_klasses
-    admin_roles = current_user.roles.select {|role| role.code == 'admin'}
-    teacher_roles = current_user.roles.select {|role| role.code == 'teacher'}
-    parent_roles = current_user.roles.select {|role| role.code == 'parent'}
-    if admin_roles.length > 0
+    if current_user.is_admin? || current_user.is_school_admin?
       klasses = Klass.where('school_id = ?', params[:schoolId]).map(&:attributes)
-    elsif teacher_roles.length > 0
+    elsif current_user.is_teacher?
       klasses = current_user.taught_klasses.map(&:attributes)
+    elsif current_user.is_parent?
+      klasses = []
     else
       klasses = current_user.klasses.map(&:attributes)
     end

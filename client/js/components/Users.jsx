@@ -80,9 +80,11 @@ class Users extends React.Component {
   }
 
   add = () => {
-    this.setState({
-      editMode: true
-    })
+    if (this.props.selectedSchoolId) {
+      this.setState({
+        editMode: true
+      })
+    }
   }
 
   closeEditor = () => {

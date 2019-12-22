@@ -22,9 +22,11 @@ class GradebooksController < ApplicationController
     params.require(:klassId)
 
     klass = Klass.find_by_id params[:klassId]
-    users = klass.users
+    users = klass.users.select {|user| !user.disabled}
+    users = users.sort_by {|user| user.name}
+    user_ids = users.map {|user| user.id}
     homeworks = klass.homeworks.where(:disabled => false)
-    grades = klass.gradebook.earned_grades.includes(:jezyk_polski_email)
+    grades = klass.gradebook.earned_grades.includes(:jezyk_polski_email).where('user_id in (?)', user_ids)
     return_grades = grades.map(&:attributes)
 
     grades.each_with_index do |grade, index|

@@ -8,7 +8,12 @@ class SchoolsController < ApplicationController
   end
 
   def get_schools
-    schools = School.all.map(&:attributes)
+    admin_roles = current_user.roles.select {|role| role.code == 'admin'}
+    if admin_roles.length > 0
+      schools = School.all.map(&:attributes)
+    else
+      schools = [current_user.school.attributes]
+    end
     render json: schools, status: 200
   end
 end

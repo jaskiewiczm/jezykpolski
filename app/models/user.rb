@@ -27,6 +27,14 @@ class User < ApplicationRecord
 
   belongs_to :grade_level
 
+  def is_school_admin?
+    return self.roles.where(:code => 'school_admin').count == 1
+  end
+
+  def is_teacher?
+    return self.roles.where(:code => 'teacher').count == 1
+  end
+
   def is_parent?
     return self.roles.where(:code => 'parent').count == 1
   end

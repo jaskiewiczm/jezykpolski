@@ -19,6 +19,7 @@ class EnrollmentsController < ApplicationController
 
     k = Klass.find_by_id params[:klassId]
     users = k.users.active
+    users = users.active.select {|user| !user.disabled}
     users = users.map(&:attributes)
     users = users.sort_by {|u| u['name']}
 

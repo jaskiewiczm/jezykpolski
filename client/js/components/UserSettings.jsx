@@ -25,9 +25,11 @@ class UserSettings extends React.Component {
   constructor(props) {
     super(props)
 
+    var allowGradesEmail = false
     var userName = null
     if (this.props.user) {
       userName = this.props.user.name
+      allowGradesEmail = this.props.user.suppress_grades_emails ? '' : 'checked'
     }
     this.state = {
       oldPassword: '',
@@ -36,16 +38,19 @@ class UserSettings extends React.Component {
       name: userName,
       isNameUnique: true,
       originalPasswordIncorrect: false,
-      showSuccess: false
+      showSuccess: false,
+      allowGradesEmail: allowGradesEmail
     }
   }
 
   save = () => {
     var that = this
 
+    var suppressGradesEmail = this.state.allowGradesEmail == 'checked' ? false : true
     var user =  {
                   userId: this.props.user.id,
                   name: this.state.name,
+                  suppressGradesEmail: suppressGradesEmail
                 }
 
     if (this.passwordChangeAttempt()) {
@@ -66,6 +71,8 @@ class UserSettings extends React.Component {
       if (response.status == 200) {
         var newUser = this.props.user
         newUser.name = that.state.name
+        newUser.suppress_grades_emails = suppressGradesEmail
+        updateUser(newUser)
 
         that.setState({
           showSuccess: true
@@ -214,6 +221,12 @@ class UserSettings extends React.Component {
     return ''
   }
 
+  unsubscribeFromGrades = (event) => {
+    this.setState({
+      allowGradesEmail: event.currentTarget.checked ? 'checked' : ''
+    })
+  }
+
   render() {
     var that = this
 
@@ -258,6 +271,10 @@ class UserSettings extends React.Component {
                 <Form.Label>Password Confirmation</Form.Label>
                 <Form.Control type='password' value={this.state.passwordConfirmation} onChange={this.passwordConfirmationChanged} isInvalid={this.passwordConfirmationInvalid()}/>
                 <Form.Control.Feedback type='invalid'>{this.passwordConfirmationInvalidMessage()}</Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Email Subscriptions</Form.Label>
+                <Form.Check type='checkbox' label={'Grade Announcements'} checked={this.state.allowGradesEmail} onChange={this.unsubscribeFromGrades} />
               </Form.Group>
               &nbsp;
               <Button className='userSettingsSaveButton' onClick={this.save}>Save</Button>

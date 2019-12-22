@@ -38,7 +38,9 @@ class UsersController < ApplicationController
 
   def users
     params.require(:schoolId)
-    users = User.where(:school_id => params[:schoolId])
+    users = User.joins(:user_roles)
+                .joins(:roles)
+                .where(:school_id => params[:schoolId])
                 .where(:disabled => false)
                 .order(:name)
 
@@ -83,8 +85,13 @@ class UsersController < ApplicationController
       u = User.new
       u.name = params[:name]
       u.email = params[:email]
-      u.password = 'TEMP_PASSWORD'
-      u.password_confirmation = 'TEMP_PASSWORD'
+      if params.has_key?(:newPassword) && params.has_key?(:passwordConfirmation)
+        u.password = params[:newPassword]
+        u.password_confirmation = params[:passwordConfirmation]
+      else
+        u.password = 'TEMP_PASSWORD'
+        u.password_confirmation = 'TEMP_PASSWORD'
+      end
       u.school_id = params[:schoolId]
 
       _parent_update(u)
@@ -166,6 +173,8 @@ class UsersController < ApplicationController
       if params.has_key? :name
         u.name = params[:name]
       end
+
+      u.suppress_grades_emails = params[:suppressGradesEmail]
 
       _parent_update(u)
       successful_password_reset = _password_reset()
