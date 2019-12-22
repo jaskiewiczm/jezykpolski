@@ -6,6 +6,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  belongs_to :school
   has_many :user_roles
   has_many :reading_logs
   has_many :user_klasses

@@ -1,5 +1,5 @@
 
-import {updateSchools} from '../redux/Actions.jsx'
+import {updateSchools, updateSelectedSchoolId} from '../redux/Actions.jsx'
 
 
 class GlobalUser {
@@ -20,6 +20,9 @@ class GlobalUser {
     }).then((response)=>{
       if (response != null) {
         updateSchools(response)
+        if (response.length == 1) {
+          updateSelectedSchoolId(response[0].id)
+        }
       }
     })
   }

@@ -19,7 +19,16 @@ class KlassesController < ApplicationController
   end
 
   def get_klasses
-    klasses = Klass.where('school_id = ?', params[:schoolId]).map(&:attributes)
+    admin_roles = current_user.roles.select {|role| role.code == 'admin'}
+    teacher_roles = current_user.roles.select {|role| role.code == 'teacher'}
+    parent_roles = current_user.roles.select {|role| role.code == 'parent'}
+    if admin_roles.length > 0
+      klasses = Klass.where('school_id = ?', params[:schoolId]).map(&:attributes)
+    elsif teacher_roles.length > 0
+      klasses = current_user.taught_klasses.map(&:attributes)
+    else
+      klasses = current_user.klasses.map(&:attributes)
+    end
     render json: klasses, status: 200
   end
 

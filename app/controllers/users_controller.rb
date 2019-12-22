@@ -25,7 +25,12 @@ class UsersController < ApplicationController
   end
 
   def get_by_role(schoolId, role)
-    users = User.joins(:user_roles).joins(:roles).where(roles: {code: role}).order(:name).distinct
+    users = User.joins(:user_roles)
+                .joins(:roles)
+                .where(roles: {code: role})
+                .where(:disabled => false)
+                .order(:name)
+                .distinct
     users = users.map(&:attributes)
     users = users.map{|user| user.select {|k,v| [:email.to_s, :id.to_s, :name.to_s].include?(k)}}
     users
@@ -33,7 +38,9 @@ class UsersController < ApplicationController
 
   def users
     params.require(:schoolId)
-    users = User.where(:school_id => params[:schoolId]).order(:name)
+    users = User.where(:school_id => params[:schoolId])
+                .where(:disabled => false)
+                .order(:name)
 
     userRoles = {}
     users.each do |user|
@@ -96,7 +103,8 @@ class UsersController < ApplicationController
     params.require(:userId)
 
     u = User.find_by_id(params[:userId])
-    u.destroy!
+    u.disabled = true
+    u.save!
 
     render json: {}, status: 200
   end

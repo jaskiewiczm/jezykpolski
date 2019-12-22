@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_18_225031) do
+ActiveRecord::Schema.define(version: 2019_12_22_002916) do
 
   create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
@@ -217,6 +217,7 @@ ActiveRecord::Schema.define(version: 2019_12_18_225031) do
     t.string "name"
     t.bigint "school_id"
     t.bigint "grade_level_id"
+    t.boolean "disabled", default: false
     t.index ["email", "school_id"], name: "index_users_on_email_and_school_id", unique: true
     t.index ["grade_level_id"], name: "fk_rails_ddf8e43c6b"
     t.index ["name", "school_id"], name: "index_users_on_name_and_school_id", unique: true

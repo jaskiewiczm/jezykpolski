@@ -138,12 +138,14 @@ export default class UserEditor extends React.Component {
     }).then((response) => {
       if (response.status == 200) {
         this.props.callback(this.state.email, this.state.name, this.state.userRoles)
-        this.props.user.parents = []
-        if (this.state.parent1Id != null) {
-          this.props.user.parents.push(this.state.parent1Id)
-        }
-        if (this.state.parent2Id != null) {
-          this.props.user.parents.push(this.state.parent2Id)
+        if (this.props.user != null) {
+          this.props.user.parents = []
+          if (this.state.parent1Id != null) {
+            this.props.user.parents.push(this.state.parent1Id)
+          }
+          if (this.state.parent2Id != null) {
+            this.props.user.parents.push(this.state.parent2Id)
+          }
         }
         that.setState({
           show: false
