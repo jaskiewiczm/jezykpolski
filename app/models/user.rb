@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_many :taught_klasses, foreign_key: :teacher_id, class_name: 'Klass'
 
   belongs_to :grade_level
+  has_many :security_logs
 
   def is_school_admin?
     return self.roles.where(:code => 'school_admin').count == 1
