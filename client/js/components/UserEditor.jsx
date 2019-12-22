@@ -44,7 +44,10 @@ export default class UserEditor extends React.Component {
       userRoles: this.props.userRoles == null ? [] : this.props.userRoles,
       parentList: parentList,
       parent1Id: user != null ? user.parents[0] : null,
-      parent2Id: user != null ? user.parents[1] : null
+      parent2Id: user != null ? user.parents[1] : null,
+      newPassword: '',
+      passwordConfirmation: '',
+      saveDisabled: false
     }
 
     this.getEnrollments()
@@ -111,6 +114,12 @@ export default class UserEditor extends React.Component {
     } else {
       path = '/add_user'
     }
+
+    if (this.invalidNewPassword() || this.invalidPasswordConfirmation()) {
+      this.forceUpdate()
+      return
+    }
+
     fetch(path, {
       method: 'POST',
       body: JSON.stringify({name: this.state.name,
@@ -118,7 +127,10 @@ export default class UserEditor extends React.Component {
                             email: this.state.email,
                             roles: this.state.userRoles.map(function(role){return role.id}),
                             parent1Id: this.state.parent1Id,
-                            parent2Id: this.state.parent2Id
+                            parent2Id: this.state.parent2Id,
+                            schoolId: this.props.schoolId,
+                            newPassword: this.state.newPassword,
+                            passwordConfirmation: this.state.passwordConfirmation
                           }),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
@@ -265,6 +277,71 @@ export default class UserEditor extends React.Component {
     })
   }
 
+  disableSaveButton = () => {
+    var saveDisabled = this.invalidNewPassword() | this.invalidPasswordConfirmation()
+    this.setState({
+      saveDisabled: saveDisabled
+    })
+  }
+
+  newPasswordChanged = (event) => {
+    this.setState({
+      newPassword: event.currentTarget.value
+    }, this.disableSaveButton)
+  }
+
+  passwordConfirmationChanged = (event) => {
+    this.setState({
+      passwordConfirmation: event.currentTarget.value
+    }, this.disableSaveButton)
+  }
+
+  invalidNewPassword = () => {
+    var rv = false
+    if (this.state.newPassword.length > 0 || this.state.passwordConfirmation.length > 0) {
+      if (this.state.newPassword.length < 6) {
+        rv = true
+      } else if (this.state.newPassword != this.state.passwordConfirmation) {
+        rv = true
+      }
+    }
+
+    return rv
+  }
+
+  invalidNewPasswordMessage = () => {
+    if (this.state.newPassword.length < 6) {
+      return 'New password must be longer than 6 characters.'
+    }
+    else if (this.state.newPassword != this.state.passwordConfirmation) {
+      return 'New password does not match password confirmation.'
+    }
+    return ''
+  }
+
+  invalidPasswordConfirmation = () => {
+    var rv = false
+    if (this.state.newPassword.length > 0 || this.state.passwordConfirmation.length > 0) {
+      if (this.state.passwordConfirmation.length < 6) {
+        rv = true
+      } else if (this.state.newPassword != this.state.passwordConfirmation) {
+        rv = true
+      }
+    }
+
+    return rv
+  }
+
+  invalidPasswordConfirmationMessage = () => {
+    if (this.state.passwordConfirmation.length < 6) {
+      return 'New password must be longer than 6 characters.'
+    }
+    else if (this.state.newPassword != this.state.passwordConfirmation) {
+      return 'New password does not match password confirmation.'
+    }
+    return ''
+  }
+
   render() {
     var that = this
 
@@ -353,13 +430,13 @@ export default class UserEditor extends React.Component {
                   <Card.Body className='userEditorCardBody'>
                     <Form.Group>
                       <Form.Label>New Password</Form.Label>
-                      <Form.Control type='password' value={this.state.email} onChange={this.emailChanged} isInvalid={this.state.validatedEmail && !this.state.uniqueEmail}/>
-                      <Form.Control.Feedback type='invalid'>This email is not unique.</Form.Control.Feedback>
+                      <Form.Control type='password' onChange={this.newPasswordChanged} isInvalid={this.invalidNewPassword()}/>
+                      <Form.Control.Feedback type='invalid'>{this.invalidNewPasswordMessage()}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group>
                       <Form.Label>Password Confirmation</Form.Label>
-                      <Form.Control type='password' value={this.state.email} onChange={this.emailChanged} isInvalid={this.state.validatedEmail && !this.state.uniqueEmail}/>
-                      <Form.Control.Feedback type='invalid'>This email is not unique.</Form.Control.Feedback>
+                      <Form.Control type='password' onChange={this.passwordConfirmationChanged} isInvalid={this.invalidPasswordConfirmation()}/>
+                      <Form.Control.Feedback type='invalid'>{this.invalidPasswordConfirmationMessage()}</Form.Control.Feedback>
                     </Form.Group>
                   </Card.Body>
                 </Card>
@@ -406,7 +483,7 @@ export default class UserEditor extends React.Component {
           <Button variant="secondary" onClick={this.handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleSave}>
+          <Button disabled={this.state.saveDisabled} variant="primary" onClick={this.handleSave}>
             Save Changes
           </Button>
         </Modal.Footer>

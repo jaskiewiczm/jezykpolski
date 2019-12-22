@@ -62,6 +62,7 @@ class UsersController < ApplicationController
 
   def add_user
     params.require(:name)
+    params.require(:schoolId)
 
     name_unique = validate_user_name_uniqueness(params[:name])
     email_unique = true
@@ -77,6 +78,7 @@ class UsersController < ApplicationController
       u.email = params[:email]
       u.password = 'TEMP_PASSWORD'
       u.password_confirmation = 'TEMP_PASSWORD'
+      u.school_id = params[:schoolId]
 
       _parent_update(u)
 
@@ -111,7 +113,7 @@ class UsersController < ApplicationController
 
   def _password_reset
     params.require(:userId)
-    if params.has_key?(:newPassword) && params.has_key?(:passwordConfirmation)
+    if params.has_key?(:newPassword) && params.has_key?(:passwordConfirmation) && params[:newPassword].length >= 6 && params[:passwordConfirmation].length >= 6
       if current_user.id != params[:userId] && current_user.roles.where('code like ?', '%admin%')
         # From the users page, doing a password reset for another user.
         u = User.find_by_id(params[:userId])

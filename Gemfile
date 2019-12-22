@@ -23,6 +23,8 @@ gem 'axlsx_rails'
 gem 'delayed_job_active_record'
 gem 'sendgrid-ruby'
 gem 'jwt'
+gem 'pry-byebug'
+gem 'pry-rails'
 
 
 group :development, :test do
