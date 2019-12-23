@@ -68,16 +68,20 @@ class LoginController < ApplicationController
 
     user = User.where(:email => params[:email]).first
     if user.present?
+      payload = { :user_id => user.id}
       secret = Rails.application.config.jwt['JWT_SECRET']
       token = JWT.encode payload, secret, 'HS256'
-      url = Rails.application.config.application['HOST']
+      url = Rails.application.config.application['HOST'] << "?#{token}"
 
       email_obj = {to: user.email,
        from: 'no-reply@jezykpol.ski',
        subject: "JezykPolski Password Reset",
        body: "A password reset has been requested for #{user.name}. Please follow this link to continue: #{url}"
       }
-      SendGridHelper.delay.send_email(email_obj)
+
+      email = JezykPolskiEmail.new
+      email.send_email(email_obj)
+      email.save!
     end
   end
 end

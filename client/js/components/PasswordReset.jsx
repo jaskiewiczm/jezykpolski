@@ -20,11 +20,11 @@ export default class PasswordReset extends React.Component {
     }
   }
 
-  attemptReset() {
+  attemptReset = () => {
     var that = this
     fetch('/request_password_reset', {
       method: 'POST',
-      body: JSON.stringify({email: this.state.email}),
+      body: JSON.stringify({email: that.state.email}),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
