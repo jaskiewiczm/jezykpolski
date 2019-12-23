@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'uri'
 
 class LoginController < ApplicationController
   include Devise::Controllers::Helpers
@@ -53,11 +54,15 @@ class LoginController < ApplicationController
     if current_user.nil?
       secret = Rails.application.config.jwt['JWT_SECRET']
       decoded_token = JWT.decode params[:jwt], secret, true, { algorithm: 'HS256' }
-      user_id = decoded_token['user_id']
+      require 'pry'
+      binding.pry
+      user_token = decoded_token.select {|item| item.has_key? 'user_id'}
+      user_id = user_token[0]['user_id']
 
       user = User.find_by_id user_id
       if user.present?
         sign_in user
+        redirect_to '/'
       end
 
     end
@@ -71,12 +76,13 @@ class LoginController < ApplicationController
       payload = { :user_id => user.id}
       secret = Rails.application.config.jwt['JWT_SECRET']
       token = JWT.encode payload, secret, 'HS256'
-      url = Rails.application.config.application['HOST'] << "?#{token}"
+      url = URI.join(Rails.application.config.application['HOST'],"jwt_login").to_s
+      url = url << "?jwt=#{token}"
 
       email_obj = {to: user.email,
        from: 'no-reply@jezykpol.ski',
        subject: "JezykPolski Password Reset",
-       body: "A password reset has been requested for #{user.name}. Please follow this link to continue: #{url}"
+       body: "A password reset has been requested for #{user.name}. Please <a href='#{url}'>continue</a> to the reset page"
       }
 
       email = JezykPolskiEmail.new

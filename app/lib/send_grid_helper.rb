@@ -8,7 +8,8 @@ class SendGridHelper
     from = Email.new(email: email[:from])
     to = Email.new(email: email[:to])
     subject = email[:subject]
-    content = Content.new(type: 'text/plain', value: email[:body])
+    email_body = '<html><body>' + email[:body] + '</body></html>'
+    content = Content.new(type: 'text/html', value: email_body)
     mail = SendGrid::Mail.new(from, subject, to, content)
 
     sg = SendGrid::API.new(api_key: Rails.application.config.sendgrid['SENDGRID_API_KEY'])
