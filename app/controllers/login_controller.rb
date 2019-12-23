@@ -43,15 +43,41 @@ class LoginController < ApplicationController
       else
         render json: {}, status: 403
       end
-    else
-      params.require [:jwt, :newPassword, :newPasswordConfirmation]
+    end
+
+    render json: {}, status: 403
+  end
+
+  def jwt_login
+    params.require :jwt
+    if current_user.nil?
       secret = Rails.application.config.jwt['JWT_SECRET']
       decoded_token = JWT.decode params[:jwt], secret, true, { algorithm: 'HS256' }
       user_id = decoded_token['user_id']
 
       user = User.find_by_id user_id
-    end
+      if user.present?
+        sign_in user
+      end
 
-    render json: {}, status: 403
+    end
+  end
+
+  def request_password_reset
+    params.require :email
+
+    user = User.where(:email => params[:email]).first
+    if user.present?
+      secret = Rails.application.config.jwt['JWT_SECRET']
+      token = JWT.encode payload, secret, 'HS256'
+      url = Rails.application.config.application['HOST']
+
+      email_obj = {to: user.email,
+       from: 'no-reply@jezykpol.ski',
+       subject: "JezykPolski Password Reset",
+       body: "A password reset has been requested for #{user.name}. Please follow this link to continue: #{url}"
+      }
+      SendGridHelper.delay.send_email(email_obj)
+    end
   end
 end

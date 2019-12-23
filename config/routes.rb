@@ -4,6 +4,8 @@ Jezykpolski::Application.routes.draw do
   post '/login' => 'login#login'
   post '/logout' => 'login#logout'
   get '/whoami' => 'login#whoami'
+  get '/jwt_login' => 'login#jwt_login'
+  post '/request_password_reset' => 'login#request_password_reset'
 
   devise_for :users, only: []
 

@@ -1,6 +1,15 @@
 .userButton {
   width: 32px; }
 
+.passwordReset {
+  color: #007BFF;
+  float: right;
+  margin-right: 140px;
+  cursor: pointer; }
+
+.passwordReset:hover {
+  color: white; }
+
 
 .react-calendar {
   width: 350px;
@@ -234,4 +243,8 @@ li {
 
 .userSettingsSaveButton {
   float: right; }
+
+.passwordResetContainer {
+  background: white;
+  padding: 16px; }
 

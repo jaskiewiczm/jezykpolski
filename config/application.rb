@@ -55,5 +55,6 @@ module Jezykpolski
     config.active_job.queue_adapter = :delayed_job
     config.sendgrid = config_for(:sendgrid)
     config.jwt = config_for(:jwt)
+    config.application = config_for(:application)
   end
 end

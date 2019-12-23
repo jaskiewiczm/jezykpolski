@@ -152,11 +152,20 @@ class Application extends React.Component {
         )
     } else {
       return (
-          <Form inline>
-            <FormControl type="text" placeholder="Email" className="mr-sm-2" onChange={this.onEmailChange}/>
-            <FormControl type="password" placeholder="Password" className="mr-sm-2" onChange={this.onPasswordChanged}/>
-            <Button variant="outline-info" onClick={this.login}>Login</Button>
-          </Form>
+          <div>
+            <div>
+              <Form inline>
+                <FormControl type="text" placeholder="Email" className="mr-sm-2" onChange={this.onEmailChange}/>
+                <FormControl type="password" placeholder="Password" className="mr-sm-2" onChange={this.onPasswordChanged}/>
+                <Button variant="outline-info" onClick={this.login}>Login</Button>
+              </Form>
+            </div>
+            <div>
+              <div>
+                <Link className='passwordReset' to="/password_reset">Password Reset</Link>
+              </div>
+            </div>
+          </div>
         )
     }
   }

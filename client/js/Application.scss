@@ -1,3 +1,14 @@
 .userButton {
   width: 32px;
 }
+
+.passwordReset {
+  color: #007BFF;
+  float: right;
+  margin-right: 140px;
+  cursor: pointer;
+}
+
+.passwordReset:hover {
+  color: white;
+}
