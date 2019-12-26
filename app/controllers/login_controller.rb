@@ -15,7 +15,7 @@ class LoginController < ApplicationController
 
   def login
     params.require [:email, :password]
-    user = User.includes(:roles).where([:email => params[:email], :disabled => false]).first
+    user = User.includes(:roles).where({:email => params[:email], :disabled => false}).first
     if user.present? && user.valid_password?(params[:password])
       sign_in user
       roles = user.roles.map(&:attributes)
