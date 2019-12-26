@@ -15,7 +15,7 @@ class LoginController < ApplicationController
 
   def login
     params.require [:email, :password]
-    user = User.includes(:roles).where(:email => params[:email]).first
+    user = User.includes(:roles).where([:email => params[:email], :disabled => false]).first
     if user.present? && user.valid_password?(params[:password])
       sign_in user
       roles = user.roles.map(&:attributes)
@@ -54,17 +54,16 @@ class LoginController < ApplicationController
     if current_user.nil?
       secret = Rails.application.config.jwt['JWT_SECRET']
       decoded_token = JWT.decode params[:jwt], secret, true, { algorithm: 'HS256' }
-      require 'pry'
-      binding.pry
       user_token = decoded_token.select {|item| item.has_key? 'user_id'}
       user_id = user_token[0]['user_id']
 
       user = User.find_by_id user_id
       if user.present?
         sign_in user
-        redirect_to '/'
+        redirect_to '/jwt_reset_password'
       end
-
+    else
+      redirect_to '/'
     end
   end
 
@@ -89,5 +88,15 @@ class LoginController < ApplicationController
       email.send_email(email_obj)
       email.save!
     end
+  end
+
+  def reset_password
+    params.require [:newPassword, :passwordConfirmation]
+
+    current_user.password = params[:newPassword]
+    current_user.password_confirmation = params[:newPasswordConfirmation]
+    current_user.save!
+
+    render json: {}, status: 200
   end
 end

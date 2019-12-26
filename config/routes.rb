@@ -6,6 +6,8 @@ Jezykpolski::Application.routes.draw do
   get '/whoami' => 'login#whoami'
   get '/jwt_login' => 'login#jwt_login'
   post '/request_password_reset' => 'login#request_password_reset'
+  post '/reset_password' => 'login#reset_password'
+  get '/jwt_reset_password' => 'jwt_reset_passwords#jwt_reset_password'
 
   devise_for :users, only: []
 

@@ -15,7 +15,8 @@ import Gradebook from 'components/Gradebook.jsx'
 import UserReport from 'components/UserReport.jsx'
 import UserSettings from 'components/UserSettings.jsx'
 import Billing from 'components/Billing.jsx'
-import PasswordReset from 'components/PasswordReset.jsx'
+import PasswordResetRequest from 'components/PasswordResetRequest.jsx'
+import JwtPasswordReset from 'components/JwtPasswordReset.jsx'
 
 import { createStore, combineReducers } from 'redux';
 import schoolsReducer from './redux/Reducers.jsx';
@@ -40,7 +41,8 @@ if (!bindNode) {
           <Route path="/user_report" component={UserReport} />
           <Route path="/user_settings" component={UserSettings} />
           <Route path="/billing" component={Billing} />
-          <Route path="/password_reset" component={PasswordReset} />
+          <Route path="/password_reset_request" component={PasswordResetRequest} />
+          <Route path="/jwt_reset_password" component={JwtPasswordReset} />
         </BrowserRouter>
       </Provider>
     ), bindNode

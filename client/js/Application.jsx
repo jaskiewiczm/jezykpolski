@@ -65,7 +65,9 @@ class Application extends React.Component {
           loginFailed: false,
           email: response.user.email
         })
-        that.props.history.push('/homeworks')
+        if (this.props.history.location.pathname != '/jwt_reset_password') {
+          that.props.history.push('/homeworks')
+        }
       }
     })
   }
@@ -162,7 +164,7 @@ class Application extends React.Component {
             </div>
             <div>
               <div>
-                <Link className='passwordReset' to="/password_reset">Password Reset</Link>
+                <Link className='passwordReset' to="/password_reset_request">Password Reset</Link>
               </div>
             </div>
           </div>
