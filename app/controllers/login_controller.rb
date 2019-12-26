@@ -58,7 +58,7 @@ class LoginController < ApplicationController
       user_id = user_token[0]['user_id']
 
       user = User.find_by_id user_id
-      if user.present?
+      if user.present? && user.disabled == false
         sign_in user
         redirect_to '/jwt_reset_password'
       end
