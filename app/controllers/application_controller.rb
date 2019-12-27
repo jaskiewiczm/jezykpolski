@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
 
   def security_checks
     if current_user.present?
-      if params.has_key? :userId && params[:userId] != current_user.id
+      if params.has_key? :userId && params[:userId].to_i != current_user.id
         sl = SecurityLog.new!
         sl.error = "UserId #{current_user.id} masquerading as #{params[:userId]}"
         sl.user_id = current_user.id
@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
 
       if params.has_key? :schoolId
         if !current_user.is_admin?
-          if params[:schoolId] != current_user.school.id
+          if params[:schoolId].to_i != current_user.school.id
             sl = SecurityLog.new!
             sl.error = "UserId #{current_user.id} from school #{current_user.school.id} accessing #{params[:schoolId]}"
             sl.user_id = current_user.id
@@ -39,8 +39,8 @@ class ApplicationController < ActionController::Base
         if !current_user.is_admin?
           if current_user.is_student?
             klass_ids = current_user.klasses.map {|klass| klass.id}
-            if !klass_ids.include? params[:klassId]
-              sl = SecurityLog.new!
+            if !klass_ids.include? params[:klassId].to_i
+              sl = SecurityLog.new
               sl.error = "UserId #{current_user.id} from school #{current_user.school.id} accessing klass #{params[:klassId]}"
               sl.user_id = current_user.id
               sl.save!
