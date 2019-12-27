@@ -11,7 +11,7 @@ class UserReportsController < ApplicationController
     user = User.find_by_id current_user.id
 
     klasses_array = []
-    user.klasses.each do |klass|
+    user.klasses.active.each do |klass|
       gradebook = klass.gradebook
       homeworks = Homework.where('klass_id = ?', klass.id).where(:disabled => false).order('due_date asc')
       homeworks.each do |homework|
@@ -27,7 +27,7 @@ class UserReportsController < ApplicationController
     user = User.find_by_id student_id
 
     klasses_array = []
-    user.klasses.order(:created_at).each do |klass|
+    user.klasses.active.order(:created_at).each do |klass|
       gradebook = klass.gradebook
       klass_obj = klass.attributes
       klass_obj['homeworks'] = []

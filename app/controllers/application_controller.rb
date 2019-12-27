@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
       if params.has_key? :klassId
         if !current_user.is_admin?
           if current_user.is_student?
-            klass_ids = current_user.klasses.map {|klass| klass.id}
+            klass_ids = current_user.klasses.active.map {|klass| klass.id}
             if !klass_ids.include? params[:klassId].to_i
               sl = SecurityLog.new
               sl.error = "UserId #{current_user.id} from school #{current_user.school.id} accessing klass #{params[:klassId]}"

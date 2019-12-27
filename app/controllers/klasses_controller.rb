@@ -26,7 +26,7 @@ class KlassesController < ApplicationController
     elsif current_user.is_parent?
       klasses = []
     else
-      klasses = current_user.klasses.map(&:attributes)
+      klasses = current_user.klasses.active.map(&:attributes)
     end
     render json: klasses, status: 200
   end
