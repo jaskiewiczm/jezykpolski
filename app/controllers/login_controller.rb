@@ -72,7 +72,7 @@ class LoginController < ApplicationController
 
     user = User.where(:email => params[:email]).first
     if user.present?
-      payload = { :user_id => user.id}
+      payload = { :user_id => user.id, :encoded_at => DateTime.now }
       secret = Rails.application.config.jwt['JWT_SECRET']
       token = JWT.encode payload, secret, 'HS256'
       url = URI.join(Rails.application.config.application['HOST'],"jwt_login").to_s

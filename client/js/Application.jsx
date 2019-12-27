@@ -12,7 +12,7 @@ import Toast from 'react-bootstrap/Toast'
 import g_roles from './components/GlobalRoles.jsx'
 import g_user from './components/GlobalUser.jsx'
 
-import {updateMyRoles, updateSchools, updateUser} from './redux/Actions.jsx'
+import {updateMyRoles, updateSchools, updateUser, updateSelectedSchoolId, updateSelectedKlassId} from './redux/Actions.jsx'
 
 import {styles} from './Application.scss'
 
@@ -111,6 +111,9 @@ class Application extends React.Component {
   logout() {
     updateMyRoles([])
     updateSchools([])
+    updateSelectedSchoolId(null)
+    updateSelectedKlassId(null)
+
     fetch('/logout', {
       method: 'POST',
       headers: {

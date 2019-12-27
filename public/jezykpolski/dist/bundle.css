@@ -208,7 +208,8 @@ li {
 .gradebookContainer {
   padding: 0px !important;
   background-color: white;
-  opacity: 1; }
+  opacity: 1;
+  min-height: 480px; }
 
 .exportLink {
   color: gray !important; }
