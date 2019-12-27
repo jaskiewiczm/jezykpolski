@@ -43,6 +43,7 @@ class UsersController < ApplicationController
                 .where(:school_id => params[:schoolId])
                 .where(:disabled => false)
                 .order(:name)
+                .distinct
 
     userRoles = {}
     users.each do |user|
