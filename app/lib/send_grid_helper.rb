@@ -17,5 +17,6 @@ class SendGridHelper
     puts response.status_code
     puts response.body
     puts response.headers
+    return response.body, response.status_code
   end
 end

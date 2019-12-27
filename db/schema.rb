@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_22_231916) do
+ActiveRecord::Schema.define(version: 2019_12_27_040019) do
 
   create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
@@ -118,7 +118,10 @@ ActiveRecord::Schema.define(version: 2019_12_22_231916) do
     t.string "emailable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "sent_at"
+    t.datetime "completed_at"
+    t.datetime "scheduled_at"
+    t.integer "response_status_code"
+    t.string "response_body"
   end
 
   create_table "klasses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

@@ -128,7 +128,7 @@ export default class Grade extends React.Component {
     return (
       <div className='grade'>
         <div className='overlayTriggerWrapper'>
-          <OverlayTrigger trigger="click" placement="bottom" overlay={this.gradePopover()} ref={(ref) => this.overlay = ref}>
+          <OverlayTrigger trigger="click" placement="left" overlay={this.gradePopover()} ref={(ref) => this.overlay = ref}>
             <Button variant={variant}>{this.state.displayGrade}</Button>
           </OverlayTrigger>
           &nbsp;

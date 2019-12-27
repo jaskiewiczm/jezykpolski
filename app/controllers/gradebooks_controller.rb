@@ -32,7 +32,7 @@ class GradebooksController < ApplicationController
     grades.each_with_index do |grade, index|
       return_grade = return_grades[index]
       if grade.jezyk_polski_email.present?
-        return_grade['email'] = 'pending' if grade.jezyk_polski_email.where(:sent_at => nil).count > 0
+        return_grade['email'] = 'pending' if grade.jezyk_polski_email.where(:completed_at => nil).count > 0
       end
     end
 
@@ -70,6 +70,10 @@ class GradebooksController < ApplicationController
     earned_grade.grading_scale_grade = grading_scale_grade
     earned_grade.save!
 
+    emails = earned_grade.jezyk_polski_email.select {|email| email.completed_at.nil? && email.scheduled_at.nil? }
+    emails.each do |email|
+      email.destroy!
+    end
     email = JezykPolskiEmail.new
     email.update_attribute(:emailable, earned_grade)
     email.save!
@@ -88,13 +92,19 @@ class GradebooksController < ApplicationController
     gradebook_id = params['gradebookId']
 
     gradebook = Gradebook.find_by_id gradebook_id
-    earned_grades = gradebook.earned_grades.joins(:jezyk_polski_email).where('jezyk_polski_emails.sent_at is null')
+    earned_grades = gradebook.earned_grades.joins(:jezyk_polski_email).where('jezyk_polski_emails.completed_at is null')
 
     earned_grades.each do |eg|
       email_obj = eg.get_earned_grade_posted_email
       eg.user.emailable_users.each do |user|
         email_obj[:to] = user.email
-        eg.jezyk_polski_email.first.delay.send_email(email_obj)
+
+        emails = eg.jezyk_polski_email.select {|email| email.completed_at.nil? && email.scheduled_at.nil?}
+        emails.each do |email|
+          email.scheduled_at = DateTime.now
+          email.save!
+          email.delay.send_email(email_obj)
+        end
       end
     end
     render json: {}, status: 200
