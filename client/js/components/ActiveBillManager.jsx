@@ -17,7 +17,7 @@ export default class ActiveBillManager extends React.Component {
 
     return (
       <div>
-
+        fdas
       </div>
     )
   }

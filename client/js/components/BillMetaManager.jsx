@@ -5,6 +5,9 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
+
 
 
 class ActiveBillManager extends React.Component {
@@ -71,6 +74,12 @@ class ActiveBillManager extends React.Component {
       metabills = []
     }
     return (
+      <div>
+      <Navbar bg="dark" variant="dark">
+        <Nav className="mr-auto">
+          <Nav.Link onClick={that.add}>Add</Nav.Link>
+        </Nav>
+      </Navbar>
       <ListGroup>
         {metabills.map(function(mb){
           return  <ListGroup.Item key={mb.id}>
@@ -83,6 +92,7 @@ class ActiveBillManager extends React.Component {
                   </ListGroup.Item>
         })}
       </ListGroup>
+      </div>
     )
   }
 }

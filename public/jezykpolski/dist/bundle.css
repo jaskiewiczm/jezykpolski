@@ -245,6 +245,14 @@ li {
 .userSettingsSaveButton {
   float: right; }
 
+.billing_nav_bar {
+  background-color: #343A40;
+  padding: 6px; }
+
+.billing_school_selector {
+  right: 140px;
+  position: absolute; }
+
 .passwordResetContainer {
   background: white;
   padding: 16px; }
