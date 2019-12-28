@@ -56,5 +56,7 @@ Jezykpolski::Application.routes.draw do
   get '/user_settings' => 'user_settings#index'
 
   get '/billing' => 'billings#index'
+  post '/get_meta_bills' => 'billings#get_meta_bills'
+
 
 end

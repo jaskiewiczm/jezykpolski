@@ -4,7 +4,6 @@ import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
-import Tabs from 'react-bootstrap/Tabs'
 
 import ActiveBillManager from './ActiveBillManager.jsx'
 import BillMetaManager from './BillMetaManager.jsx'
@@ -15,38 +14,6 @@ export default class Billing extends React.Component {
 
   constructor(props) {
     super(props)
-
-    this.state = {
-      selectedSchoolId: null
-    }
-  }
-
-  getKlasses() {
-    var that = this
-    fetch('/get_klasses', {
-      method: 'POST',
-      body: JSON.stringify({schoolId: this.state.selectedSchoolId}),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    }).then((response)=>{
-      if (response.status == 200) {
-        return response.json()
-      }
-      return null
-    }).then((response)=>{
-      if (response != null) {
-        that.setState({
-          klasses: response
-        })
-      }
-    })
-  }
-
-  schoolSelected = (schoolId) => {
-    this.setState({
-      selectedSchoolId: schoolId
-    })
   }
 
   render() {
@@ -59,23 +26,28 @@ export default class Billing extends React.Component {
           <Navbar bg="dark" variant="dark">
             <Navbar.Brand>Billing</Navbar.Brand>
             <Nav className="mr-auto">
-
+            <Nav.Item>
+              <Nav.Link eventKey="meta_bill_event_key">Meta Bill</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="active_bill_event_key">Active Bill</Nav.Link>
+            </Nav.Item>
             </Nav>
             <Nav>
-              <SchoolSelector callback={this.schoolSelected} schoolId={this.state.selectedSchoolId}/>
+              <SchoolSelector schoolId={this.props.selectedSchoolId}/>
             </Nav>
           </Navbar>
-
-          <Tabs>
-            <Tab title='Bill'>
+          <Tab.Content>
+            <Tab.Pane eventKey="meta_bill_event_key">
               <BillMetaManager />
-            </Tab>
-            <Tab title='Published Bills'>
+            </Tab.Pane>
+            <Tab.Pane eventKey="active_bill_event_key">
               <ActiveBillManager />
-            </Tab>
-          </Tabs>
+            </Tab.Pane>
+          </Tab.Content>
         </Container>
       </div>
     )
   }
 }
+

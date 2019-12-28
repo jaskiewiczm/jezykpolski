@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_27_040019) do
+ActiveRecord::Schema.define(version: 2019_12_28_022253) do
 
   create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
@@ -133,11 +133,22 @@ ActiveRecord::Schema.define(version: 2019_12_27_040019) do
     t.index ["school_id"], name: "fk_rails_c5e5112d0b"
   end
 
+  create_table "meta_bill_rate_adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "meta_bill_id"
+    t.bigint "rate_adjustment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["meta_bill_id"], name: "fk_rails_b8d89e83f4"
+    t.index ["rate_adjustment_id"], name: "fk_rails_c4a23b3536"
+  end
+
   create_table "meta_bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.float "amount"
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "school_id"
+    t.index ["school_id"], name: "fk_rails_9ae6112ea3"
   end
 
   create_table "rate_adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -172,6 +183,8 @@ ActiveRecord::Schema.define(version: 2019_12_27_040019) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "school_year_id"
+    t.index ["school_year_id"], name: "fk_rails_661f452b3b"
   end
 
   create_table "security_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -242,6 +255,10 @@ ActiveRecord::Schema.define(version: 2019_12_27_040019) do
   add_foreign_key "bills", "users"
   add_foreign_key "homeworks", "klasses"
   add_foreign_key "klasses", "schools"
+  add_foreign_key "meta_bill_rate_adjustments", "meta_bills"
+  add_foreign_key "meta_bill_rate_adjustments", "rate_adjustments"
+  add_foreign_key "meta_bills", "schools"
+  add_foreign_key "schools", "school_years"
   add_foreign_key "user_rate_adjustments", "bills"
   add_foreign_key "user_rate_adjustments", "rate_adjustments"
   add_foreign_key "user_users", "users", column: "child_id"

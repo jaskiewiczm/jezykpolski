@@ -7,4 +7,15 @@ class BillingsController < ApplicationController
     render 'layouts/application'
   end
 
+
+  def get_meta_bills
+    params.require(:schoolId)
+
+    metabills = MetaBill.where(:school_id => params[:schoolId])
+    metabills = metabills.map(&:attributes)
+
+    render json: metabills, status: 200
+  end
+
+
 end
