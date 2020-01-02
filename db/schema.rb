@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_02_013825) do
+ActiveRecord::Schema.define(version: 2020_01_02_033716) do
 
   create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
@@ -155,10 +155,13 @@ ActiveRecord::Schema.define(version: 2020_01_02_013825) do
   end
 
   create_table "rate_adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.float "delta"
+    t.float "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "soft_delete", default: false
+    t.bigint "school_id"
+    t.string "name"
+    t.index ["school_id"], name: "fk_rails_5c81166623"
   end
 
   create_table "reading_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -262,6 +265,7 @@ ActiveRecord::Schema.define(version: 2020_01_02_013825) do
   add_foreign_key "meta_bill_rate_adjustments", "meta_bills"
   add_foreign_key "meta_bill_rate_adjustments", "rate_adjustments"
   add_foreign_key "meta_bills", "schools"
+  add_foreign_key "rate_adjustments", "schools"
   add_foreign_key "schools", "school_years"
   add_foreign_key "user_rate_adjustments", "bills"
   add_foreign_key "user_rate_adjustments", "rate_adjustments"

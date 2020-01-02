@@ -161,9 +161,11 @@ class BillMetaManager extends React.Component {
             {metabills.map(function(mb){
               return  <ListGroup.Item key={mb.id}>
                         <Row>
-                          <Col xs={1}><img className='billMetaManagerIcon' src='bill.svg'/></Col>
+                          <Col xs={1}>
+                            <img className={mb.type == 'bill' ? 'billMetaManagerIconBill' : 'billMetaManagerIconRateAdj'} src={mb.type == 'bill' ? 'bill.svg' : 'plus_minus.svg'}/>
+                          </Col>
                           <Col xs={7} className='billMetaManagerName'>{mb.name}</Col>
-                          <Col xs={2}><h3><Badge variant={mb.amount >= 0 ? 'success' : 'danger'}>{mb.amount >= 0 ? '+' : '-'}${mb.amount}</Badge></h3></Col>
+                          <Col xs={2}><h3><Badge variant={mb.amount >= 0 ? 'success' : 'danger'}>{mb.amount >= 0 ? '+$' : '-$'}{String(mb.amount).replace('-', '')}</Badge></h3></Col>
                           <Col xs={1}><Image src="pencil.png" onClick={() => {that.editMetaBill(mb.id)}} /></Col>
                           <Col xs={1}><Image src="trash.png" onClick={() => {that.deleteMetaBill(mb.id)}} /></Col>
                         </Row>
