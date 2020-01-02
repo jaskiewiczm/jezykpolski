@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from "react-redux";
 import {Link} from 'react-router-dom'
+import { LinkContainer } from 'react-router-bootstrap';
+
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import Form from 'react-bootstrap/Form'
@@ -8,6 +10,12 @@ import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
 import Toast from 'react-bootstrap/Toast'
+import Dropdown from 'react-bootstrap/Dropdown'
+import NavItem from 'react-bootstrap/NavItem'
+import NavLink from 'react-bootstrap/NavLink'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import NavDropdown from 'react-bootstrap/NavDropdown'
+
 
 import g_roles from './components/GlobalRoles.jsx'
 import g_user from './components/GlobalUser.jsx'
@@ -227,6 +235,17 @@ class Application extends React.Component {
 
     return (
         <Nav className="mr-auto">
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              Dropdown Button
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item as={Link} to='/billing'>Action</Dropdown.Item>
+              <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+              <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
           {billingLink}
           {classesLink}
           {gradebookLink}
@@ -243,6 +262,7 @@ class Application extends React.Component {
         {this.addAlert()}
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand>Język Polski</Navbar.Brand>
+
           {this.getNavButtons()}
           {this.getAuthenticatorArea()}
         </Navbar>
