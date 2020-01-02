@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_28_022253) do
+ActiveRecord::Schema.define(version: 2020_01_02_013825) do
 
   create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2019_12_28_022253) do
     t.datetime "updated_at", null: false
     t.float "paid_amount"
     t.bigint "meta_bill_id"
+    t.boolean "soft_delete", default: false
     t.index ["meta_bill_id"], name: "fk_rails_513a56ed10"
     t.index ["school_year_id"], name: "fk_rails_62113e10cf"
     t.index ["user_id"], name: "fk_rails_f5fcc78f42"
@@ -138,6 +139,7 @@ ActiveRecord::Schema.define(version: 2019_12_28_022253) do
     t.bigint "rate_adjustment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "soft_delete", default: false
     t.index ["meta_bill_id"], name: "fk_rails_b8d89e83f4"
     t.index ["rate_adjustment_id"], name: "fk_rails_c4a23b3536"
   end
@@ -148,6 +150,7 @@ ActiveRecord::Schema.define(version: 2019_12_28_022253) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "school_id"
+    t.boolean "soft_delete", default: false
     t.index ["school_id"], name: "fk_rails_9ae6112ea3"
   end
 
@@ -155,6 +158,7 @@ ActiveRecord::Schema.define(version: 2019_12_28_022253) do
     t.float "delta"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "soft_delete", default: false
   end
 
   create_table "reading_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

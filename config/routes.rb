@@ -57,6 +57,8 @@ Jezykpolski::Application.routes.draw do
 
   get '/billing' => 'billings#index'
   post '/get_meta_bills' => 'billings#get_meta_bills'
-
+  post '/add_meta_bill' => 'billings#add_meta_bill'
+  post '/delete_meta_bill' => 'billings#delete_meta_bill'
+  post '/edit_meta_bill' => 'billings#edit_meta_bill'
 
 end

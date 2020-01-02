@@ -245,6 +245,14 @@ li {
 .userSettingsSaveButton {
   float: right; }
 
+
+.billMetaManagerName {
+  padding-top: 8px; }
+
+.billMetaManagerIcon {
+  width: 40px;
+  height: 40px; }
+
 .passwordResetContainer {
   background: white;
   padding: 16px; }
