@@ -14,7 +14,8 @@ import Klasses from 'components/Klasses.jsx'
 import Gradebook from 'components/Gradebook.jsx'
 import UserReport from 'components/UserReport.jsx'
 import UserSettings from 'components/UserSettings.jsx'
-import Billing from 'components/Billing.jsx'
+import ActiveBillManager from 'components/ActiveBillManager.jsx'
+import BillMetaManager from 'components/BillMetaManager.jsx'
 import PasswordResetRequest from 'components/PasswordResetRequest.jsx'
 import JwtPasswordReset from 'components/JwtPasswordReset.jsx'
 
@@ -40,9 +41,10 @@ if (!bindNode) {
           <Route path="/gradebook" component={Gradebook} />
           <Route path="/user_report" component={UserReport} />
           <Route path="/user_settings" component={UserSettings} />
-          <Route path="/billing" component={Billing} />
           <Route path="/password_reset_request" component={PasswordResetRequest} />
           <Route path="/jwt_reset_password" component={JwtPasswordReset} />
+          <Route path="/bill_meta_manager" component={BillMetaManager} />
+          <Route path="/active_bill_manager" component={ActiveBillManager} />
         </BrowserRouter>
       </Provider>
     ), bindNode

@@ -203,49 +203,93 @@ class Application extends React.Component {
     return null
   }
 
+  getHomeworkLink = () => {
+    var homeworksLink = null
+    if (g_roles.containsRole('admin', this.props.roles)
+        || g_roles.containsRole('school_admin', this.props.roles)
+        || g_roles.containsRole('parent', this.props.roles)
+        || g_roles.containsRole('teacher', this.props.roles)
+        || g_roles.containsRole('student', this.props.roles)) {
+      homeworksLink = <Nav.Item as='li'>
+                        <Nav.Link as={Link} to='/homeworks'>Homeworks</Nav.Link>
+                      </Nav.Item>
+    }
+    return homeworksLink
+  }
+
+  getUsersLink = () => {
+    var usersLink = null
+    if (g_roles.containsRole('admin', this.props.roles)
+        || g_roles.containsRole('school_admin', this.props.roles)) {
+      usersLink = <Nav.Item as='li'>
+                    <Nav.Link as={Link} to='/users'>Users</Nav.Link>
+                  </Nav.Item>
+    }
+    return usersLink
+  }
+
+  getKlassesLink = () => {
+    var classesLink = null
+    if (g_roles.containsRole('admin', this.props.roles)
+        || g_roles.containsRole('school_admin', this.props.roles)
+        || g_roles.containsRole('teacher', this.props.roles)) {
+      classesLink = <Nav.Item as='li'>
+                      <Nav.Link as={Link} to='/klasses'>Klasses</Nav.Link>
+                    </Nav.Item>
+    }
+    return classesLink
+  }
+
+  getGradebookLink = () => {
+    var gradebookLink = null
+    if (g_roles.containsRole('admin', this.props.roles)
+        || g_roles.containsRole('school_admin', this.props.roles)
+        || g_roles.containsRole('teacher', this.props.roles)) {
+      gradebookLink = <Nav.Item as='li'>
+                        <Nav.Link as={Link} to='/gradebook'>Gradebook</Nav.Link>
+                      </Nav.Item>
+    }
+    return gradebookLink
+  }
+
+  getStudentReportLink = () => {
+    var studentReportLink = null
+    if (g_roles.containsRole('parent', this.props.roles)
+        || g_roles.containsRole('student', this.props.roles)) {
+      studentReportLink = <Nav.Item as='li'>
+                            <Nav.Link as={Link} to='/user_report'>Student Report</Nav.Link>
+                          </Nav.Item>
+    }
+    return studentReportLink
+  }
+
+  getBillingLink = () => {
+    var billingLink = null
+    if (g_roles.containsRole('admin', this.props.roles)
+        || g_roles.containsRole('school_admin', this.props.roles)) {
+      billingLink = <Dropdown as={NavItem}>
+                      <Dropdown.Toggle variant="success" id="dropdown-basic" as={NavLink}>Bills</Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        <Dropdown.Item as={Link} to='/bill_meta_manager'>Configuration</Dropdown.Item>
+                        <Dropdown.Item as={Link} to='/active_bill_manager'>Active Bills</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+    }
+    return billingLink
+  }
+
   getNavButtons() {
 
-    var homeworksLink = null
-    var usersLink = null
-    var classesLink = null
-    var gradebookLink = null
-    var studentReportLink = null
-    var billingLink = null
-
-    if (g_roles.containsRole('admin', this.props.roles) || g_roles.containsRole('school_admin', this.props.roles)) {
-      homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
-      usersLink = <div><Link to="/users">Users</Link>&nbsp;&nbsp;&nbsp;</div>
-      classesLink = <div><Link to="/klasses">Classes</Link>&nbsp;&nbsp;&nbsp;</div>
-      gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
-      studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
-      billingLink = <div><Link to="/billing">Billing</Link>&nbsp;&nbsp;&nbsp;</div>
-    }
-    if (g_roles.containsRole('teacher', this.props.roles)) {
-      homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
-      gradebookLink = <div><Link to="/gradebook">Gradebook</Link>&nbsp;&nbsp;&nbsp;</div>
-    }
-    if (g_roles.containsRole('student', this.props.roles)) {
-      homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
-      studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
-    }
-    if (g_roles.containsRole('parent', this.props.roles)) {
-      homeworksLink = <div><Link to="/homeworks">Homework</Link>&nbsp;&nbsp;&nbsp;</div>
-      studentReportLink = <div><Link to="/user_report">Student Report</Link>&nbsp;&nbsp;&nbsp;</div>
-    }
+    var homeworksLink = this.getHomeworkLink()
+    var usersLink = this.getUsersLink()
+    var classesLink = this.getKlassesLink()
+    var gradebookLink = this.getGradebookLink()
+    var studentReportLink = this.getStudentReportLink()
+    var billingLink = this.getBillingLink()
 
     return (
         <Nav className="mr-auto">
-          <Dropdown>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
-              Dropdown Button
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item as={Link} to='/billing'>Action</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
           {billingLink}
           {classesLink}
           {gradebookLink}
