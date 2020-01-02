@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_02_033716) do
+ActiveRecord::Schema.define(version: 2020_01_02_035521) do
 
   create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
@@ -134,16 +134,6 @@ ActiveRecord::Schema.define(version: 2020_01_02_033716) do
     t.index ["school_id"], name: "fk_rails_c5e5112d0b"
   end
 
-  create_table "meta_bill_rate_adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "meta_bill_id"
-    t.bigint "rate_adjustment_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "soft_delete", default: false
-    t.index ["meta_bill_id"], name: "fk_rails_b8d89e83f4"
-    t.index ["rate_adjustment_id"], name: "fk_rails_c4a23b3536"
-  end
-
   create_table "meta_bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.float "amount"
     t.string "name"
@@ -151,17 +141,8 @@ ActiveRecord::Schema.define(version: 2020_01_02_033716) do
     t.datetime "updated_at", null: false
     t.bigint "school_id"
     t.boolean "soft_delete", default: false
+    t.string "bill_type", default: "bill"
     t.index ["school_id"], name: "fk_rails_9ae6112ea3"
-  end
-
-  create_table "rate_adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.float "amount"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "soft_delete", default: false
-    t.bigint "school_id"
-    t.string "name"
-    t.index ["school_id"], name: "fk_rails_5c81166623"
   end
 
   create_table "reading_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -209,15 +190,6 @@ ActiveRecord::Schema.define(version: 2020_01_02_033716) do
     t.integer "soft_unenrolled", default: 0
   end
 
-  create_table "user_rate_adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "bill_id"
-    t.bigint "rate_adjustment_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bill_id"], name: "fk_rails_9b11f0e767"
-    t.index ["rate_adjustment_id"], name: "fk_rails_cac5dd7e41"
-  end
-
   create_table "user_roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
@@ -262,13 +234,8 @@ ActiveRecord::Schema.define(version: 2020_01_02_033716) do
   add_foreign_key "bills", "users"
   add_foreign_key "homeworks", "klasses"
   add_foreign_key "klasses", "schools"
-  add_foreign_key "meta_bill_rate_adjustments", "meta_bills"
-  add_foreign_key "meta_bill_rate_adjustments", "rate_adjustments"
   add_foreign_key "meta_bills", "schools"
-  add_foreign_key "rate_adjustments", "schools"
   add_foreign_key "schools", "school_years"
-  add_foreign_key "user_rate_adjustments", "bills"
-  add_foreign_key "user_rate_adjustments", "rate_adjustments"
   add_foreign_key "user_users", "users", column: "child_id"
   add_foreign_key "user_users", "users", column: "parent_id"
   add_foreign_key "users", "grade_levels"

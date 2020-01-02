@@ -3,8 +3,6 @@
 class Bill < ApplicationRecord
   belongs_to :user
   belongs_to :meta_bill
-  has_many :user_rate_adjustments
-  has_many :rate_adjustments, :through => :user_rate_adjustments
 
   def total
     default_rate = meta_bill.amount

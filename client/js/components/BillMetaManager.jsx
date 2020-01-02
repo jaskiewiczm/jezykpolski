@@ -162,7 +162,7 @@ class BillMetaManager extends React.Component {
               return  <ListGroup.Item key={mb.id}>
                         <Row>
                           <Col xs={1}>
-                            <img className={mb.type == 'bill' ? 'billMetaManagerIconBill' : 'billMetaManagerIconRateAdj'} src={mb.type == 'bill' ? 'bill.svg' : 'plus_minus.svg'}/>
+                            <img className={mb.bill_type == 'bill' ? 'billMetaManagerIconBill' : 'billMetaManagerIconRateAdj'} src={mb.bill_type == 'bill' ? 'bill.svg' : 'plus_minus.svg'}/>
                           </Col>
                           <Col xs={7} className='billMetaManagerName'>{mb.name}</Col>
                           <Col xs={2}><h3><Badge variant={mb.amount >= 0 ? 'success' : 'danger'}>{mb.amount >= 0 ? '+$' : '-$'}{String(mb.amount).replace('-', '')}</Badge></h3></Col>
