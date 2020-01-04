@@ -29,6 +29,7 @@ class UsersController < ApplicationController
                 .joins(:roles)
                 .where(roles: {code: role})
                 .where(:disabled => false)
+                .where(:school_id => schoolId)
                 .order(:name)
                 .distinct
     users = users.map(&:attributes)

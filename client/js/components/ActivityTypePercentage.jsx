@@ -25,6 +25,7 @@ export default class ActivityTypePercentage extends React.Component {
     } else if (this.state.activityTypes) {
       var disable = this.isAnyPercentageInvalid()
       this.props.disableSaveCallback(disable)
+      this.props.updateActivityTypesCallback(this.state.activityTypes)
     }
   }
 

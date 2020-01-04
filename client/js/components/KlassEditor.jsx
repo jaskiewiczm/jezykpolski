@@ -52,6 +52,16 @@ class KlassEditor extends React.Component {
     this.props.callback(this.state.name)
   }
 
+  updateActivityTypesCallback = (activityTypes) => {
+    var that = this
+    activityTypes.forEach(at => {
+      var oldAt = that.state.activityTypeBreakdown.find(item => {return item.activity_id == at.activity_id})
+      if (oldAt) {
+        oldAt.percentage = at.percentage
+      }
+    })
+  }
+
   getActivityTypeBreakdown = () => {
     var body = null
     if (this.props.klassId != null) {
@@ -115,9 +125,19 @@ class KlassEditor extends React.Component {
       path = '/add_klass'
     }
 
+    var data = {name: this.state.name,
+                klassId: this.props.klassId,
+                schoolId: this.props.selectedSchoolId,
+                teacherId: this.state.selectedTeacherId}
+
+    if (this.state.activityTypeBreakdown) {
+      var activityTypes = this.state.activityTypeBreakdown.map(at => {return {activity_id: at.activity_id, percentage: at.percentage}})
+      data['activityPercentages'] = activityTypes
+    }
+
     fetch(path, {
       method: 'POST',
-      body: JSON.stringify({name: this.state.name, klassId: this.props.klassId, schoolId: this.props.selectedSchoolId, teacherId: this.state.selectedTeacherId}),
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -193,7 +213,9 @@ class KlassEditor extends React.Component {
                   <Card.Body className='klassEditorCardBody'>
                     <Form.Group>
                       <Form.Label></Form.Label>
-                      <ActivityTypePercentage disableSaveCallback={this.disableSaveCallback} activityTypes={this.state.activityTypeBreakdown}/>
+                      <ActivityTypePercentage updateActivityTypesCallback={this.updateActivityTypesCallback}
+                                              disableSaveCallback={this.disableSaveCallback}
+                                              activityTypes={this.state.activityTypeBreakdown}/>
                     </Form.Group>
                   </Card.Body>
                 </Card>

@@ -20,15 +20,31 @@ class KlassesController < ApplicationController
 
   def get_klasses
     if current_user.is_admin? || current_user.is_school_admin?
-      klasses = Klass.where('school_id = ?', params[:schoolId]).map(&:attributes)
+      klasses = Klass.where('school_id = ?', params[:schoolId])
     elsif current_user.is_teacher?
-      klasses = current_user.taught_klasses.map(&:attributes)
+      klasses = current_user.taught_klasses
     elsif current_user.is_parent?
       klasses = []
     else
-      klasses = current_user.klasses.active.map(&:attributes)
+      klasses = current_user.klasses.active
     end
+
+    klasses = klasses.map(&:attributes)
     render json: klasses, status: 200
+  end
+
+  def updateActivityPercentages(klass)
+    if params.has_key? :activityPercentages
+      aps = params[:activityPercentages]
+
+
+      klass.klass_activity_types.each do |kat|
+        activity_type = aps.select {|ap| ap[:activity_id] == kat.activity_type_id}
+        activity_type = activity_type.first
+        kat.percentage = activity_type[:percentage]
+        kat.save!
+      end
+    end
   end
 
   def update
@@ -43,6 +59,8 @@ class KlassesController < ApplicationController
     end
 
     klass.save!
+
+    updateActivityPercentages(klass)
 
     render json: {}, status: 200
   end
@@ -60,6 +78,13 @@ class KlassesController < ApplicationController
     end
 
     klass.save!
+
+    acts = ActivityType.all
+    acts.each do |act|
+      klass.activity_types.append(act)
+    end
+
+    updateActivityPercentages(klass)
 
     render json: {}, status: 200
   end

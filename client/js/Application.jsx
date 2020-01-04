@@ -286,7 +286,7 @@ class Application extends React.Component {
     var classesLink = this.getKlassesLink()
     var gradebookLink = this.getGradebookLink()
     var studentReportLink = this.getStudentReportLink()
-    var billingLink = this.getBillingLink()
+    var billingLink = null //this.getBillingLink()
 
     return (
         <Nav className="mr-auto">

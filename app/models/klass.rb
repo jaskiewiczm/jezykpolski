@@ -24,11 +24,6 @@ class Klass < ApplicationRecord
     @gradebook = Gradebook.new
     @gradebook.klass_id = self.id
     @gradebook.save!
-
-    acts = ActivityType.all
-    acts.each do |act|
-      @activity_types.append(act)
-    end
   end
 
   def enrollment_to_excel_file()
