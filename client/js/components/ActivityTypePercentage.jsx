@@ -22,7 +22,19 @@ export default class ActivityTypePercentage extends React.Component {
       this.setState({
         activityTypes: this.props.activityTypes
       })
+    } else if (this.state.activityTypes) {
+      var disable = this.isAnyPercentageInvalid()
+      this.props.disableSaveCallback(disable)
     }
+  }
+
+  isAnyPercentageInvalid = () => {
+    var that = this
+    var disableSave = false
+    var invalids = this.state.activityTypes.map(at => {return that.invalidPercentage(at.activity_id)})
+    invalids = invalids.reduce((prev, next) => prev | next)
+
+    return invalids
   }
 
   invalidPercentage = (activityId) => {
@@ -91,7 +103,7 @@ export default class ActivityTypePercentage extends React.Component {
                                       isInvalid={that.invalidPercentage(at.activity_id)}
                                       className='activityTypePercentageCell'/>
                         <Form.Control.Feedback type='invalid'>
-                          {that.invalidPercentageMessage(at.activity_id)}
+
                         </Form.Control.Feedback>
                       </Col>
                     </Row>

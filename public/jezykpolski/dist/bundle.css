@@ -177,6 +177,9 @@ li {
 .activityTypePercentageCell {
   width: 64px !important; }
 
+.activityTypeFeedbackRow {
+  height: 24px; }
+
 .klassEditorCards {
   box-shadow: 1px 1px grey; }
 

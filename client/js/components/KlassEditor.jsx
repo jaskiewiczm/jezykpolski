@@ -34,7 +34,8 @@ class KlassEditor extends React.Component {
       addOrEdit: this.props.title == null ? 'edit' : 'add',
       teachers: [],
       selectedTeacherId: selectedTeacherId,
-      activityTypeBreakdown: null
+      activityTypeBreakdown: null,
+      disableSave: false
     }
   }
 
@@ -146,6 +147,14 @@ class KlassEditor extends React.Component {
     }
   }
 
+  disableSaveCallback = (newState) => {
+    if (this.state.disableSave != newState) {
+      this.setState({
+        disableSave: newState
+      })
+    }
+  }
+
   render() {
     var that = this
     return (
@@ -184,7 +193,7 @@ class KlassEditor extends React.Component {
                   <Card.Body className='klassEditorCardBody'>
                     <Form.Group>
                       <Form.Label></Form.Label>
-                      <ActivityTypePercentage activityTypes={this.state.activityTypeBreakdown}/>
+                      <ActivityTypePercentage disableSaveCallback={this.disableSaveCallback} activityTypes={this.state.activityTypeBreakdown}/>
                     </Form.Group>
                   </Card.Body>
                 </Card>
@@ -209,7 +218,7 @@ class KlassEditor extends React.Component {
           <Button variant="secondary" onClick={this.handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={this.handleSave}>
+          <Button variant="primary" disabled={this.state.disableSave} onClick={this.handleSave}>
             Save Changes
           </Button>
         </Modal.Footer>
