@@ -2,23 +2,11 @@
 
 class Bill < ApplicationRecord
   belongs_to :user
-  belongs_to :meta_bill
+  has_many :bill_meta_bills
+  has_many :meta_bills, :through => :bill_meta_bills
 
   def total
-    default_rate = meta_bill.amount
-
-    rate_adjustments.each do |ra|
-      default_rate += ra.delta
-    end
-
-    default_rate
-  end
-
-  def paid?
-    if self.paid_amount.nil?
-      false
-    else
-      self.total <= self.paid_amount
-    end
+    amounts = self.meta_bills.map {|mb| mb.amount}
+    return amounts.inject(0, :+)
   end
 end

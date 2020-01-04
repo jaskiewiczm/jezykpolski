@@ -10,7 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_02_035521) do
+ActiveRecord::Schema.define(version: 2020_01_03_210832) do
+
+  create_table "activity_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "bill_meta_bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "bill_id"
+    t.bigint "meta_bill_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bill_id"], name: "fk_rails_94e3455f44"
+    t.index ["meta_bill_id"], name: "fk_rails_1723e26f44"
+  end
 
   create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
@@ -18,9 +34,9 @@ ActiveRecord::Schema.define(version: 2020_01_02_035521) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "paid_amount"
-    t.bigint "meta_bill_id"
     t.boolean "soft_delete", default: false
-    t.index ["meta_bill_id"], name: "fk_rails_513a56ed10"
+    t.bigint "school_id"
+    t.index ["school_id"], name: "fk_rails_5e2470764d"
     t.index ["school_year_id"], name: "fk_rails_62113e10cf"
     t.index ["user_id"], name: "fk_rails_f5fcc78f42"
   end
@@ -111,6 +127,8 @@ ActiveRecord::Schema.define(version: 2020_01_02_035521) do
     t.bigint "klass_id"
     t.boolean "disabled", default: false
     t.string "title"
+    t.bigint "activity_type_id"
+    t.index ["activity_type_id"], name: "fk_rails_236e1f009c"
     t.index ["klass_id"], name: "fk_rails_be9153e8bc"
   end
 
@@ -123,6 +141,16 @@ ActiveRecord::Schema.define(version: 2020_01_02_035521) do
     t.datetime "scheduled_at"
     t.integer "response_status_code"
     t.string "response_body"
+  end
+
+  create_table "klass_activity_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.float "percentage"
+    t.bigint "klass_id"
+    t.bigint "activity_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["activity_type_id"], name: "fk_rails_9d0a954cc1"
+    t.index ["klass_id"], name: "fk_rails_a14a1066d8"
   end
 
   create_table "klasses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -229,10 +257,15 @@ ActiveRecord::Schema.define(version: 2020_01_02_035521) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "bills", "meta_bills"
+  add_foreign_key "bill_meta_bills", "bills"
+  add_foreign_key "bill_meta_bills", "meta_bills"
   add_foreign_key "bills", "school_years"
+  add_foreign_key "bills", "schools"
   add_foreign_key "bills", "users"
+  add_foreign_key "homeworks", "activity_types"
   add_foreign_key "homeworks", "klasses"
+  add_foreign_key "klass_activity_types", "activity_types"
+  add_foreign_key "klass_activity_types", "klasses"
   add_foreign_key "klasses", "schools"
   add_foreign_key "meta_bills", "schools"
   add_foreign_key "schools", "school_years"

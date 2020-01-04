@@ -60,5 +60,8 @@ Jezykpolski::Application.routes.draw do
   post '/add_meta_bill' => 'billings#add_meta_bill'
   post '/delete_meta_bill' => 'billings#delete_meta_bill'
   post '/edit_meta_bill' => 'billings#edit_meta_bill'
+  post '/get_active_bills' => 'billings#get_active_bills'
+  post '/delete_bill' => 'billings#delete_bill'
 
+  post '/get_activity_types' => 'activity_types#get_activity_types'
 end

@@ -30,12 +30,14 @@ class KlassEditor extends React.Component {
       title: this.props.title == null ? 'Edit Class' : this.props.title,
       addOrEdit: this.props.title == null ? 'edit' : 'add',
       teachers: [],
-      selectedTeacherId: selectedTeacherId
+      selectedTeacherId: selectedTeacherId,
+      activityTypeBreakdown: null
     }
   }
 
   componentDidMount() {
     this.getTeachers()
+    this.getActivityTypeBreakdown()
   }
 
   handleClose = () => {
@@ -44,6 +46,32 @@ class KlassEditor extends React.Component {
     })
 
     this.props.callback(this.state.name)
+  }
+
+  getActivityTypeBreakdown = () => {
+    var body = null
+    if (this.props.klassId != null) {
+      body = {klassId: this.props.klassId}
+    }
+
+    fetch('/get_activity_types', {
+      method: 'POST',
+      body: JSON.stringify(),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
+    }).then((response) => {
+      if (response != null) {
+        this.setState({
+          activityTypeBreakdown: response
+        })
+      }
+    })
   }
 
   getTeachers = () => {
@@ -127,6 +155,8 @@ class KlassEditor extends React.Component {
             <Form.Group>
               <Form.Label>Name</Form.Label>
               <Form.Control type='text' value={this.state.name} onChange={this.nameChanged}/>
+            </Form.Group>
+            <Form.Group>
               <Form.Label>Teacher</Form.Label>
               <Form.Control as='select' onChange={this.teacherChanged}>
                 <option></option>
@@ -134,9 +164,12 @@ class KlassEditor extends React.Component {
                   return <option key={teacher.id} selected={teacher.id == that.state.selectedTeacherId ? 'selected' : false}>{teacher.name}</option>
                 })}
               </Form.Control>
-              <br />
+            </Form.Group>
+            <Form.Group>
               <Form.Label>Enrollments</Form.Label>
               <UserEnrollment schoolId={this.props.selectedSchoolId} klassId={this.props.klassId}/>
+            </Form.Group>
+            <Form.Group>
             </Form.Group>
           </Form>
         </Modal.Body>

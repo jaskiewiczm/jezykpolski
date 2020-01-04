@@ -11,6 +11,8 @@ class Klass < ApplicationRecord
    end
   end
   has_many :documents
+  has_many :klass_activity_types
+  has_many :activity_types, :through => :klass_activity_types
   has_one :gradebook
   has_many :homeworks
   belongs_to :teacher, :foreign_key => 'teacher_id', :class_name => :User
@@ -22,6 +24,11 @@ class Klass < ApplicationRecord
     @gradebook = Gradebook.new
     @gradebook.klass_id = self.id
     @gradebook.save!
+
+    acts = ActivityType.all
+    acts.each do |act|
+      @activity_types.append(act)
+    end
   end
 
   def enrollment_to_excel_file()

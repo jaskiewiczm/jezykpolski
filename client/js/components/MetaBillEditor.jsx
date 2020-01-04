@@ -42,7 +42,40 @@ export default class MetaBillEditor extends React.Component {
       that.setState({
         billName: ''
       })
+      return
     }
+
+    var data = {
+      billName: this.state.billName,
+      billValue: this.state.billValue,
+      billType: this.state.billType,
+      schoolId: this.props.schoolId
+    }
+
+    var route = '/add_meta_bill'
+    if (this.props.metaBillId) {
+      route = '/edit_meta_bill'
+      data['metaBillId'] = this.props.metaBillId
+    }
+
+    fetch(route, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
+    }).then((response)=>{
+      this.setState({
+        show: false
+      })
+
+      this.props.closeCallback()
+    })
   }
 
   nameChanged = (evt) => {
