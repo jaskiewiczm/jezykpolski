@@ -234,7 +234,7 @@ class Application extends React.Component {
         || g_roles.containsRole('school_admin', this.props.roles)
         || g_roles.containsRole('teacher', this.props.roles)) {
       classesLink = <Nav.Item as='li'>
-                      <Nav.Link as={Link} to='/klasses'>Klasses</Nav.Link>
+                      <Nav.Link as={Link} to='/klasses'>Classes</Nav.Link>
                     </Nav.Item>
     }
     return classesLink

@@ -7,10 +7,13 @@ import Container from 'react-bootstrap/Container'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import Card from 'react-bootstrap/Card'
 
 import UserEnrollment from './UserEnrollment.jsx'
+import ActivityTypePercentage from './ActivityTypePercentage.jsx'
 
 import "./HomeworkEditor.scss"
+import "./KlassEditor.scss"
 
 class KlassEditor extends React.Component {
 
@@ -56,7 +59,7 @@ class KlassEditor extends React.Component {
 
     fetch('/get_activity_types', {
       method: 'POST',
-      body: JSON.stringify(),
+      body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
@@ -152,25 +155,54 @@ class KlassEditor extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group>
-              <Form.Label>Name</Form.Label>
-              <Form.Control type='text' value={this.state.name} onChange={this.nameChanged}/>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Teacher</Form.Label>
-              <Form.Control as='select' onChange={this.teacherChanged}>
-                <option></option>
-                {this.state.teachers.map(function(teacher){
-                  return <option key={teacher.id} selected={teacher.id == that.state.selectedTeacherId ? 'selected' : false}>{teacher.name}</option>
-                })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Enrollments</Form.Label>
-              <UserEnrollment schoolId={this.props.selectedSchoolId} klassId={this.props.klassId}/>
-            </Form.Group>
-            <Form.Group>
-            </Form.Group>
+            <Row>
+              <Col>
+                <Card className='klassEditorCards'>
+                  <Card.Title className='klassEditorCardTitle'>
+                    Basic Settings
+                  </Card.Title>
+                  <Card.Body className='klassEditorCardBody'>
+                    <Form.Group>
+                      <Form.Label>Name</Form.Label>
+                      <Form.Control type='text' value={this.state.name} onChange={this.nameChanged}/>
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Teacher</Form.Label>
+                      <Form.Control as='select' onChange={this.teacherChanged}>
+                        <option></option>
+                        {this.state.teachers.map(function(teacher){
+                          return <option key={teacher.id} selected={teacher.id == that.state.selectedTeacherId ? 'selected' : false}>{teacher.name}</option>
+                        })}
+                      </Form.Control>
+                    </Form.Group>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col>
+                <Card className='klassEditorCards'>
+                  <Card.Title className='klassEditorCardTitle'>Activity Type Percentages</Card.Title>
+                  <Card.Body className='klassEditorCardBody'>
+                    <Form.Group>
+                      <Form.Label></Form.Label>
+                      <ActivityTypePercentage activityTypes={this.state.activityTypeBreakdown}/>
+                    </Form.Group>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col>
+                <Card className='klassEditorCards'>
+                  <Card.Title className='klassEditorCardTitle'>Enrollments</Card.Title>
+                  <Card.Body className='klassEditorCardBody'>
+                    <Form.Group>
+                      <UserEnrollment schoolId={this.props.selectedSchoolId} klassId={this.props.klassId}/>
+                    </Form.Group>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
           </Form>
         </Modal.Body>
         <Modal.Footer>

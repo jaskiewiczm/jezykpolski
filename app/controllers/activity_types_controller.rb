@@ -15,12 +15,19 @@ class ActivityTypesController < ApplicationController
       k.klass_activity_types.each do |kat|
         acts.append({activity_code: kat.activity_type.code,
                      activity_id: kat.activity_type.id,
-                     activity_name: kat.activity_type.name})
+                     activity_name: kat.activity_type.name,
+                     percentage: kat.percentage})
       end
 
       render json: acts, status: 200
     else
-      acts = ActivityType.all.map(&:attributes)
+      acts = []
+      ActivityType.all.each do |at|
+        acts.append({activity_code: at.code,
+                     activity_id: at.id,
+                     activity_name: at.name,
+                     percentage: 0})
+      end
       render json: acts, status: 200
     end
   end
