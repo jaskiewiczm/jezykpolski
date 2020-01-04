@@ -11,7 +11,7 @@ class Klass < ApplicationRecord
    end
   end
   has_many :documents
-  has_many :klass_activity_types
+  has_many :klass_activity_types, :dependent => :delete_all
   has_many :activity_types, :through => :klass_activity_types
   has_one :gradebook
   has_many :homeworks
