@@ -77,11 +77,11 @@ class IndividualHomework extends React.Component {
     })
   }
 
-  editClosed = (text, dueDate) => {
-    if (text != null && dueDate != null) {
+  editClosed = (title, dueDate, activityTypeId) => {
+    if (title != null && dueDate != null) {
       this.setState({
         editMode: false,
-        description: text,
+        homeworkTitle: title,
         dueDate: dueDate
       })
     } else {

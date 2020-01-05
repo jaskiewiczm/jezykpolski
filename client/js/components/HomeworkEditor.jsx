@@ -85,6 +85,7 @@ export default class HomeworkEditor extends React.Component {
   }
 
   handleSave = () => {
+    var that = this
     this.setState({
       show: false
     })
@@ -125,7 +126,7 @@ export default class HomeworkEditor extends React.Component {
         }
       }).then((response)=>{
         if (response.status == 200) {
-          this.props.callback(updatedText, this.state.dueDate)
+          this.props.callback(this.state.homeworkTitle, this.state.dueDate, this.state.selectedActivityTypeId)
         }
       })
     }
