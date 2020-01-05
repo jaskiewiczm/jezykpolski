@@ -19,11 +19,7 @@ class IndividualHomework extends React.Component {
 
     this.state = {
       homeworkEditorDisableFields: false,
-      editMode: false,
-      description: this.props.description,
-      homeworkId: this.props.homeworkId,
-      dueDate: this.props.dueDate,
-      homeworkTitle: this.props.homeworkTitle
+      editMode: false
     }
   }
 
@@ -48,7 +44,7 @@ class IndividualHomework extends React.Component {
       if (willDelete === true) {
         fetch('/delete_homework', {
           method: 'POST',
-          body: JSON.stringify({homeworkId: this.props.homeworkId}),
+          body: JSON.stringify({homeworkId: this.props.homework.id}),
           headers: {
             "Content-Type": "application/json; charset=utf-8"
           }
@@ -80,9 +76,7 @@ class IndividualHomework extends React.Component {
   editClosed = (title, dueDate, activityTypeId) => {
     if (title != null && dueDate != null) {
       this.setState({
-        editMode: false,
-        homeworkTitle: title,
-        dueDate: dueDate
+        editMode: false
       })
     } else {
       this.setState({
@@ -93,12 +87,8 @@ class IndividualHomework extends React.Component {
 
   render() {
     var editContent = this.state.editMode ? <HomeworkEditor homeworkEditorDisableFields={this.state.homeworkEditorDisableFields}
-                                                            homeworkId={this.state.homeworkId}
-                                                            homeworkTitle={this.state.homeworkTitle}
-                                                            description={this.state.description}
                                                             callback={this.editClosed}
-                                                            homework={this.props.homework}
-                                                            dueDate={this.state.dueDate}/> : null
+                                                            homework={this.props.homework}/> : null
 
     var readOrDeleteButton = null
     var editButton = null
@@ -115,10 +105,10 @@ class IndividualHomework extends React.Component {
       <div>
         <Container>
           <Row>
-            <Col xs={2}>{this.state.dueDate}</Col>
+            <Col xs={2}>{this.props.homework.due_date}</Col>
             <Col xs={8}>
               <Container>
-                <Row><Col>{this.state.homeworkTitle}</Col></Row>
+                <Row><Col>{this.props.homework.title}</Col></Row>
               </Container>
             </Col>
             <Col xs={1}>

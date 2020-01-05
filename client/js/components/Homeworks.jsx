@@ -124,12 +124,7 @@ class Homeworks extends React.Component {
                 {
                   this.state.homeworks.map(function(key, index){
                     return  <ListGroup.Item action key={key.id}>
-                              <IndividualHomework dueDate={key.due_date}
-                                                  description={key.description}
-                                                  homeworkId={key.id}
-                                                  homeworkTitle={key.title}
-                                                  deleteCallback={that.deleteCallback}
-                                                  homework={key}/>
+                              <IndividualHomework homework={key}/>
                             </ListGroup.Item>
                   })
                 }

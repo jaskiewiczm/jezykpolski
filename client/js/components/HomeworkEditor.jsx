@@ -19,21 +19,16 @@ export default class HomeworkEditor extends React.Component {
   constructor(props) {
     super(props)
 
-    var selectedActivityTypeId = null
-    if (this.props.homework) {
-      selectedActivityTypeId = this.props.homework.activity_type_id
-    }
-
     this.state = {
-      value: this.props.description != null ? RichTextEditor.createValueFromString(this.props.description, 'html') : RichTextEditor.createEmptyValue(),
+      value: this.props.homework != null ? RichTextEditor.createValueFromString(this.props.homework.description, 'html') : RichTextEditor.createEmptyValue(),
       show: true,
       title: this.props.title == null ? 'Edit Homework' : this.props.title,
-      dueDate: this.props.dueDate != null ? this.props.dueDate : null,
-      homeworkTitle: this.props.homeworkTitle != null ? this.props.homeworkTitle : null,
+      dueDate: this.props.homework != null ? this.props.homework.due_date : null,
+      homeworkTitle: this.props.homework != null ? this.props.homework.title : null,
       addOrEdit: this.props.title == null ? 'edit' : 'add',
       selectedKlassId: this.props.selectedKlassId,
       activityTypes: null,
-      selectedActivityTypeId: selectedActivityTypeId
+      selectedActivityTypeId: this.props.homework != null ? this.props.homework.activity_type_id : null
     }
   }
 
@@ -117,7 +112,7 @@ export default class HomeworkEditor extends React.Component {
       fetch('/update_homework_description', {
         method: 'POST',
         body: JSON.stringify({description: updatedText,
-                              homeworkId: this.props.homeworkId,
+                              homeworkId: this.props.homework.id,
                               dueDate: this.state.dueDate,
                               selectedActivityTypeId: this.state.selectedActivityTypeId,
                               title: this.state.homeworkTitle}),
