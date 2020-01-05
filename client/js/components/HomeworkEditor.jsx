@@ -10,12 +10,20 @@ import Form from 'react-bootstrap/Form'
 
 import Calendar from 'react-calendar'
 
+import getActivityTypes from '../helpers/activity_types.jsx'
+
 import "./HomeworkEditor.scss"
 
 export default class HomeworkEditor extends React.Component {
 
   constructor(props) {
     super(props)
+
+    var selectedActivityTypeId = null
+    if (this.props.homework) {
+      selectedActivityTypeId = this.props.homework.activity_type_id
+    }
+
     this.state = {
       value: this.props.description != null ? RichTextEditor.createValueFromString(this.props.description, 'html') : RichTextEditor.createEmptyValue(),
       show: true,
@@ -23,8 +31,19 @@ export default class HomeworkEditor extends React.Component {
       dueDate: this.props.dueDate != null ? this.props.dueDate : null,
       homeworkTitle: this.props.homeworkTitle != null ? this.props.homeworkTitle : null,
       addOrEdit: this.props.title == null ? 'edit' : 'add',
-      selectedKlassId: this.props.selectedKlassId
+      selectedKlassId: this.props.selectedKlassId,
+      activityTypes: null,
+      selectedActivityTypeId: selectedActivityTypeId
     }
+  }
+
+  componentDidMount() {
+    var that = this
+    getActivityTypes(null, (response) => {
+      that.setState({
+        activityTypes: response
+      })
+    })
   }
 
   onChange = (value) => {
@@ -48,6 +67,15 @@ export default class HomeworkEditor extends React.Component {
     })
   }
 
+  activityTypeChanged = (event) => {
+    var at = this.state.activityTypes.find(at => {return at.activity_name == event.currentTarget.value})
+    if (at) {
+      this.setState({
+        selectedActivityTypeId: at.activity_id
+      })
+    }
+  }
+
   handleClose = () => {
     this.setState({
       show: false
@@ -69,6 +97,7 @@ export default class HomeworkEditor extends React.Component {
         body: JSON.stringify({description: updatedText,
                               dueDate: this.state.dueDate,
                               selectedKlassId: this.state.selectedKlassId,
+                              selectedActivityTypeId: this.state.selectedActivityTypeId,
                               title: this.state.homeworkTitle}),
         headers: {
           "Content-Type": "application/json; charset=utf-8"
@@ -89,6 +118,7 @@ export default class HomeworkEditor extends React.Component {
         body: JSON.stringify({description: updatedText,
                               homeworkId: this.props.homeworkId,
                               dueDate: this.state.dueDate,
+                              selectedActivityTypeId: this.state.selectedActivityTypeId,
                               title: this.state.homeworkTitle}),
         headers: {
           "Content-Type": "application/json; charset=utf-8"
@@ -103,6 +133,7 @@ export default class HomeworkEditor extends React.Component {
 
 
   render() {
+    var that = this
     var buttons = null
     var rte = null
     if (!this.props.homeworkEditorDisableFields) {
@@ -124,6 +155,11 @@ export default class HomeworkEditor extends React.Component {
       rte = <div dangerouslySetInnerHTML={{__html: this.props.description}}></div>
     }
 
+    var activityTypes = []
+    if (this.state.activityTypes) {
+      activityTypes = this.state.activityTypes
+    }
+
     return (
       <Modal show={this.state.show} size="lg">
         <Modal.Header>
@@ -134,6 +170,15 @@ export default class HomeworkEditor extends React.Component {
             <Form.Group>
               <Form.Label>Title</Form.Label>
               <Form.Control disabled={this.props.homeworkEditorDisableFields} required type="text" onChange={this.onTitleChange} value={this.state.homeworkTitle}/>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Activity Type</Form.Label>
+              <Form.Control as='select' onChange={this.activityTypeChanged}>
+                <option></option>
+                {activityTypes.map(function(at){
+                  return <option key={at.id} selected={at.activity_id == that.state.selectedActivityTypeId ? 'selected' : false}>{at.activity_name}</option>
+                })}
+              </Form.Control>
             </Form.Group>
             <Form.Group>
               <Form.Label>Due Date</Form.Label>

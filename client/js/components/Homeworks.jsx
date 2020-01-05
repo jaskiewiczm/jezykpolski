@@ -123,7 +123,14 @@ class Homeworks extends React.Component {
               <ListGroup className={styles.homeworks}>
                 {
                   this.state.homeworks.map(function(key, index){
-                    return <ListGroup.Item action key={key.id}><IndividualHomework dueDate={key.due_date} description={key.description} homeworkId={key.id} homeworkTitle={key.title} deleteCallback={that.deleteCallback}/></ListGroup.Item>
+                    return  <ListGroup.Item action key={key.id}>
+                              <IndividualHomework dueDate={key.due_date}
+                                                  description={key.description}
+                                                  homeworkId={key.id}
+                                                  homeworkTitle={key.title}
+                                                  deleteCallback={that.deleteCallback}
+                                                  homework={key}/>
+                            </ListGroup.Item>
                   })
                 }
               </ListGroup>
@@ -149,7 +156,7 @@ class Homeworks extends React.Component {
         <br />
         <Container>
           <Navbar bg="dark" variant="dark">
-            <Navbar.Brand>Homework</Navbar.Brand>
+            <Navbar.Brand>Activities</Navbar.Brand>
             {addButton}
             <Nav>
               <SchoolSelector callback={this.schoolSelected} schoolId={this.props.selectedSchoolId}/>

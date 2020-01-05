@@ -92,7 +92,13 @@ class IndividualHomework extends React.Component {
   }
 
   render() {
-    var editContent = this.state.editMode ? <HomeworkEditor homeworkEditorDisableFields={this.state.homeworkEditorDisableFields} homeworkId={this.state.homeworkId} homeworkTitle={this.state.homeworkTitle} description={this.state.description} callback={this.editClosed} dueDate={this.state.dueDate}/> : null
+    var editContent = this.state.editMode ? <HomeworkEditor homeworkEditorDisableFields={this.state.homeworkEditorDisableFields}
+                                                            homeworkId={this.state.homeworkId}
+                                                            homeworkTitle={this.state.homeworkTitle}
+                                                            description={this.state.description}
+                                                            callback={this.editClosed}
+                                                            homework={this.props.homework}
+                                                            dueDate={this.state.dueDate}/> : null
 
     var readOrDeleteButton = null
     var editButton = null

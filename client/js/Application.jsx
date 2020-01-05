@@ -211,7 +211,7 @@ class Application extends React.Component {
         || g_roles.containsRole('teacher', this.props.roles)
         || g_roles.containsRole('student', this.props.roles)) {
       homeworksLink = <Nav.Item as='li'>
-                        <Nav.Link as={Link} to='/homeworks'>Homeworks</Nav.Link>
+                        <Nav.Link as={Link} to='/homeworks'>Activities</Nav.Link>
                       </Nav.Item>
     }
     return homeworksLink

@@ -21,9 +21,9 @@ class HomeworksController < ApplicationController
 
   def homework
     if Rails.env.production?
-      render json: Homework.where('klass_id = ? and disabled=false', params[:klassId]).order(due_date: :desc).map(&:attributes)
+      render json: Homework.joins(:activity_type).where('klass_id = ? and disabled=false', params[:klassId]).order(due_date: :desc).map(&:attributes)
     else
-      render json: Homework.where('klass_id = ? and disabled=0', params[:klassId]).order(due_date: :desc).map(&:attributes)
+      render json: Homework.joins(:activity_type).where('klass_id = ? and disabled=0', params[:klassId]).order(due_date: :desc).map(&:attributes)
     end
   end
 
@@ -33,6 +33,7 @@ class HomeworksController < ApplicationController
     h.due_date = params[:dueDate]
     h.klass_id = params[:selectedKlassId]
     h.title = params[:title]
+    h.activity_type_id = params[:selectedActivityTypeId]
     h.save!
     render json: {}, status: 200
   end
@@ -49,6 +50,7 @@ class HomeworksController < ApplicationController
     homework.description = Sanitize.fragment(params[:description], :elements => ['b', 'strong', 'p', 'i', 'ul', 'li', 'ol', 'del', 'u'])
     homework.due_date = params[:dueDate]
     homework.title = params[:title]
+    homework.activity_type_id = params[:selectedActivityTypeId]
     homework.save!
     render json: {}, status: 200
   end
