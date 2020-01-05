@@ -74,6 +74,11 @@ class IndividualHomework extends React.Component {
   }
 
   editClosed = (title, dueDate, activityTypeId) => {
+    this.setState({
+      editMode: false
+    }, this.props.deleteCallback)
+
+    /*
     if (title != null && dueDate != null) {
       this.setState({
         editMode: false
@@ -83,6 +88,7 @@ class IndividualHomework extends React.Component {
         editMode: false
       })
     }
+    */
   }
 
   render() {

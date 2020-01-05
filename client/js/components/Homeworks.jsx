@@ -124,7 +124,7 @@ class Homeworks extends React.Component {
                 {
                   this.state.homeworks.map(function(key, index){
                     return  <ListGroup.Item action key={key.id}>
-                              <IndividualHomework homework={key}/>
+                              <IndividualHomework homework={key} deleteCallback={that.deleteCallback}/>
                             </ListGroup.Item>
                   })
                 }
