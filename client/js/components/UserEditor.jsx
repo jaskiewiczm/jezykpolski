@@ -120,18 +120,24 @@ export default class UserEditor extends React.Component {
       return
     }
 
+    var body = {
+                  name: this.state.name,
+                  userId: this.props.userId,
+                  email: this.state.email,
+                  roles: this.state.userRoles.map(function(role){return role.id}),
+                  parent1Id: this.state.parent1Id,
+                  parent2Id: this.state.parent2Id,
+                  schoolId: this.props.schoolId
+                }
+
+    if (this.state.newPassword != null && this.state.newPassword.length > 0) {
+      body['newPassword'] = this.state.newPassword
+      body['passwordConfirmation'] = this.state.passwordConfirmation
+    }
+
     fetch(path, {
       method: 'POST',
-      body: JSON.stringify({name: this.state.name,
-                            userId: this.props.userId,
-                            email: this.state.email,
-                            roles: this.state.userRoles.map(function(role){return role.id}),
-                            parent1Id: this.state.parent1Id,
-                            parent2Id: this.state.parent2Id,
-                            schoolId: this.props.schoolId,
-                            newPassword: this.state.newPassword,
-                            passwordConfirmation: this.state.passwordConfirmation
-                          }),
+      body: JSON.stringify(),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }

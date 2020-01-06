@@ -28,7 +28,7 @@ export default class HomeworkEditor extends React.Component {
       addOrEdit: this.props.title == null ? 'edit' : 'add',
       selectedKlassId: this.props.selectedKlassId,
       activityTypes: null,
-      selectedActivityTypeId: this.props.homework != null ? this.props.homework.activity_type_id : null
+      selectedActivityTypeId: this.props.homework != null ? this.props.homework.activity_type_id : 1
     }
   }
 
@@ -170,7 +170,6 @@ export default class HomeworkEditor extends React.Component {
             <Form.Group>
               <Form.Label>Activity Type</Form.Label>
               <Form.Control as='select' onChange={this.activityTypeChanged}>
-                <option></option>
                 {activityTypes.map(function(at){
                   return <option key={at.id} selected={at.activity_id == that.state.selectedActivityTypeId ? 'selected' : false}>{at.activity_name}</option>
                 })}
