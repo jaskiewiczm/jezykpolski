@@ -137,7 +137,7 @@ export default class UserEditor extends React.Component {
 
     fetch(path, {
       method: 'POST',
-      body: JSON.stringify(),
+      body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
