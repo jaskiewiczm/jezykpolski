@@ -177,6 +177,24 @@ class KlassEditor extends React.Component {
 
   render() {
     var that = this
+
+    var enrollment = null
+    if (this.state.klassId) {
+      enrollment =  <Row>
+                      <Col>
+                        <Card className='klassEditorCards'>
+                          <Card.Title className='klassEditorCardTitle'>Enrollments</Card.Title>
+                          <Card.Body className='klassEditorCardBody'>
+                            <Form.Group>
+                              <UserEnrollment schoolId={this.props.selectedSchoolId} klassId={this.props.klassId}/>
+                            </Form.Group>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    </Row>
+    }
+
+
     return (
       <Modal show={this.state.show} size="lg">
         <Modal.Header>
@@ -222,18 +240,7 @@ class KlassEditor extends React.Component {
               </Col>
             </Row>
             <br />
-            <Row>
-              <Col>
-                <Card className='klassEditorCards'>
-                  <Card.Title className='klassEditorCardTitle'>Enrollments</Card.Title>
-                  <Card.Body className='klassEditorCardBody'>
-                    <Form.Group>
-                      <UserEnrollment schoolId={this.props.selectedSchoolId} klassId={this.props.klassId}/>
-                    </Form.Group>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
+            {enrollment}
           </Form>
         </Modal.Body>
         <Modal.Footer>
