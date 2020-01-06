@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_04_224730) do
+ActiveRecord::Schema.define(version: 2020_01_06_010014) do
 
   create_table "activity_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
@@ -30,14 +30,12 @@ ActiveRecord::Schema.define(version: 2020_01_04_224730) do
 
   create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
-    t.bigint "school_year_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "paid_amount"
     t.boolean "soft_delete", default: false
     t.bigint "school_id"
     t.index ["school_id"], name: "fk_rails_5e2470764d"
-    t.index ["school_year_id"], name: "fk_rails_62113e10cf"
     t.index ["user_id"], name: "fk_rails_f5fcc78f42"
   end
 
@@ -189,18 +187,21 @@ ActiveRecord::Schema.define(version: 2020_01_04_224730) do
     t.integer "sort"
   end
 
-  create_table "school_years", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "period", null: false
+  create_table "school_periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "year_span"
+    t.string "period_name"
+    t.bigint "school_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "fk_rails_2110fb2914"
   end
 
   create_table "schools", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "school_year_id"
-    t.index ["school_year_id"], name: "fk_rails_661f452b3b"
+    t.bigint "active_period_id"
+    t.index ["active_period_id"], name: "fk_rails_b6621e6ddf"
   end
 
   create_table "security_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -249,6 +250,7 @@ ActiveRecord::Schema.define(version: 2020_01_04_224730) do
     t.bigint "grade_level_id"
     t.boolean "disabled", default: false
     t.boolean "suppress_grades_emails", default: false
+    t.integer "sign_in_count", default: 0, null: false
     t.index ["email", "school_id"], name: "index_users_on_email_and_school_id", unique: true
     t.index ["grade_level_id"], name: "fk_rails_ddf8e43c6b"
     t.index ["name", "school_id"], name: "index_users_on_name_and_school_id", unique: true
@@ -259,7 +261,6 @@ ActiveRecord::Schema.define(version: 2020_01_04_224730) do
 
   add_foreign_key "bill_meta_bills", "bills"
   add_foreign_key "bill_meta_bills", "meta_bills"
-  add_foreign_key "bills", "school_years"
   add_foreign_key "bills", "schools"
   add_foreign_key "bills", "users"
   add_foreign_key "homeworks", "activity_types"
@@ -268,7 +269,8 @@ ActiveRecord::Schema.define(version: 2020_01_04_224730) do
   add_foreign_key "klass_activity_types", "klasses"
   add_foreign_key "klasses", "schools"
   add_foreign_key "meta_bills", "schools"
-  add_foreign_key "schools", "school_years"
+  add_foreign_key "school_periods", "schools"
+  add_foreign_key "schools", "school_periods", column: "active_period_id"
   add_foreign_key "user_users", "users", column: "child_id"
   add_foreign_key "user_users", "users", column: "parent_id"
   add_foreign_key "users", "grade_levels"
