@@ -10,16 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_06_010014) do
+ActiveRecord::Schema.define(version: 2020_01_06_014348) do
 
-  create_table "activity_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "activity_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name"
     t.string "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "bill_meta_bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "bill_meta_bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "bill_id"
     t.bigint "meta_bill_id"
     t.datetime "created_at", null: false
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["meta_bill_id"], name: "fk_rails_1723e26f44"
   end
 
-  create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -39,14 +39,14 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["user_id"], name: "fk_rails_f5fcc78f42"
   end
 
-  create_table "books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "books", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "title"
     t.string "author"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "calendar_entries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "calendar_entries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "assignment_text"
     t.date "date"
     t.integer "klass_id"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
@@ -69,14 +69,14 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "documents", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "documents", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name"
     t.integer "klass_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "earned_grades", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "earned_grades", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.integer "gradebook_id", null: false
     t.integer "user_id", null: false
     t.integer "grading_scale_grade_id", null: false
@@ -85,20 +85,20 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.integer "homework_id", null: false
   end
 
-  create_table "grade_levels", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "grade_levels", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "level"
     t.integer "level_integer"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "gradebooks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "gradebooks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.integer "klass_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "grading_scale_grades", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "grading_scale_grades", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.float "value"
     t.integer "grading_scale_id"
@@ -111,13 +111,13 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.string "visualization_level"
   end
 
-  create_table "grading_scales", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "grading_scales", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "homeworks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "homeworks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.date "due_date"
     t.string "description", limit: 4096
     t.datetime "created_at", null: false
@@ -130,7 +130,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["klass_id"], name: "fk_rails_be9153e8bc"
   end
 
-  create_table "jezyk_polski_emails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "jezyk_polski_emails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "emailable_id"
     t.string "emailable_type"
     t.datetime "created_at", null: false
@@ -141,7 +141,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.string "response_body"
   end
 
-  create_table "klass_activity_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "klass_activity_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.float "percentage"
     t.bigint "klass_id"
     t.bigint "activity_type_id"
@@ -151,7 +151,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["klass_id"], name: "fk_rails_a14a1066d8"
   end
 
-  create_table "klasses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "klasses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["school_id"], name: "fk_rails_c5e5112d0b"
   end
 
-  create_table "meta_bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "meta_bills", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.float "amount"
     t.string "name"
     t.datetime "created_at", null: false
@@ -171,7 +171,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["school_id"], name: "fk_rails_9ae6112ea3"
   end
 
-  create_table "reading_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "reading_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "book_id"
     t.integer "duration"
@@ -179,7 +179,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -187,7 +187,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.integer "sort"
   end
 
-  create_table "school_periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "school_periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "year_span"
     t.string "period_name"
     t.bigint "school_id"
@@ -196,7 +196,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["school_id"], name: "fk_rails_2110fb2914"
   end
 
-  create_table "schools", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "schools", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -204,14 +204,14 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["active_period_id"], name: "fk_rails_b6621e6ddf"
   end
 
-  create_table "security_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "security_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "error"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "user_klasses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "user_klasses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "klass_id"
     t.datetime "created_at", null: false
@@ -219,14 +219,14 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.integer "soft_unenrolled", default: 0
   end
 
-  create_table "user_roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "user_roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "user_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "user_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "parent_id"
     t.bigint "child_id"
     t.datetime "created_at", null: false
@@ -235,7 +235,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_010014) do
     t.index ["parent_id"], name: "fk_rails_97d3981df2"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "email", default: ""
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
