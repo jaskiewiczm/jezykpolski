@@ -191,7 +191,8 @@ li {
   margin-top: -20px; }
 
 .grade {
-  cursor: pointer; }
+  cursor: pointer;
+  padding-top: 4px; }
 
 .gradeSelect {
   cursor: pointer;
@@ -217,6 +218,7 @@ li {
 .gradebookHomeworkHeaderParentHover {
   background: lightgray; }
 
+
 .gradebook {
   background-color: white;
   opacity: 1; }
@@ -224,8 +226,7 @@ li {
 .gradebookContainer {
   padding: 0px !important;
   background-color: white;
-  opacity: 1;
-  min-height: 480px; }
+  opacity: 1; }
 
 .exportLink {
   color: gray !important; }

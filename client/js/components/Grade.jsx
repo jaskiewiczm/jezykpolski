@@ -120,7 +120,7 @@ export default class Grade extends React.Component {
   }
 
   render() {
-    var variant = this.state == null ? 'light' : (this.state.displayGrade == 'N/A' ? 'light' : 'success')
+    var variant = this.state == null ? 'light' : (this.state.displayGrade == 'N/A' ? 'light' : 'info')
     var star = null
     if (this.state.earnedGrade != null && this.state.earnedGrade.email == 'pending') {
       star = '<span>*</span>'

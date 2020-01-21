@@ -7,23 +7,26 @@ import Nav from 'react-bootstrap/Nav'
 import Table from 'react-bootstrap/Table'
 import Image from 'react-bootstrap/Image'
 import Button from 'react-bootstrap/Button'
+import Badge from 'react-bootstrap/Badge'
 
 import SchoolSelector from './SchoolSelector.jsx'
 import KlassSelector from './KlassSelector.jsx'
 import Grade from './Grade.jsx'
 import GradebookHomeworkHeader from './GradebookHomeworkHeader.jsx'
+import FinalGrade from './FinalGrade.jsx'
+import getActivityTypes from '../helpers/activity_types.jsx'
 
 import {gradebook} from './Gradebook.scss'
 
 
 class Gradebook extends React.Component {
 
-  constructor(props) {
+  constructor(props) {    
     super(props)
+    var that = this
 
     this.state = {
       klasses: null,
-
       homeworks: null,
       grades: null,
       users: null,
@@ -32,10 +35,12 @@ class Gradebook extends React.Component {
       emailDisabled: true,
       prevSchoolId: null,
       prevKlassId: null,
-      finalGrades: null
+      finalGrades: null,
+      activityTypes: null
     }
 
     this.getGradingScale()
+    getActivityTypes(null, function(activityTypes){that.setState({activityTypes: activityTypes})})
   }
 
   componentDidUpdate() {
@@ -187,7 +192,7 @@ class Gradebook extends React.Component {
     var body = null
 
     if (this.props.selectedSchoolId != null && this.props.selectedKlassId != null) {
-      body = (<Table responsive striped hover>
+      body = (<Table responsive striped hover className='gradebookTable'>
           <thead className='gradebook'>
             <tr>
               <th className='envelopeButtonParent'>
@@ -198,6 +203,7 @@ class Gradebook extends React.Component {
               {homeworks.map(function(homework, index) {
                 return <th key={homework.id}><GradebookHomeworkHeader homework={homework}/></th>
               })}
+              <th>Final</th>
             </tr>
           </thead>
           <tbody className='gradebook'>
@@ -207,8 +213,11 @@ class Gradebook extends React.Component {
                   {sortedHomeworkIds.map(function(homeworkId, hIndex){
                     return <td key={homeworkId}><Grade gradeSetCallback={that.gradeSetCallback} userId={user.id} homeworkId={homeworkId} earnedGrade={that.getEarnedGrade(user.id, homeworkId)} gradingScale={that.state.gradingScale}/></td>
                   })}
+                  <td>
+                    <FinalGrade gradeObj={that.state.finalGrades[user.id]} activityTypes={that.state.activityTypes} />
+                  </td>
                 </tr>
-            })}
+            })}            
           </tbody>
         </Table>)
     }
