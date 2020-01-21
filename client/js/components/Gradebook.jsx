@@ -31,7 +31,8 @@ class Gradebook extends React.Component {
       gradingScale: null,
       emailDisabled: true,
       prevSchoolId: null,
-      prevKlassId: null
+      prevKlassId: null,
+      finalGrades: null
     }
 
     this.getGradingScale()
@@ -86,7 +87,9 @@ class Gradebook extends React.Component {
           users: response.users,
           sortedHomeworkIds: response.homeworks.map(function(item){ return item.id }),
           gradebookId: response.gradebook_id,
-          emailDisabled: emailDisabled
+          emailDisabled: emailDisabled,
+          finalGrades: response.final_grades
+
         })
       }
     })
