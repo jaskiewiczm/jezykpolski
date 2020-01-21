@@ -20,7 +20,7 @@ export default class FinalGrade extends React.Component {
   gradePopover = () => {
     var that = this
     
-    return (<Popover id="popover-basic">
+    return (<Popover>
         <Popover.Content>
           <ListGroup>
           {this.props.activityTypes.map(function(at){
@@ -38,16 +38,15 @@ export default class FinalGrade extends React.Component {
           </ListGroup>
         </Popover.Content>
       </Popover>)
+      
   }
 
   render() {
     return (
-      <div>
-        <h2>
-          <OverlayTrigger trigger="click" placement="left" overlay={this.gradePopover} ref={(ref) => this.overlay = ref}>
-            <Button variant='success'>{this.props.gradeObj.final_letter}</Button>
-          </OverlayTrigger>          
-        </h2>
+      <div>        
+        <OverlayTrigger trigger="click" placement="left" overlay={this.gradePopover} ref={(ref) => this.overlay = ref}>
+          <Button variant='success'>{this.props.gradeObj.final_letter}</Button>
+        </OverlayTrigger>                  
       </div>
     )
   }
