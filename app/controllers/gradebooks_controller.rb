@@ -22,7 +22,7 @@ class GradebooksController < ApplicationController
     params.require(:klassId)
 
     klass = Klass.find_by_id params[:klassId]
-    users = klass.users.select {|user| !user.disabled}
+    users = klass.users.active.select {|user| !user.disabled}
     users = users.sort_by {|user| user.name}
     user_ids = users.map {|user| user.id}
     homeworks = klass.homeworks.where(:disabled => false)
@@ -43,7 +43,8 @@ class GradebooksController < ApplicationController
       gradebook_id: klass.gradebook.id,
       users: users.map(&:attributes),
       homeworks: homeworks,
-      grades: return_grades
+      grades: return_grades,
+      final_grades: klass.gradebook.calculate_final_grades
     }
 
     render json: json, status: 200

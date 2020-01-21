@@ -7,6 +7,7 @@ class Gradebook < ApplicationRecord
   has_many :earned_grades, -> {includes :grading_scale_grade}
 
   def calculate_final_grades
+    gs = GradingScale.includes(:grading_scale_grades).where(:name => 'Basic').first
     klass_activity_types = self.klass.klass_activity_types
 
     user_grades = {}
@@ -24,11 +25,14 @@ class Gradebook < ApplicationRecord
       final_grade = 0
       activity_type_percentages.each do |activity_type_id, percentage|
         if grades.has_key? activity_type_id
-          final_grade = final_grade + percentage * grades[activity_type_id] / 100.0
+          final_grade = final_grade + percentage * grades[activity_type_id] / 100.0          
+          grades[ActivityType.find_by_id(activity_type_id).code.to_sym] = grades[activity_type_id]
+          grades.delete(activity_type_id)
         end
       end
 
       grades[:final] = final_grade.round(2)
+      grades[:final_letter] = gs.get_letter_grade_for_value grades[:final]
     end
 
     user_grades

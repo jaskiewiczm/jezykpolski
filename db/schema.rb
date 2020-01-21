@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_06_014348) do
+ActiveRecord::Schema.define(version: 2020_01_21_023300) do
 
   create_table "activity_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name"
@@ -103,8 +103,8 @@ ActiveRecord::Schema.define(version: 2020_01_06_014348) do
     t.float "value"
     t.integer "grading_scale_id"
     t.integer "order", null: false
-    t.integer "lower_bound_inclusive"
-    t.integer "upper_bound_inclusive"
+    t.float "lower_bound_inclusive"
+    t.float "upper_bound_exclusive"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "group"
