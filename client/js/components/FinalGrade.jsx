@@ -20,9 +20,11 @@ export default class FinalGrade extends React.Component {
 
   getLetterGrade = (activityId) => {
     var rv = 'N/A'
-    var activityObj = this.props.gradeObj[activityId]
-    if (activityObj != null) {
-      rv = activityObj['letter_value']
+    if (this.props.gradeObj != null) {
+      var activityObj = this.props.gradeObj[activityId]
+      if (activityObj != null) {
+        rv = activityObj['letter_value']
+      }
     }
     
     return rv
@@ -30,15 +32,16 @@ export default class FinalGrade extends React.Component {
 
   getGrade = (activityId) => {
     var rv = ''
-    var activityObj = this.props.gradeObj[activityId]
-    if (activityObj != null) {
-      var value = activityObj['raw_value']
-      rv = parseFloat(value).toFixed(2)
-      if (isNaN(rv)) {
-        return rv
+    if (this.props.gradeObj != null) {
+      var activityObj = this.props.gradeObj[activityId]
+      if (activityObj != null) {
+        var value = activityObj['raw_value']
+        rv = parseFloat(value).toFixed(2)
+        if (isNaN(rv)) {
+          return rv
+        }
       }
     }
-    
     return rv
   }
 
