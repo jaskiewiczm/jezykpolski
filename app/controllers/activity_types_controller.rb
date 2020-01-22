@@ -18,7 +18,7 @@ class ActivityTypesController < ApplicationController
                      activity_name: kat.activity_type.name,
                      percentage: kat.percentage})
       end
-
+      acts = acts.sort_by {|act| act[:activity_name]}
       render json: acts, status: 200
     else
       acts = []
@@ -28,6 +28,7 @@ class ActivityTypesController < ApplicationController
                      activity_name: at.name,
                      percentage: 0})
       end
+      acts = acts.sort_by {|act| act[:activity_name]}      
       render json: acts, status: 200
     end
   end

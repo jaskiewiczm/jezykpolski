@@ -25,9 +25,15 @@ class Gradebook < ApplicationRecord
       final_grade = 0
       activity_type_percentages.each do |activity_type_id, percentage|
         if grades.has_key? activity_type_id
-          final_grade = final_grade + percentage * grades[activity_type_id] / 100.0          
-          grades[ActivityType.find_by_id(activity_type_id).code.to_sym] = grades[activity_type_id]
+          final_grade = final_grade + percentage * grades[activity_type_id] / 100.0                    
+          #grades[ActivityType.find_by_id(activity_type_id).code.to_sym] = grades[activity_type_id]
+          
+          activity_grade = grades[activity_type_id]
           grades.delete(activity_type_id)
+          grades[activity_type_id] = {
+            raw_value: activity_grade,
+            letter_value: gs.get_letter_grade_for_value(activity_grade)
+          }
         end
       end
 

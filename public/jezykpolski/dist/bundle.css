@@ -218,6 +218,12 @@ li {
 .gradebookHomeworkHeaderParentHover {
   background: lightgray; }
 
+.popover {
+  max-width: 320px !important;
+  width: 320px !important; }
+
+.finalGradeGradeDiv {
+  float: right; }
 
 .gradebook {
   background-color: white;
