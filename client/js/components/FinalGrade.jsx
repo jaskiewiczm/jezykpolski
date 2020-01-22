@@ -74,12 +74,17 @@ export default class FinalGrade extends React.Component {
   }
 
   render() {
-    return (
-      <div>        
-        <OverlayTrigger trigger="click" placement="left" overlay={this.gradePopover()} ref={(ref) => this.overlay = ref}>
-          <Button variant='success'>{this.props.gradeObj.final_letter}</Button>
-        </OverlayTrigger>                  
-      </div>
-    )
+    if (this.props.gradeObj) {
+      return (
+        <div>        
+          <OverlayTrigger trigger="click" placement="left" overlay={this.gradePopover()} ref={(ref) => this.overlay = ref}>
+            <Button variant='success'>{this.props.gradeObj.final_letter}</Button>
+          </OverlayTrigger>                  
+        </div>
+      )  
+    } else {
+      return null
+    }
+    
   }
 }
