@@ -206,12 +206,17 @@ class Gradebook extends React.Component {
               <th>Final</th>
             </tr>
           </thead>
-          <tbody className='gradebook'>
+          <tbody className='gradebook gradebookBody'>
             {users.map(function(user, index){
               return <tr key={user.id}>
                   <td>{user.name}</td>
                   {sortedHomeworkIds.map(function(homeworkId, hIndex){
-                    return <td key={homeworkId}><Grade gradeSetCallback={that.gradeSetCallback} userId={user.id} homeworkId={homeworkId} earnedGrade={that.getEarnedGrade(user.id, homeworkId)} gradingScale={that.state.gradingScale}/></td>
+                    return <td key={homeworkId}><Grade gradeSetCallback={that.gradeSetCallback} 
+                                                       userId={user.id} 
+                                                       leftOrRight={1.0 * hIndex / sortedHomeworkIds.length < 0.5 ? 'right' : 'left'}
+                                                       homeworkId={homeworkId} 
+                                                       earnedGrade={that.getEarnedGrade(user.id, homeworkId)} 
+                                                       gradingScale={that.state.gradingScale}/></td>
                   })}
                   <td>
                     <FinalGrade gradeObj={that.state.finalGrades[user.id]} activityTypes={that.state.activityTypes} />
@@ -223,7 +228,7 @@ class Gradebook extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{height: '100%'}}>
         <br />
         <Container className="gradebookContainer">
           <Navbar bg="dark" variant="dark">

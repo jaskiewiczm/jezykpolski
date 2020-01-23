@@ -41,12 +41,15 @@ class Gradebook < ApplicationRecord
       grades[:final_letter] = gs.get_letter_grade_for_value grades[:final]
     end
 
+    active_user_ids = self.klass.users.active.map {|user| user.id}
+    (user_grades.keys - active_user_ids).each {|bad_id| user_grades.delete bad_id}
+
     user_grades
   end
 
 
-  def gradebook_to_excel_file
-    users = self.klass.users.order(:name)
+  def gradebook_to_excel_file    
+    users = self.klass.users.active.order(:name)
     homeworks = self.klass.homeworks.order(:due_date)
     grading_scale = GradingScale.where('name = ?', 'Basic').first
     earned_grades = self.earned_grades

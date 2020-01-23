@@ -229,10 +229,20 @@ li {
   background-color: white;
   opacity: 1; }
 
+.gradebookTable {
+  min-height: 512px; }
+
+.table-responsive {
+  min-height: 512px; }
+
 .gradebookContainer {
   padding: 0px !important;
   background-color: white;
-  opacity: 1; }
+  opacity: 1;
+  min-height: 512px; }
+
+.gradebookBody {
+  min-height: 512px; }
 
 .exportLink {
   color: gray !important; }

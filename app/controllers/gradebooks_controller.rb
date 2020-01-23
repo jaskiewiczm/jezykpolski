@@ -37,7 +37,7 @@ class GradebooksController < ApplicationController
     end
 
     homeworks = homeworks.map(&:attributes)
-    homeworks = homeworks.sort_by {|h| h['due_date']}
+    homeworks = homeworks.sort_by {|h| h['due_date'].nil? ? Date.today : h['due_date']}
 
     json = {
       gradebook_id: klass.gradebook.id,
