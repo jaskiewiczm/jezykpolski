@@ -23,7 +23,7 @@ class Gradebook < ApplicationRecord
     activity_type_percentages = self.klass.klass_activity_types.map {|kat| [kat.activity_type_id, kat.percentage]}.to_h
     user_grades.each do |user_id, grades|
       final_grade = 0
-      activity_type_percentages.each do |activity_type_id, percentage|
+      activity_type_percentages.each do |activity_type_id, percentage|        
         if grades.has_key? activity_type_id
           final_grade = final_grade + percentage * grades[activity_type_id] / 100.0                    
           #grades[ActivityType.find_by_id(activity_type_id).code.to_sym] = grades[activity_type_id]

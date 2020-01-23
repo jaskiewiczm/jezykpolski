@@ -64,8 +64,31 @@ class Gradebook extends React.Component {
   }
 
   gradeSetCallback = () => {
+    this.recalculateFinalGrades()
     this.setState({
       emailDisabled: false
+    })
+  }
+
+  recalculateFinalGrades = () => {
+    var that = this
+    fetch('/recalculate_final_grades', {
+      method: 'POST',
+      body: JSON.stringify({klassId: this.props.selectedKlassId}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response) => {
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
+    }).then((response) => {
+      if (response != null) {        
+        this.setState({
+          finalGrades: response
+        })
+      }
     })
   }
 

@@ -45,6 +45,7 @@ Jezykpolski::Application.routes.draw do
   post '/set_grade' => 'gradebooks#set_grade'
   get '/download_gradebook/:gradebookId' => 'gradebooks#download'
   post '/send_grade_emails' => 'gradebooks#send_grade_emails'
+  post '/recalculate_final_grades' => 'gradebooks#recalculate_final_grades'
 
   post '/get_grading_scale' => 'grading_scales#get_grading_scale'
 

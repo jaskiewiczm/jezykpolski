@@ -18,6 +18,14 @@ class GradebooksController < ApplicationController
     end
   end
 
+  def recalculate_final_grades
+    params.require(:klassId)
+    klass = Klass.find_by_id params[:klassId]
+    grades = klass.gradebook.calculate_final_grades
+
+    render json: grades, status: 200
+  end
+
   def get_gradebook
     params.require(:klassId)
 
