@@ -52,7 +52,7 @@ export default class FinalGrade extends React.Component {
         <Popover.Content className='finalGradePopoverContent'>
           <ListGroup>
           {this.props.activityTypes.map(function(at){
-            return  <ListGroup.Item>
+            return  <ListGroup.Item key={at.activity_id}>
                       <Row>
                         <Col className='activityTypeColumnWidth' style={{width: '128px !important'}}>
                           {at.activity_name}

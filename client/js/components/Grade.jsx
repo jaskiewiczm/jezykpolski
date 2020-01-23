@@ -31,8 +31,16 @@ export default class Grade extends React.Component {
         earnedGrade: this.props.earnedGrade
       }
     }
+  }
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.earnedGrade != null && props.earnedGrade.email != state.earnedGrade.email) {
+      return {
+        earnedGrade: props.earnedGrade
+      }
+    }
 
+    return null;
   }
 
   saveGrade = (gradingScaleGradeObj, userId, homeworkId) => {
