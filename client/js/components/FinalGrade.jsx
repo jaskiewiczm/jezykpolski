@@ -54,16 +54,19 @@ export default class FinalGrade extends React.Component {
           {this.props.activityTypes.map(function(at){
             return  <ListGroup.Item>
                       <Row>
-                        <Col className='activityTypeColumnWidth'>
+                        <Col className='activityTypeColumnWidth' style={{width: '128px !important'}}>
                           {at.activity_name}
                         </Col>
-                        <Col>
+                        <Col style={{width: '64px'}}>
                           <div>                            
                             <Badge variant="info" style={{display: 'inline', fontSize: '1.2em'}}>{that.getLetterGrade(at['activity_id'])}</Badge>
                             &nbsp;
                             <div style={{display: 'inline', fontSize: '0.8em'}}>{that.getGrade(at['activity_id'])}</div>                            
                           </div>
-                        </Col>                        
+                        </Col> 
+                        <Col style={{width: '32px'}}>
+                          {at.percentage}%
+                        </Col>                       
                       </Row>
                     </ListGroup.Item>
           })}

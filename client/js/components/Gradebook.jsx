@@ -40,12 +40,16 @@ class Gradebook extends React.Component {
     }
 
     this.getGradingScale()
-    getActivityTypes(null, function(activityTypes){that.setState({activityTypes: activityTypes})})
   }
 
   componentDidUpdate() {
+    var that = this
     if (this.props.selectedSchoolId != null && this.props.selectedKlassId != null && this.state.grades == null) {
-      this.getGradebook()
+      getActivityTypes( {klassId: this.props.selectedKlassId}, 
+                        function(activityTypes){
+                          that.setState({activityTypes: activityTypes}, that.getGradebook)
+                        }
+                      )      
     }
   }
 
