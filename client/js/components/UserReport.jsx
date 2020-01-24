@@ -13,6 +13,8 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Badge from 'react-bootstrap/Badge'
 
 import "./UserReport.scss"
+import UserReportComparison from "./UserReportComparison.jsx"
+import getActivityTypes from '../helpers/activity_types.jsx'
 
 
 export default class UserReport extends React.Component {
@@ -23,8 +25,26 @@ export default class UserReport extends React.Component {
     this.getUsers()
 
     this.state = {
-      userData: null
-    }
+      userData: null,
+      activityTypes: {}
+    }    
+  }
+
+  getActivityTypes = () => {
+    var that = this
+    if (this.state.userData) {
+      this.state.userData.forEach(function(userObj) {
+        userObj.klasses.forEach(function(klass) {
+          getActivityTypes( {klassId: klass.id}, 
+                            function(activityTypes){
+                              var at = that.state.activityTypes
+                              at[klass.id] = activityTypes
+                              that.setState({activityTypes: at})
+                            }
+                          )
+        })        
+      })
+    }    
   }
 
   getUsers = () => {
@@ -43,7 +63,7 @@ export default class UserReport extends React.Component {
       if (response != null) {
         that.setState({
           userData: response
-        })
+        }, that.getActivityTypes)
       }
     })
   }
@@ -95,6 +115,10 @@ export default class UserReport extends React.Component {
                   </Col>
                   <Col>
                     <Container>
+                      <Row>Grade Breakdown</Row>
+                      <Row>
+                        <UserReportComparison activityTypes={that.state.activityTypes[klass.id]} klass={klass} user={userObj.user}/>
+                      </Row>
                       <Row>Grades over Time</Row>
                       <Row>
                         <LineChart key={klass.id} data={that.getKlassChartData(klass)} download={true}/>

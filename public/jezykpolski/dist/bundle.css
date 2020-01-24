@@ -276,6 +276,9 @@ li {
   padding-top: 5px;
   margin-bottom: 5px; }
 
+.comparisonGrade {
+  font-size: 1.4em; }
+
 .userSettingsContainer {
   background: white;
   padding: 20px; }

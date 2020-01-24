@@ -6,6 +6,40 @@ class Gradebook < ApplicationRecord
   belongs_to :klass
   has_many :earned_grades, -> {includes :grading_scale_grade}
 
+  def calculate_final_grades_distribution(user_id)
+    user_grades = self.calculate_final_grades
+    user_grade = user_grades[user_id].dup
+
+    user_grades.each {|key, value| value.delete(:final_letter)}
+    activity_type_ids = user_grades.values.map {|item| item.keys}
+    activity_type_ids = activity_type_ids.flatten.uniq    
+    
+    added_raw_values = {}
+    count_raw_values = {}
+    activity_type_ids.each {|at_id| added_raw_values[at_id] = 0 }
+    activity_type_ids.each {|at_id| count_raw_values[at_id] = 0 }
+
+    activity_type_ids.each do |at_id|
+      user_grades.values.each do |user_grade|
+        if user_grade.has_key? at_id
+          if at_id == :final
+            added_raw_values[at_id] += user_grade[at_id] 
+          else 
+            added_raw_values[at_id] += user_grade[at_id][:raw_value] 
+          end
+          
+          count_raw_values[at_id] += 1
+        end
+      end
+    end
+
+    gs = GradingScale.includes(:grading_scale_grades).where(:name => 'Basic').first
+
+    calculated = activity_type_ids.map {|at_id| {at_id => gs.get_letter_grade_for_value(added_raw_values[at_id] / count_raw_values[at_id]) }}    
+    calculated = calculated.reduce({}, :merge)
+    {class_grades: calculated, user_grades: user_grade}
+  end
+
   def calculate_final_grades
     gs = GradingScale.includes(:grading_scale_grades).where(:name => 'Basic').first
     klass_activity_types = self.klass.klass_activity_types
