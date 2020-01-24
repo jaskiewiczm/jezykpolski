@@ -8,6 +8,8 @@ import Button from 'react-bootstrap/Button'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Table from 'react-bootstrap/Table'
 
+import EarnedGradeHistory from './EarnedGradeHistory.jsx'
+
 import {grade} from './Grade.scss'
 
 
@@ -109,20 +111,31 @@ export default class Grade extends React.Component {
   gradePopover = (userId, homeworkId) => {
     var that = this
     var rows = this.getGradeRows()
-    return (<Popover id="popover-basic">
+    return (<Popover id="popover-basic" className='gradePopover'>
         <Popover.Content>
           <Table>
             <tbody>
-              {rows.map(function(row, rowIndex){
-                return (
-                  <tr key={rowIndex}>
-                    {row.cells.map(function(cell, cellIndex){
-                      return <td key={cellIndex} align='center' colSpan={row.colspan} className='gradeSelect' onClick={() => {that.saveGrade(cell, that.props.userId, that.props.homeworkId)}}>{cell.name}</td>
-                    })}
-                  </tr>)
-              })}
+              <tr>
+                <td>
+                  <Table>
+                    <tbody>
+                      {rows.map(function(row, rowIndex){
+                        return (
+                          <tr key={rowIndex}>
+                            {row.cells.map(function(cell, cellIndex){
+                              return <td key={cellIndex} align='center' colSpan={row.colspan} className='gradeSelect' onClick={() => {that.saveGrade(cell, that.props.userId, that.props.homeworkId)}}>{cell.name}</td>
+                            })}
+                          </tr>)
+                      })}              
+                    </tbody>
+                  </Table>
+                </td>
+                <td>
+                  <EarnedGradeHistory earnedGrade={this.state.earnedGrade}/>
+                </td>
+              </tr>
             </tbody>
-          </Table>
+          </Table>          
         </Popover.Content>
       </Popover>)
   }

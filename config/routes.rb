@@ -65,4 +65,6 @@ Jezykpolski::Application.routes.draw do
   post '/delete_bill' => 'billings#delete_bill'
 
   post '/get_activity_types' => 'activity_types#get_activity_types'
+
+  post '/get_earned_grade_histories' => 'earned_grade_histories#get_earned_grade_histories'
 end

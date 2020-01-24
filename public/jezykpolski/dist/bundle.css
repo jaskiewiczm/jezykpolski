@@ -190,6 +190,7 @@ li {
 .klassEditorCardBody {
   margin-top: -20px; }
 
+
 .grade {
   cursor: pointer;
   padding-top: 4px; }
@@ -212,13 +213,17 @@ li {
 .overlayTriggerWrapper {
   float: left; }
 
+.gradePopover {
+  max-width: 600px !important;
+  width: 600px !important; }
+
 .gradebookHomeworkHeader {
   cursor: pointer; }
 
 .gradebookHomeworkHeaderParentHover {
   background: lightgray; }
 
-.popover {
+.finalGradePopover {
   max-width: 400px !important;
   width: 400px !important; }
 

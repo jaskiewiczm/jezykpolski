@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_23_022257) do
+ActiveRecord::Schema.define(version: 2020_01_23_214857) do
 
   create_table "activity_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name"
@@ -74,6 +74,17 @@ ActiveRecord::Schema.define(version: 2020_01_23_022257) do
     t.integer "klass_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "earned_grade_histories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "earned_grade_id"
+    t.bigint "teacher_id"
+    t.bigint "grading_scale_grade_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["earned_grade_id"], name: "fk_rails_08ab34c060"
+    t.index ["grading_scale_grade_id"], name: "fk_rails_2911d632de"
+    t.index ["teacher_id"], name: "fk_rails_036d13f552"
   end
 
   create_table "earned_grades", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
@@ -263,6 +274,9 @@ ActiveRecord::Schema.define(version: 2020_01_23_022257) do
   add_foreign_key "bill_meta_bills", "meta_bills"
   add_foreign_key "bills", "schools"
   add_foreign_key "bills", "users"
+  add_foreign_key "earned_grade_histories", "earned_grades"
+  add_foreign_key "earned_grade_histories", "grading_scale_grades"
+  add_foreign_key "earned_grade_histories", "users", column: "teacher_id"
   add_foreign_key "homeworks", "activity_types"
   add_foreign_key "homeworks", "klasses"
   add_foreign_key "klass_activity_types", "activity_types"

@@ -79,6 +79,8 @@ class GradebooksController < ApplicationController
     earned_grade.grading_scale_grade = grading_scale_grade
     earned_grade.save!
 
+    egh = EarnedGradeHistory.create(:teacher_id => current_user.id, :earned_grade_id => earned_grade.id, :grading_scale_grade_id => grading_scale_grade.id)
+
     emails = earned_grade.jezyk_polski_email.select {|email| email.completed_at.nil? && email.scheduled_at.nil? }
     emails.each do |email|
       email.destroy!
