@@ -103,30 +103,38 @@ export default class UserReport extends React.Component {
         {userObj.klasses.map(function(klass){
           return <Row key={klass.id}>
             <Col>
-              <Container>
-                <Row className='userReportKlassNameRow'>
-                  <Col>
-                    <h2>{klass.name}</h2>
-                  </Col>
-                </Row>
-                <Row className='userReportHomeworkRow'>
-                  <Col>
-                    <ListGroup>{that.renderKlass(klass)}</ListGroup>
-                  </Col>
-                  <Col>
-                    <Container>
-                      <Row>Grade Breakdown</Row>
-                      <Row>
-                        <UserReportComparison activityTypes={that.state.activityTypes[klass.id]} klass={klass} user={userObj.user}/>
-                      </Row>
-                      <Row>Grades over Time</Row>
-                      <Row>
-                        <LineChart key={klass.id} data={that.getKlassChartData(klass)} download={true}/>
-                      </Row>
-                    </Container>
-                  </Col>
-                </Row>
-              </Container>
+         
+              <Row className='userReportKlassNameRow'>
+                <Col>
+                  <h2>{klass.name}</h2>
+                </Col>
+              </Row>
+              <Row className='userReportHomeworkRow'>
+                <Col>
+                  <Card className='userReportCard'>
+                    <Card.Title className='userReportCardTitle'>Activities</Card.Title>
+                    <Card.Body>
+                      <ListGroup>{that.renderKlass(klass)}</ListGroup>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col>
+                  <Card className='userReportCard'>
+                    <Card.Title className='userReportCardTitle'>Grade Breakdown</Card.Title>
+                    <Card.Body>                                                
+                      <UserReportComparison activityTypes={that.state.activityTypes[klass.id]} klass={klass} user={userObj.user}/>                        
+                    </Card.Body>
+                  </Card>
+                  <br />
+                  <Card className='userReportCard'>
+                    <Card.Title className='userReportCardTitle'>Grades over Time</Card.Title>
+                    <Card.Body>
+                      <LineChart key={klass.id} data={that.getKlassChartData(klass)} download={true}/>
+                    </Card.Body>
+                  </Card>                        
+                </Col>
+              </Row>
+              
             </Col>
           </Row>
         })}
