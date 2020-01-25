@@ -47,6 +47,7 @@ Jezykpolski::Application.routes.draw do
   post '/send_grade_emails' => 'gradebooks#send_grade_emails'
   post '/recalculate_final_grades' => 'gradebooks#recalculate_final_grades'
   post '/calculate_final_grades_distribution' => 'gradebooks#calculate_final_grades_distribution'
+  post '/calculate_individual_activity_distributions' => 'gradebooks#calculate_individual_activity_distributions'
 
   post '/get_grading_scale' => 'grading_scales#get_grading_scale'
 

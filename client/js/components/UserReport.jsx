@@ -11,10 +11,13 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Badge from 'react-bootstrap/Badge'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 
 import "./UserReport.scss"
 import UserReportComparison from "./UserReportComparison.jsx"
 import getActivityTypes from '../helpers/activity_types.jsx'
+import ActivityGradeDistribution from './ActivityGradeDistribution.jsx'
 
 
 export default class UserReport extends React.Component {
@@ -26,7 +29,8 @@ export default class UserReport extends React.Component {
 
     this.state = {
       userData: null,
-      activityTypes: {}
+      activityTypes: {},
+      klassIndividualDistributions: {}
     }    
   }
 
@@ -47,6 +51,40 @@ export default class UserReport extends React.Component {
     }    
   }
 
+  getKlassActivityDistributions = (klassId) => {
+    var that = this
+    fetch('/calculate_individual_activity_distributions', {
+      method: 'POST',
+      body: JSON.stringify({klassId: klassId}),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then((response)=>{
+      if (response.status == 200) {
+        return response.json()
+      }
+      return null
+    }).then((response)=>{
+      if (response != null) {
+        var klassIndividualDistributions = that.state.klassIndividualDistributions
+        klassIndividualDistributions[klassId] = response
+        that.setState({
+          klassIndividualDistributions: klassIndividualDistributions
+        })
+      }
+    })
+  }
+
+  postUserFetch = () => {
+    var that = this
+    this.getActivityTypes()
+    this.state.userData.forEach(function(userObj) {
+      userObj.klasses.forEach(function(klass){
+        that.getKlassActivityDistributions(klass.id)    
+      })      
+    })    
+  }
+
   getUsers = () => {
     var that = this
     fetch('/get_user_report', {
@@ -63,7 +101,7 @@ export default class UserReport extends React.Component {
       if (response != null) {
         that.setState({
           userData: response
-        }, that.getActivityTypes)
+        }, that.postUserFetch)
       }
     })
   }
@@ -143,6 +181,10 @@ export default class UserReport extends React.Component {
 
   renderKlass = (klass) => {
     var that = this
+    var klassIndividualDistributions = null
+    if (this.state.klassIndividualDistributions) {
+      klassIndividualDistributions = this.state.klassIndividualDistributions[klass.id]
+    }
 
     return <div>
         {klass.homeworks.map(function(homework){
@@ -153,7 +195,11 @@ export default class UserReport extends React.Component {
                       </Col>
                       <Col xs={1}>
                         <h3>
-                          <Badge variant={that.visualizationToVariant(homework.visualization)}>{homework.grade}</Badge>
+                          <OverlayTrigger placement='right' overlay={<Tooltip><ActivityGradeDistribution distribution={klassIndividualDistributions == null ? null : klassIndividualDistributions[homework.id]}/></Tooltip>}>
+                            <Badge variant={that.visualizationToVariant(homework.visualization)}>
+                              {homework.grade}
+                            </Badge>
+                          </OverlayTrigger>
                         </h3>
                       </Col>
                     </Row>
@@ -169,7 +215,7 @@ export default class UserReport extends React.Component {
     if (this.state.userData != null) {
       body = (<div>
                 {this.state.userData.map(function(userObj){
-                  return <div>{that.renderUser(userObj)}</div>
+                  return <div key={userObj.id}>{that.renderUser(userObj)}</div>
                 })}
               </div>)
     }

@@ -34,6 +34,14 @@ class GradebooksController < ApplicationController
     render json: grades, status: 200
   end
 
+  def calculate_individual_activity_distributions
+    params.require(:klassId)
+    klass = Klass.find_by_id params[:klassId]
+    grades = klass.gradebook.calculate_individual_activity_distributions
+
+    render json: grades, status: 200
+  end
+
   def get_gradebook
     params.require(:klassId)
 

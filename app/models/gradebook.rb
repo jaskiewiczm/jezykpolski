@@ -6,6 +6,29 @@ class Gradebook < ApplicationRecord
   belongs_to :klass
   has_many :earned_grades, -> {includes :grading_scale_grade}
 
+  def calculate_individual_activity_distributions
+    k = Klass.find_by_id self.klass.id
+    g = k.gradebook    
+    egs = EarnedGrade.includes(:grading_scale_grade).where(:gradebook_id => g.id)
+    homework_id_to_grade = egs.map {|eg| {eg.homework_id => eg.grading_scale_grade.name}}
+    homework_ids = homework_id_to_grade.map {|eg| eg.keys.first}
+    homework_ids = homework_ids.uniq
+    homework_id_to_grade_count = homework_ids.map {|h_id| [h_id, {}]}.to_h
+
+    homework_id_to_grade.each do |data_obj| 
+      h_id = data_obj.keys.first
+      grade = data_obj[h_id]
+
+      if not homework_id_to_grade_count[h_id].has_key? grade
+        homework_id_to_grade_count[h_id][grade] = 0
+      end
+
+      homework_id_to_grade_count[h_id][grade] = homework_id_to_grade_count[h_id][grade] + 1
+    end
+
+    homework_id_to_grade_count
+  end
+
   def calculate_final_grades_distribution(user_id)
     user_grades = self.calculate_final_grades
     user_grade = user_grades[user_id].dup
