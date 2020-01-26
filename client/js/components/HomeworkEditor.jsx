@@ -169,7 +169,7 @@ export default class HomeworkEditor extends React.Component {
             </Form.Group>
             <Form.Group>
               <Form.Label>Activity Type</Form.Label>
-              <Form.Control as='select' onChange={this.activityTypeChanged}>
+              <Form.Control as='select' onChange={this.activityTypeChanged} disabled={this.props.homeworkEditorDisableFields}>
                 {activityTypes.map(function(at){
                   return <option key={at.id} selected={at.activity_id == that.state.selectedActivityTypeId ? 'selected' : false}>{at.activity_name}</option>
                 })}

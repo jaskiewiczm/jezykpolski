@@ -13,6 +13,9 @@ class GradebooksController < ApplicationController
   end
 
   def check_permissions
+    if action_name == 'calculate_individual_activity_distributions' || action_name == 'calculate_final_grades_distribution'
+      return
+    end
     if current_user.roles.where(:code => @permitted_role_codes).count == 0
       raise NotAuthorized
     end

@@ -22,24 +22,26 @@ export default class EarnedGradeHistory extends React.Component {
 
   getEarnedGradeHistory = () => {
     var that = this
-    fetch('/get_earned_grade_histories', {
-      method: 'POST',
-      body: JSON.stringify({earned_grade_id: this.props.earnedGrade.id}),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    }).then((response)=>{
-      if (response.status == 200) {
-        return response.json()
-      }
-      return null
-    }).then((response)=>{
-      if (response != null) {
-        that.setState({
-          history: response
-        })
-      }
-    })
+    if (this.props.earnedGrade) {
+      fetch('/get_earned_grade_histories', {
+        method: 'POST',
+        body: JSON.stringify({earned_grade_id: this.props.earnedGrade.id}),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }).then((response)=>{
+        if (response.status == 200) {
+          return response.json()
+        }
+        return null
+      }).then((response)=>{
+        if (response != null) {
+          that.setState({
+            history: response
+          })
+        }
+      })
+    }
   }
 
   render() {

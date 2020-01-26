@@ -128,7 +128,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def _password_reset
+  def _password_reset    
     params.require(:userId)
     if params.has_key?(:newPassword) && params.has_key?(:passwordConfirmation) && params[:newPassword].length >= 6 && params[:passwordConfirmation].length >= 6
       if current_user.id != params[:userId] && current_user.roles.where('code like ?', '%admin%')
