@@ -44,7 +44,7 @@ class Gradebook extends React.Component {
 
   componentDidUpdate() {
     var that = this
-    if (this.props.selectedSchoolId != null && this.props.selectedKlassId != null && this.state.grades == null) {
+    if (this.props.selectedSchoolId != null && this.props.selectedKlassId != null && this.state.grades == null && this.state.activityTypes == null) {
       getActivityTypes( {klassId: this.props.selectedKlassId}, 
                         function(activityTypes){
                           that.setState({activityTypes: activityTypes}, that.getGradebook)
