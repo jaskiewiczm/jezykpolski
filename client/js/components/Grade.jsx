@@ -126,7 +126,7 @@ export default class Grade extends React.Component {
                               return <td key={cellIndex} align='center' colSpan={row.colspan} className='gradeSelect' onClick={() => {that.saveGrade(cell, that.props.userId, that.props.homeworkId)}}>{cell.name}</td>
                             })}
                           </tr>)
-                      })}              
+                      })}
                     </tbody>
                   </Table>
                 </td>
@@ -135,12 +135,13 @@ export default class Grade extends React.Component {
                 </td>
               </tr>
             </tbody>
-          </Table>          
+          </Table>
         </Popover.Content>
       </Popover>)
   }
 
   render() {
+    var that = this
     var variant = this.state == null ? 'light' : (this.state.displayGrade == 'N/A' ? 'light' : 'info')
     var star = null
     if (this.state.earnedGrade != null && this.state.earnedGrade.email == 'pending') {
@@ -152,6 +153,7 @@ export default class Grade extends React.Component {
           <OverlayTrigger trigger="click" placement={this.props.leftOrRight} overlay={this.gradePopover()} ref={(ref) => this.overlay = ref}>
             <Button variant={variant}>{this.state.displayGrade}</Button>
           </OverlayTrigger>
+          {that.props.user.name}
           &nbsp;
         </div>
         <div className='pendingEmailMarker' dangerouslySetInnerHTML={{__html: star}}></div>
