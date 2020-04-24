@@ -21,7 +21,7 @@ import {gradebook} from './Gradebook.scss'
 
 class Gradebook extends React.Component {
 
-  constructor(props) {    
+  constructor(props) {
     super(props)
     var that = this
 
@@ -45,11 +45,11 @@ class Gradebook extends React.Component {
   componentDidUpdate() {
     var that = this
     if (this.props.selectedSchoolId != null && this.props.selectedKlassId != null && this.state.grades == null && this.state.activityTypes == null) {
-      getActivityTypes( {klassId: this.props.selectedKlassId}, 
+      getActivityTypes( {klassId: this.props.selectedKlassId},
                         function(activityTypes){
                           that.setState({activityTypes: activityTypes}, that.getGradebook)
                         }
-                      )      
+                      )
     }
   }
 
@@ -88,7 +88,7 @@ class Gradebook extends React.Component {
       }
       return null
     }).then((response) => {
-      if (response != null) {        
+      if (response != null) {
         this.setState({
           finalGrades: response
         })
@@ -238,18 +238,19 @@ class Gradebook extends React.Component {
               return <tr key={user.id}>
                   <td>{user.name}</td>
                   {sortedHomeworkIds.map(function(homeworkId, hIndex){
-                    return <td key={homeworkId}><Grade gradeSetCallback={that.gradeSetCallback} 
-                                                       userId={user.id} 
+                    return <td key={homeworkId}><Grade gradeSetCallback={that.gradeSetCallback}
+                                                       userId={user.id}
                                                        leftOrRight={1.0 * hIndex / sortedHomeworkIds.length < 0.5 ? 'right' : 'left'}
-                                                       homeworkId={homeworkId} 
-                                                       earnedGrade={that.getEarnedGrade(user.id, homeworkId)} 
-                                                       gradingScale={that.state.gradingScale}/></td>
+                                                       homeworkId={homeworkId}
+                                                       earnedGrade={that.getEarnedGrade(user.id, homeworkId)}
+                                                       gradingScale={that.state.gradingScale}
+                                                       user={user}/></td>
                   })}
                   <td>
                     <FinalGrade gradeObj={that.state.finalGrades[user.id]} activityTypes={that.state.activityTypes} />
                   </td>
                 </tr>
-            })}            
+            })}
           </tbody>
         </Table>)
     }
