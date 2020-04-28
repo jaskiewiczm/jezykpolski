@@ -31,7 +31,7 @@ export default class UserReport extends React.Component {
       userData: null,
       activityTypes: {},
       klassIndividualDistributions: {}
-    }    
+    }
   }
 
   getActivityTypes = () => {
@@ -39,16 +39,16 @@ export default class UserReport extends React.Component {
     if (this.state.userData) {
       this.state.userData.forEach(function(userObj) {
         userObj.klasses.forEach(function(klass) {
-          getActivityTypes( {klassId: klass.id}, 
+          getActivityTypes( {klassId: klass.id},
                             function(activityTypes){
                               var at = that.state.activityTypes
                               at[klass.id] = activityTypes
                               that.setState({activityTypes: at})
                             }
                           )
-        })        
+        })
       })
-    }    
+    }
   }
 
   getKlassActivityDistributions = (klassId) => {
@@ -80,9 +80,9 @@ export default class UserReport extends React.Component {
     this.getActivityTypes()
     this.state.userData.forEach(function(userObj) {
       userObj.klasses.forEach(function(klass){
-        that.getKlassActivityDistributions(klass.id)    
-      })      
-    })    
+        that.getKlassActivityDistributions(klass.id)
+      })
+    })
   }
 
   getUsers = () => {
@@ -133,6 +133,16 @@ export default class UserReport extends React.Component {
   }
 
   renderUser = (userObj) => {
+
+    /*
+    <Card className='userReportCard'>
+                    <Card.Title className='userReportCardTitle'>Grade Breakdown</Card.Title>
+                    <Card.Body>
+                      <UserReportComparison activityTypes={that.state.activityTypes[klass.id]} klass={klass} user={userObj.user}/>
+                    </Card.Body>
+                  </Card>
+    */
+
     var that = this
     return <ListGroup.Item>
         <Row className='userReportNameRow'>
@@ -141,7 +151,7 @@ export default class UserReport extends React.Component {
         {userObj.klasses.map(function(klass){
           return <Row key={klass.id}>
             <Col>
-         
+
               <Row className='userReportKlassNameRow'>
                 <Col>
                   <h2>{klass.name}</h2>
@@ -157,22 +167,17 @@ export default class UserReport extends React.Component {
                   </Card>
                 </Col>
                 <Col>
-                  <Card className='userReportCard'>
-                    <Card.Title className='userReportCardTitle'>Grade Breakdown</Card.Title>
-                    <Card.Body>                                                
-                      <UserReportComparison activityTypes={that.state.activityTypes[klass.id]} klass={klass} user={userObj.user}/>                        
-                    </Card.Body>
-                  </Card>
+
                   <br />
                   <Card className='userReportCard'>
                     <Card.Title className='userReportCardTitle'>Grades over Time</Card.Title>
                     <Card.Body>
                       <LineChart key={klass.id} data={that.getKlassChartData(klass)} download={true}/>
                     </Card.Body>
-                  </Card>                        
+                  </Card>
                 </Col>
               </Row>
-              
+
             </Col>
           </Row>
         })}
