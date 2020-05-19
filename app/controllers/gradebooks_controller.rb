@@ -50,7 +50,7 @@ class GradebooksController < ApplicationController
 
     klass = Klass.find_by_id params[:klassId]
     users = klass.users.active.select {|user| !user.disabled}
-    users = users.sort_by {|user| user.name}
+    users = users.sort_by {|user| user.name.split(' ')[1]}
     user_ids = users.map {|user| user.id}
     homeworks = klass.homeworks.where(:disabled => false)
     grades = klass.gradebook.earned_grades.includes(:jezyk_polski_email).where('user_id in (?)', user_ids)
