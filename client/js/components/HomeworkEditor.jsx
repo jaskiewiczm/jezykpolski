@@ -148,7 +148,7 @@ export default class HomeworkEditor extends React.Component {
       buttons =     <Button variant="primary" onClick={this.handleClose}>
                       Close
                     </Button>
-      rte = <div dangerouslySetInnerHTML={{__html: this.props.description}}></div>
+      rte = <div dangerouslySetInnerHTML={{__html: this.props.homework.description}}></div>
     }
 
     var activityTypes = []
